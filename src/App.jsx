@@ -7,7 +7,7 @@ export default function App() {
   return (
       <Router>
       <Routes>
-        <Route index element={<Login />} />
+        <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
     </Router>

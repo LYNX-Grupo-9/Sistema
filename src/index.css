@@ -55,6 +55,43 @@ body {
                 font-size: 16px;
             }
 
+            }
+
+            .inputDuplo {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                width: 65%;
+                height: 12%;
+
+                .containerLabel {
+                    display: flex;
+                    width: 104%;
+                    
+                    span {
+                        width: 65%;
+                        height: 30%;
+                        font-size: 15px;
+                        font-weight: 600;
+                        color: #013451;
+                    }
+                }
+
+                .containerInput {
+                    display: flex;
+                    justify-content: space-between;
+                    
+                    input {
+                        width: 48%;
+                        height: 40px;
+                        border-radius: 5px;
+                        border: solid 2px #013451;
+                        padding: 15px;
+                        background-color: #FFF;
+                        font-size: 16px;
+                    }
+                }
+
         }
 
         button {
