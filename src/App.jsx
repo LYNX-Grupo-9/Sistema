@@ -5,7 +5,7 @@ import { Cadastro } from "./pages/Cadastro";
 
 export default function App() {
   return (
-    <Router> 
+      <Router>
       <Routes>
         <Route index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />

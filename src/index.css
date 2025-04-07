@@ -1,2 +1,112 @@
 @import "tailwindcss";
 
+body {
+    margin: 0;
+    background-color: #F0F0F0;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    padding: 15px;
+
+    .containerLogin {
+        width: 50%;
+        height: 95%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-right: 2%;
+
+        h1 {
+            font-size: 35px;
+            font-weight: 650;
+            color: #013451;
+            margin-bottom: 20px;
+        }
+
+        .inputContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 14%;
+            width: 100%;
+
+            span {
+                width: 65%;
+                height: 30%;
+                font-size: 15px;
+                font-weight: 600;
+                color: #013451;
+            }
+    
+            input {
+                width: 65%;
+                height: 40px;
+                border-radius: 5px;
+                border: solid 2px #013451;
+                padding: 15px;
+                background-color: #FFF;
+                font-size: 16px;
+            }
+
+        }
+
+        button {
+            width: 65%;
+            height: 45px;
+            margin-top: 5%;
+            border-radius: 10px;
+            border: solid 2px #013451;
+            background-color: #013451;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+        } 
+
+        button:hover {
+            background-color: #106294;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .possuiConta {
+            color: #013451;
+            font-weight: 550;
+            margin-top: 3%;
+
+            a {
+                color: #FF8C00;
+                font-weight: 550;
+                transition: all 0.3s;
+            }
+
+            a:hover {
+                text-decoration: underline;
+                transition: all 0.3s;
+            }
+
+        }
+
+    }
+
+    .imgLogin {
+        width: 46%;
+        height: 95%;
+        background-image: url(assets/imgLogin.svg);
+        background-size: cover;
+        background-position: center;
+        border-radius: 25px;
+    }
+
+}
+
+
+
