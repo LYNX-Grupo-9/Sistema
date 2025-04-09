@@ -8,10 +8,12 @@ export function Cadastro() {
         
         <>
         
-        <div className="login">
-            <div className="imgLogin"></div>
-            <div className="containerLogin">
-                <h1>CADASTRO</h1>
+        <div className="flex justify-center items-center h-screen w-full p-[15px]">
+
+            <div className="w-[46%] h-[95%] bg-[url('assets/imgLogin.svg')] bg-cover bg-center rounded-[25px]"></div>
+            
+            <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%]">
+                <h1 className="text-[35px] font-[650] text-[#013451] mb-5">CADASTRO</h1>
                 <Inputs label="Nome" type="text" placeholder="Informe seu nome" />
                 <InputDuplo label="CPF" type="text" placeholder="Informe seu CPF" label2="OAB" type2="text" placeholder2="Informe seu OAB"/>
                 <Inputs label="Email" type="email" placeholder="Informe seu email" />
