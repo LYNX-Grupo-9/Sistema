@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 :root{
-    --bgColor--primary: #E3E3E3;
+    --bgColor-primary: #E3E3E3;
     --bgLight: #F3F3F3;
     --bgDark: #444444;
     --bgTransparentDark: #444444b3;
