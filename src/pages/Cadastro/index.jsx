@@ -2,11 +2,30 @@ import { InputDuplo } from "../../InputDuplo";
 import { Inputs } from "../../Inputs";
 import { PossuiConta } from '../../PossuiConta';
 import { Button } from '../../Button';
+import { useEffect, useState } from "react";
+
+
 
 export function Cadastro() {
+    const [nome, setNome] = useState("");
+    const [placeholderNome , setPlaceholderNome] = useState();
+
+
+    function cadastrar () {
+        const inputNome = document.getElementById("nome");
+        
+        
+        if (nome.trim() === "") {
+            inputNome.classList.add("border-red-500");
+            setPlaceholderNome("Campo obrigatório");
+            inputNome.placeholder = "Campo obrigatório";
+        }
+    
+    }
+
     return (
         
-        <>
+        <>  
         
         <div className="flex justify-center items-center h-screen w-full p-[15px]">
 
@@ -14,12 +33,12 @@ export function Cadastro() {
             
             <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%]">
                 <h1 className="text-[35px] font-[650] text-[#013451] mb-5">CADASTRO</h1>
-                <Inputs label="Nome" type="text" placeholder="Informe seu nome" />
+                <Inputs value={nome} onChange={(e) => setNome(e.target.value)} id="nome" label="Nome" type="text" placeholder="Informe seu nome" />
                 <InputDuplo label="CPF" type="text" placeholder="Informe seu CPF" label2="OAB" type2="text" placeholder2="Informe seu OAB"/>
                 <Inputs label="Email" type="email" placeholder="Informe seu email" />
                 <Inputs label="Senha" type="password" placeholder="Insira sua senha" />
                 <Inputs label="Confirmar senha" type="password" placeholder="Digite sua senha novamente" />
-                <Button buttonLabel="Próximo" />
+                <Button id="btnCadastrar" buttonlabel="Próximo" onClick={cadastrar} />
                 <PossuiConta label="Já possui uma conta? Faça seu" link="/login" linkLabel="Login!" />
             </div>
         </div>
