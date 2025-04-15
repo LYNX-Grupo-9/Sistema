@@ -1,54 +1,63 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-:root{
-    --bgColor--primary: #E3E3E3;
-    --bgLight: #F3F3F3;
-    --bgDark: #444444;
-    --bgTransparentDark: #444444b3;
-    --bgMedium: #656565;
+@import "tailwindcss";
 
-    --color-blueDark: #013451;
-    --color-blueLight: #3C6A89;
-    --color-grayLight: #465059;
-    --color-red: #A60003;
-    --color-light: #FFFFFF;
+html {
+  --font-smoothing: antialiased;
+  --webkit-font-smoothing: antialiased;
+  --moz-osx-font-smoothing: grayscale;
+}
 
-    --gradientVertical: linear-gradient(180deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
-    --gradientHorizontal: linear-gradient(90deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
+:root {
 
-    .bgGlass {
-        background: rgba(255, 255, 255, 0.6); 
-        backdrop-filter: blur(80px);
-        -webkit-backdrop-filter: blur(80px);
-        border-radius: 15px;
-        border: 2px solid rgba(255, 255, 255, 1);
-        padding: 20px;
-      }
+  --bgColor--primary: #E3E3E3;
+  --bgLight: #F3F3F3;
+  --bgDark: #444444;
+  --bgTransparentDark: #444444b3;
+  --bgMedium: #656565;
 
-      .typography-regular {
-        font-family: 'Roboto', sans-serif;
-        font-weight: 400;
-      }
-      
-      .typography-medium {
-        font-family: 'Roboto', sans-serif;
-        font-weight: 500;
-      }
-      
-      .typography-semibold {
-        font-family: 'Roboto', sans-serif;
-        font-weight: 600;
-      }
-      .typography-bold {
-        font-family: 'Roboto', sans-serif;
-        font-weight: 700;
-      }
-      
-      .typography-black {
-        font-family: 'Roboto', sans-serif;
-        font-weight: 900;
-      }
+  --color-blueDark: #013451;
+  --color-blueLight: #3C6A89;
+  --color-grayLight: #465059;
+  --color-red: #A60003;
+  --color-light: #FFFFFF;
 
-      
-      
+  --gradientVertical: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
+  --gradientHorizontal: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
+
+  .bgGlass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(80px);
+    -webkit-backdrop-filter: blur(80px);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 1);
+    padding: 20px;
+  }
+
+  .typography-regular {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+  }
+
+  .typography-medium {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+  }
+
+  .typography-semibold {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+  }
+
+  .typography-bold {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+  }
+
+  .typography-black {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+  }
+
+
+
 }
