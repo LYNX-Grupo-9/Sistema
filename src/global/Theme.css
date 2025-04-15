@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
 :root{
     --bgColor-primary: #E3E3E3;
     --bgLight: #F3F3F3;
@@ -12,6 +12,7 @@
     --color-grayLight: #465059;
     --color-red: #A60003;
     --color-light: #FFFFFF;
+    --lineSeparator: #87939e;
 
     --gradientVertical: linear-gradient(180deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
     --gradientHorizontal: linear-gradient(90deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
@@ -22,7 +23,7 @@
         -webkit-backdrop-filter: blur(80px);
         border-radius: 15px;
         border: 2px solid rgba(255, 255, 255, 1);
-        padding: 20px;
+        padding: 40px;
       }
 
       .typography-regular {
