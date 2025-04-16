@@ -1,5 +1,6 @@
 import { DropdownComponent } from "../../components/DropdownComponent";
 import { HighlightedCases } from "../../components/HighlightedCases";
+import { MonthEvent } from "../../components/MonthEvent";
 import { OverviewNotification } from "../../components/OverviewNotification";
 import { Search } from "../../components/search";
 
@@ -122,17 +123,33 @@ export function Home() {
                                 <div className="bgGlass w-[550px] h-[350px] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
                                     <div className="h-[220px] overflow-y-scroll py-2.5">
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
-                                    <OverviewNotification message="Nova consulta"/>
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
+                                        <OverviewNotification message="Nova consulta" />
                                     </div>
                                 </div>
-                                <div className="bgGlass w-[422px] h-[350px] ml-[12px]">
+                                <div className="bgGlass w-[422px] h-[350px] ml-[12px] flex flex-col items-center">
+                                    <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Eventos do mês</span>
+                                    <div className="flex w-full pt-[20px]">
+                                        <span className="text-[var(--lineSeparator)] typography-medium text-[10px]">Nome do evento</span>
+                                        <span className="text-[var(--lineSeparator)] typography-medium text-[10px] ml-[50%]">Data</span>
+                                    </div>
+                                    <div className="h-[250px] w-full overflow-scroll">
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                        <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
+                                    </div>
 
                                 </div>
                             </div>
