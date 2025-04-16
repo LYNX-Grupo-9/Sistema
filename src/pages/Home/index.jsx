@@ -6,6 +6,7 @@ import { OverviewNotification } from "../../components/OverviewNotification";
 import { Search } from "../../components/search";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { HistoryComponent } from "../../components/HistoryComponent";
 
 export function Home() {
 
@@ -181,6 +182,25 @@ export function Home() {
                                 <div className="flex justify-between items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Histórico</span>
                                     <DropdownComponent />
+                                </div>
+                                <div className="flex w-full pt-[20px]">
+                                    <span className="text-[var(--lineSeparator)] typography-medium text-[12px]">Nome do cliente</span>
+                                    <span className="text-[var(--lineSeparator)] typography-medium text-[12px] ml-[15%]">Processos em aberto</span>
+                                </div>
+                                <div className="h-[375px] overflow-scroll">
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
                                 </div>
                             </div>
                         </div>
