@@ -14,7 +14,7 @@ export function Login() {
                 <h1 className='text-[35px] font-[650] text-[#013451] mb-5'>LOGIN</h1>
                 <Inputs label="Email" type="email" placeholder="Informe seu email" />
                 <Inputs label="Senha" type="password" placeholder="Insira sua senha" />
-                <Button buttonLabel="Entrar" />
+                <Button buttonlabel="Entrar" />
                 <PossuiConta label="Não possui uma conta?" link="/cadastro" linkLabel="Cadastre-se!" />
             </div>
 
