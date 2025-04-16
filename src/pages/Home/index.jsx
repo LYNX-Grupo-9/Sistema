@@ -1,10 +1,26 @@
+import { useEffect, useState } from "react";
 import { DropdownComponent } from "../../components/DropdownComponent";
 import { HighlightedCases } from "../../components/HighlightedCases";
 import { MonthEvent } from "../../components/MonthEvent";
 import { OverviewNotification } from "../../components/OverviewNotification";
 import { Search } from "../../components/search";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export function Home() {
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    const [today, setToday] = useState("")
+
+    useEffect(() => {
+        const today = new Date();
+        const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
+        setToday(capitalizeFirstLetter(formattedDate))
+    })
+
     return (
         <>
             <div className="flex bg-[var(--bgColor-primary)] h-screen w-screen">
@@ -15,8 +31,8 @@ export function Home() {
                         <Search />
                     </div>
                     <div className="flex w-full ">
-                        <div className="">
-                            <div className="bgGlass h-[450px] w-[1000px]">
+                        <div>
+                            <div className="bgGlass h-[450px] w-[950px]">
                                 <div className="flex justify-between">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Processos em destaque</span>
                                     <DropdownComponent />
@@ -120,7 +136,7 @@ export function Home() {
                                 </div>
                             </div>
                             <div className="mt-[24px] flex">
-                                <div className="bgGlass w-[550px] h-[350px] mr-[12px]">
+                                <div className="bgGlass w-[525px] h-[350px] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
                                     <div className="h-[220px] overflow-y-scroll py-2.5">
                                         <OverviewNotification message="Nova consulta" />
@@ -133,7 +149,7 @@ export function Home() {
                                         <OverviewNotification message="Nova consulta" />
                                     </div>
                                 </div>
-                                <div className="bgGlass w-[422px] h-[350px] ml-[12px] flex flex-col items-center">
+                                <div className="bgGlass w-[400px] h-[350px] ml-[12px] flex flex-col items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Eventos do mês</span>
                                     <div className="flex w-full pt-[20px]">
                                         <span className="text-[var(--lineSeparator)] typography-medium text-[10px]">Nome do evento</span>
@@ -150,16 +166,22 @@ export function Home() {
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         <div className="mx-[24px]">
-                            <div className="bgGlass w-[450px] h-[350px] mb-[24px]">
-
+                            <div className="bgGlass w-[500px] h-[250px] mb-[24px] flex flex-col">
+                                <span className="typography-black text-[var(--color-blueDark)] text-[28px]">{today}</span>
+                                <span className="typography-semibold text-[var(--lineSeparator)] text-[20px]">Sem eventos hoje</span>
+                                <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
+                                <span className="typography-semibold text-[var(--color-blueDark)] text-[24px]">Próximo evento</span>
+                                <span className="typography-regular text-[var(--lineSeparator)] text-[20px]">Atendimento Walace - 10 de março 2025</span>
                             </div>
-                            <div className="bgGlass w-[450px] h-[450px]">
-
+                            <div className="bgGlass w-[500px] h-[550px]">
+                                <div className="flex justify-between items-center">
+                                    <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Histórico</span>
+                                    <DropdownComponent />
+                                </div>
                             </div>
                         </div>
                     </div>
