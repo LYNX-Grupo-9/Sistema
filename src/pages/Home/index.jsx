@@ -42,11 +42,11 @@ export function Home() {
                                 <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
                                 <div className="flex flex-col w-full">
                                     <div className="flex w-[85%] justify-between items-center pl-[5%]">
-                                        <span className="typography-medium text-[10px] text-[var(--lineSeparator)] w-[150px]">Id do Processo</span>
-                                        <span className="typography-medium text-[10px] text-[var(--lineSeparator)] w-[200px]">Nome do cliente</span>
-                                        <span className="typography-medium text-[10px] text-[var(--lineSeparator)] w-[150px] ">Tipo</span>
-                                        <span className="typography-medium text-[10px] text-[var(--lineSeparator)] w-[150px] ">Data de inicio</span>
-                                        <span className="typography-medium text-[10px] text-[var(--lineSeparator)] w-[150px] ">Previsão de conclusão</span>
+                                        <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px]">Id do Processo</span>
+                                        <span className="typography-medium text-[10px] text-[var(--grayText)] w-[200px]">Nome do cliente</span>
+                                        <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Tipo</span>
+                                        <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Data de inicio</span>
+                                        <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
                                     <div className="overflow-scroll h-[250px]">
                                         <HighlightedCases
@@ -153,8 +153,8 @@ export function Home() {
                                 <div className="bgGlass w-[400px] h-[350px] ml-[12px] flex flex-col items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Eventos do mês</span>
                                     <div className="flex w-full pt-[20px]">
-                                        <span className="text-[var(--lineSeparator)] typography-medium text-[10px]">Nome do evento</span>
-                                        <span className="text-[var(--lineSeparator)] typography-medium text-[10px] ml-[50%]">Data</span>
+                                        <span className="text-[var(--grayText)] typography-medium text-[10px]">Nome do evento</span>
+                                        <span className="text-[var(--grayText)] typography-medium text-[10px] ml-[50%]">Data</span>
                                     </div>
                                     <div className="h-[250px] w-full overflow-scroll">
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
@@ -173,10 +173,10 @@ export function Home() {
                         <div className="mx-[24px]">
                             <div className="bgGlass w-[500px] h-[250px] mb-[24px] flex flex-col">
                                 <span className="typography-black text-[var(--color-blueDark)] text-[28px]">{today}</span>
-                                <span className="typography-semibold text-[var(--lineSeparator)] text-[20px]">Sem eventos hoje</span>
+                                <span className="typography-semibold text-[var(--grayText)] text-[20px]">Sem eventos hoje</span>
                                 <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
                                 <span className="typography-semibold text-[var(--color-blueDark)] text-[24px]">Próximo evento</span>
-                                <span className="typography-regular text-[var(--lineSeparator)] text-[20px]">Atendimento Walace - 10 de março 2025</span>
+                                <span className="typography-regular text-[var(--grayText)] text-[20px]">Atendimento Walace - 10 de março 2025</span>
                             </div>
                             <div className="bgGlass w-[500px] h-[550px]">
                                 <div className="flex justify-between items-center">
@@ -184,23 +184,23 @@ export function Home() {
                                     <DropdownComponent />
                                 </div>
                                 <div className="flex w-full pt-[20px]">
-                                    <span className="text-[var(--lineSeparator)] typography-medium text-[12px]">Nome do cliente</span>
-                                    <span className="text-[var(--lineSeparator)] typography-medium text-[12px] ml-[15%]">Processos em aberto</span>
+                                    <span className="text-[var(--grayText)] typography-medium text-[12px]">Nome do cliente</span>
+                                    <span className="text-[var(--grayText)] typography-medium text-[12px] ml-[15%]">Processos em aberto</span>
                                 </div>
                                 <div className="h-[375px] overflow-scroll">
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
-                                    <HistoryComponent title="Lewis Hamilton" message="2"/>
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
+                                    <HistoryComponent title="Lewis Hamilton" message="2" />
                                 </div>
                             </div>
                         </div>

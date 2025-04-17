@@ -12,7 +12,8 @@
     --color-grayLight: #465059;
     --color-red: #A60003;
     --color-light: #FFFFFF;
-    --lineSeparator: #87939e;
+    --grayText: #87939e;
+    --lineSeparator: #87939e70;
 
     --gradientVertical: linear-gradient(180deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
     --gradientHorizontal: linear-gradient(90deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);

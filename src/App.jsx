@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Cadastro } from "./pages/Cadastro";
 import { Home } from "./pages/Home";
+import { ClientList } from "./pages/ClientList";
 
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/home" element={<Home/>} />
+        <Route path="/ClientList" element={<ClientList/>} />
       </Routes>
     </Router>
   );
