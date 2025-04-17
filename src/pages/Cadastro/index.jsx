@@ -1,7 +1,7 @@
-import { InputDuplo } from "../../InputDuplo";
-import { Inputs } from "../../Inputs";
-import { PossuiConta } from '../../PossuiConta';
-import { Button } from '../../Button';
+import { InputDuplo } from "../../components/InputDuplo";
+import { InputForm } from "../../components/InputForm";
+import { PossuiConta } from '../../components/PossuiConta';
+import { BtnForm } from '../../components/BtnForm';
 import { useEffect, useState } from "react";
 
 
@@ -113,7 +113,7 @@ export function Cadastro() {
                 <div className="w-[46%] h-[95%] bg-[url('assets/imgLogin.svg')] bg-cover bg-center rounded-[25px]"></div>
                 <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%]">
                     <h1 className="text-[35px] font-[650] text-[#013451] mb-5">CADASTRO</h1>
-                    <Inputs
+                    <InputForm
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
                         id="nome"
@@ -133,7 +133,7 @@ export function Cadastro() {
                         onChange1={(e) => setCpf(e.target.value)}
                         onChange2={(e) => setRegistroOab(e.target.value)}
                     />
-                    <Inputs
+                    <InputForm
                         id="email"
                         label="Email"
                         type="email"
@@ -141,7 +141,7 @@ export function Cadastro() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <Inputs
+                    <InputForm
                         id="senha"
                         label="Senha"
                         type="password"
@@ -149,7 +149,7 @@ export function Cadastro() {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                     />
-                    <Inputs
+                    <InputForm
                         id="confirmarSenha"
                         label="Confirmar senha"
                         type="password"
@@ -157,8 +157,8 @@ export function Cadastro() {
                         value={confirmarSenha}
                         onChange={(e) => setConfirmarSenha(e.target.value)}
                     />
-                    <Button id="btnCadastrar" buttonlabel="Próximo" onClick={cadastrar} />
-                    <PossuiConta label="Já possui uma conta? Faça seu" link="/login" linkLabel="Login!" />
+                    <BtnForm id="btnCadastrar" buttonlabel="Próximo" onClick={cadastrar} />
+                    <PossuiConta label="Já possui uma conta? Faça seu" link="/login" linkLabel=" Login!" />
                 </div>
             </div>
             

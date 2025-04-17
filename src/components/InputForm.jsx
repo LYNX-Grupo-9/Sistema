@@ -1,4 +1,4 @@
-export function Inputs ({id, label, type, placeholder, onChange,value, ...props}) {
+export function InputForm ({id, label, type, placeholder, onChange,value, ...props}) {
     return (
         <div className="flex flex-col items-center justify-center h-[14%] w-full">
             <span className="w-[65%] h-[30%] text-[15px] font-semibold text-[#013451]">
