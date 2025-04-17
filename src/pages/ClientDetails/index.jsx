@@ -3,7 +3,7 @@ import { ClientInfo } from "../../components/ClientInfo";
 import { DropdownComponent } from "../../components/DropdownComponent";
 import { EventCard } from "../../components/EventCard";
 
-export function ClientList() {
+export function ClientDetails() {
     return (
         <div className="w-screen h-screen bg-[var(--bgColor-primary))] pl-[200px] pt-[80px] flex gap-10">
             <div className="flex flex-col gap-6">
