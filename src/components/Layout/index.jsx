@@ -90,7 +90,7 @@ export function Layout() {
                     </div>
                 </aside>
 
-                <div className="flex-1 bg-gray-700">
+                <div className="flex-1 ">
                     <Outlet />
                 </div>
             </div>
