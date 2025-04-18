@@ -24,9 +24,8 @@ export function Home() {
 
     return (
         <>
-            <div className="flex bg-[var(--bgColor-primary)] h-screen w-screen">
-                <div className="h-screen w-[140px] bg-[var(--color-blueDark)]"></div>
-                <div className="pt-[50px] ml-[200px] absolute">
+            <div className="flex h-full w-full">
+                <div className="pt-[20px] ml-[100px] absolute">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />
