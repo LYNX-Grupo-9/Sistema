@@ -1,4 +1,4 @@
-import { SmButton } from "./SmButton"
+import { SmButton } from "./Buttons/SmButton"
 export function HistoryComponent(props) {
     return (
         <div className="flex w-full justify-between pt-[16px]">

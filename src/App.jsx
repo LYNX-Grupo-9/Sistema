@@ -4,6 +4,8 @@ import { Login } from "./pages/Login";
 import { Cadastro } from "./pages/Cadastro";
 import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
+import { CustomerDetails } from "./pages/CustomerDetails";
+import { CustomerList } from "./pages/CustomerList";
 
 
 export default function App() {
@@ -12,9 +14,10 @@ export default function App() {
       <Routes>
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
-        </Route>
+        <Route path="/home" element={<Home/>} />
+        <Route path="/CustomerDetails" element={<CustomerDetails/>} />
+        <Route path="/CustomerList" element={<CustomerList/>} />
+
       </Routes>
 
 

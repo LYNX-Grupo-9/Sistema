@@ -1,4 +1,4 @@
-import { SmButton } from "./SmButton"
+import { SmButton } from "./Buttons/SmButton"
 export function OverviewNotification(props) {
     return (
         <div className="flex w-full items-center justify-between mt-[12px]">
