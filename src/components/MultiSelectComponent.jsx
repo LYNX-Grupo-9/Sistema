@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SmButton } from "./SmButton";
+import { SmButton } from "./Buttons/SmButton";
 import filterIcon from "../assets/icons/Filter.svg";
 
 export function MultiSelectComponent(props) {
@@ -26,7 +26,7 @@ export function MultiSelectComponent(props) {
   const DISPLAY_LIMIT = 1;
 
   return (
-    <div className="relative">
+    <div className="relative z-10">
 
       <div
         className="border-2 w-[200px] h-[50px] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"

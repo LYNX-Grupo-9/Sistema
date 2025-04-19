@@ -51,84 +51,84 @@ export function Home() {
                                     <div className="overflow-scroll h-[250px]">
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"
                                         />
                                         <HighlightedCases
                                             idCase="1321321"
-                                            Client="Paulo Cesar Dantas"
+                                            Customer="Paulo Cesar Dantas"
                                             type="Aposentadoria"
                                             initialDate="10/10/2010"
                                             end="10/10/2020"

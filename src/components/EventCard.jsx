@@ -1,4 +1,4 @@
-import { SmButton } from "./SmButton";
+import { SmButton } from "./Buttons/SmButton"
 
 export function EventCard(props) {
     return (

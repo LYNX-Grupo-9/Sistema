@@ -1,6 +1,6 @@
-import { SmButton } from "./SmButton";
+import { SmButton } from "./Buttons/SmButton"
 
-export function ClientCase(props){
+export function CustomerCase(props){
     return(
         <div className="flex w-full items-center mt-[12px]">
             <div className="bg-[var(--color-blueDark)] h-[8px] w-[8px] rounded-[20px] mr-[36px]"></div>

@@ -1,9 +1,9 @@
-import { ClientCase } from "../../components/ClientCases";
-import { ClientInfo } from "../../components/ClientInfo";
+import { CustomerCase } from "../../components/CustomerCases";
+import { CustomerInfo } from "../../components/CustomerInfo";
 import { DropdownComponent } from "../../components/DropdownComponent";
 import { EventCard } from "../../components/EventCard";
 
-export function ClientDetails() {
+export function CustomerDetails() {
     return (
         <div className="w-screen h-screen bg-[var(--bgColor-primary))] pl-[200px] pt-[80px] flex gap-10">
             <div className="flex flex-col gap-6">
@@ -11,13 +11,13 @@ export function ClientDetails() {
                     <span className="typography-semibold text-3xl text-[var(--color-blueDark)]">Lewis Carl Davidson Hamilton</span>
                 </div>
                 <div className="bgGlass w-[700px] h-[650px] flex flex-col items-center gap-5">
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
-                    <ClientInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
+                    <CustomerInfo title="Documento de identificação" value="CPF -123456789-12" />
                 </div>
             </div>
             <div className="flex flex-col gap-6">
@@ -35,14 +35,14 @@ export function ClientDetails() {
                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                     </div>
                     <div className="h-[180px] overflow-scroll">
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                        <ClientCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                        <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
                     </div>
                 </div>
                 <div className="bgGlass w-[700px] h-[420px]">

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import filterIcon from "../assets/icons/Filter.svg";
-import { SmButton } from "./SmButton";
 
 export function SingleSelectComponent(props) {
     const options = props.options;
@@ -14,7 +12,7 @@ export function SingleSelectComponent(props) {
     };
 
     return (
-        <div className="relative">
+        <div className="relative z-10">
 
             <div
                 className="border-2 w-[200px] h-[50px] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
