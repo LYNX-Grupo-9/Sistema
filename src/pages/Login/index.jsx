@@ -1,35 +1,104 @@
 import { BtnForm } from '../../components/BtnForm';
 import { InputForm } from '../../components/InputForm';
 import { PossuiConta } from '../../components/PossuiConta';
+import React, { useState } from 'react';
 
 
 export function Login() {
+  
+        const [email, setEmail] = useState("");
+        const [senha, setSenha] = useState("");
+        
+        const [placeholders, setPlaceholders] = useState({
+            email: "Informe seu email",
+            senha: "Insira sua senha",
+        });
+
+    async function loginAdvogados () {
+        let hasError = false;
+        
+        if (email.trim() === "") {
+            document.getElementById("email").classList.add("border-red-500");
+            setPlaceholders((prev) => ({ ...prev, email: "Campo obrigatório" }));
+            hasError = true;
+        } else {
+            document.getElementById("email").classList.remove("border-red-500"); 
+        }
+        
+        if (senha.trim() === "") {
+            document.getElementById("senha").classList.add("border-red-500");
+            setPlaceholders((prev) => ({ ...prev, senha: "Campo obrigatório" }));
+            hasError = true;
+        } else {
+            document.getElementById("senha").classList.remove("border-red-500"); 
+        }
+        if (hasError) return;
+
+        const dados = {
+            email,
+            senha,
+        };
+
+        try {
+            const response = await fetch("http://localhost:8080/api/advogados/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                const token = data.token;
+    
+                localStorage.setItem("token", token);
+    
+                alert("Login realizado com sucesso!");
+            
+            } else if (response.status === 401) {
+                alert("Email ou senha incorretos.");
+            } else {
+                alert("Erro ao fazer login. Tente novamente.");
+            }
+        } catch (error) {
+            alert("Erro na conexão com o servidor.");
+        }
+    }
+
     return (
 
-    <>
-
-        <div className="flex justify-center items-center h-screen w-full p-[15px] ">
-            <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%] ">
-                <h1 className='text-[35px] font-[650] text-[#013451] mb-5'>LOGIN</h1>
-                <InputForm
-                    label="Email" 
-                    type="email" 
-                    placeholder="Informe seu email" 
-                />
-                <InputForm
-                    label="Senha" 
-                    type="password" 
-                    placeholder="Insira sua senha" 
-                />
-                <BtnForm buttonlabel="Entrar" />
-                <PossuiConta label="Não possui uma conta?" link="/cadastro" linkLabel=" Cadastre-se!" />
+        <>
+    
+            <div className="flex justify-center items-center h-screen w-full p-[15px] ">
+                <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%] ">
+                    <h1 className='text-[35px] font-[650] text-[#013451] mb-5'>LOGIN</h1>
+                    <InputForm
+                        id="email"
+                        label="Email"
+                        type="email"
+                        placeholder={placeholders.email}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <InputForm
+                        id="senha"
+                        label="Senha"
+                        type="password"
+                        placeholder={placeholders.senha}
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                    />
+                    <BtnForm buttonlabel="Entrar" onClick={loginAdvogados} />
+                    <PossuiConta label="Não possui uma conta?" link="/cadastro" linkLabel=" Cadastre-se!" />
+                </div>
+                <div className="w-[46%] h-[95%] bg-[url('assets/imgLogin.svg')] bg-cover bg-center rounded-[25px]">
+                </div>
+    
             </div>
-            <div className="w-[46%] h-[95%] bg-[url('assets/imgLogin.svg')] bg-cover bg-center rounded-[25px]">
-            </div>
+    
+        </>
+    
+        );
 
-        </div>
+    }
 
-    </>
-
-    );
-}
+    

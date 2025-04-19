@@ -4,7 +4,6 @@ import { PossuiConta } from '../../components/PossuiConta';
 import { BtnForm } from '../../components/BtnForm';
 import { useEffect, useState } from "react";
 
-
 export function Cadastro() {
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
@@ -27,10 +26,10 @@ export function Cadastro() {
         
     if (nome.trim() === "") {
         document.getElementById("nome").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, nome: "Campo obrigatório" }));
+        setPlaceholders((prev) => ({ ...prev, nome: "Campo obrigatório" })); 
         hasError = true;
     } else {
-        document.getElementById("nome").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("nome").classList.remove("border-red-500"); 
     }
 
     if (cpf.trim() === "") {
@@ -38,7 +37,7 @@ export function Cadastro() {
         setPlaceholders((prev) => ({ ...prev, cpf: "Campo obrigatório" }));
         hasError = true;
     } else {
-        document.getElementById("cpf").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("cpf").classList.remove("border-red-500"); 
     }
   
     if (registroOab.trim() === "") {
@@ -46,7 +45,7 @@ export function Cadastro() {
         setPlaceholders((prev) => ({ ...prev, registroOab: "Campo obrigatório" }));
         hasError = true;
     } else {
-        document.getElementById("registroOab").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("registroOab").classList.remove("border-red-500"); 
     }
    
     if (email.trim() === "") {
@@ -54,7 +53,7 @@ export function Cadastro() {
         setPlaceholders((prev) => ({ ...prev, email: "Campo obrigatório" }));
         hasError = true;
     } else {
-        document.getElementById("email").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("email").classList.remove("border-red-500"); 
     }
     
     if (senha.trim() === "") {
@@ -62,7 +61,7 @@ export function Cadastro() {
         setPlaceholders((prev) => ({ ...prev, senha: "Campo obrigatório" }));
         hasError = true;
     } else {
-        document.getElementById("senha").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("senha").classList.remove("border-red-500"); 
     }
 
     if (confirmarSenha.trim() === "") {
@@ -74,7 +73,7 @@ export function Cadastro() {
         setPlaceholders((prev) => ({ ...prev, confirmarSenha: "As senhas não coincidem" }));
         hasError = true;
     } else {
-        document.getElementById("confirmarSenha").classList.remove("border-red-500"); // Remove a classe de erro
+        document.getElementById("confirmarSenha").classList.remove("border-red-500"); 
     }
 
     if (hasError) return;
@@ -88,7 +87,7 @@ export function Cadastro() {
     };
 
     try {
-        const response = await fetch("http://localhost:8080/api/advogados", {
+        const response = await fetch("http://localhost:8080/api/advogados/cadastrar", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados),
