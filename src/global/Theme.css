@@ -4,7 +4,7 @@
     --bgColor-primary: #E3E3E3;
     --bgLight: #F3F3F3;
     --bgDark: #444444;
-    --bgTransparentDark: #444444b3;
+    --bgTransparentDark: #444444cf;
     --bgMedium: #656565;
 
     --color-blueDark: #013451;
@@ -14,6 +14,7 @@
     --color-light: #FFFFFF;
     --grayText: #87939e;
     --lineSeparator: #87939e70;
+    --success: #009E0D;
 
     --gradientVertical: linear-gradient(180deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
     --gradientHorizontal: linear-gradient(90deg,rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
@@ -53,59 +54,4 @@
 
       
       
-}
-
-:root {
-
-  --bgColor--primary: #E3E3E3;
-  --bgLight: #F3F3F3;
-  --bgDark: #444444;
-  --bgTransparentDark: #444444b3;
-  --bgMedium: #656565;
-
-  --color-blueDark: #013451;
-  --color-blueLight: #3C6A89;
-  --color-grayLight: #465059;
-  --color-red: #A60003;
-  --color-light: #FFFFFF;
-
-  --gradientVertical: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
-  --gradientHorizontal: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
-
-  .bgGlass {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(80px);
-    -webkit-backdrop-filter: blur(80px);
-    border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 1);
-    padding: 20px;
-  }
-
-  .typography-regular {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-  }
-
-  .typography-medium {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-  }
-
-  .typography-semibold {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
-  }
-
-  .typography-bold {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-  }
-
-  .typography-black {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 900;
-  }
-
-
-
 }

@@ -24,17 +24,18 @@ export function Layout() {
 
     const pageMapping = {
         '/home': 'home',
-        '/clientes': 'clientes',
+        '/CustomerList': 'CustomerList',
         '/processos': 'processos',
         '/agenda': 'agenda',
         '/ia': 'ia',
+        '/CustomerDetails': 'CustomerList',
     };
 
     const currentPage = pageMapping[location.pathname] || 'home';
 
     const whiteBarMapping = {
         home: "416px",
-        clientes: "312px",
+        CustomerList: "312px",
         processos: "208px",
         agenda: "104px",
         ia: "0px"
@@ -70,8 +71,8 @@ export function Layout() {
                             <IconHome actualcolor={currentPage == "home" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/clientes')}>
-                            <IconProfile actualcolor={currentPage == "clientes" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/CustomerList')}>
+                            <IconProfile actualcolor={currentPage == "CustomerList" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/processos')}>

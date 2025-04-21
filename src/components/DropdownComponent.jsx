@@ -34,7 +34,7 @@ export function DropdownComponent() {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
             >
-                <div className="bg-[var(--color-light)] w-[250px] h-[40px] flex items-center rounded-[8px] border-[var(--color-blueLight)] border-2 typography-bold text-[12px] justify-center">
+                <div className="bg-[var(--color-light)] w-[250px] h-[40px] flex items-center rounded-[8px] border-[var(--color-blueLight)] border-2 typography-bold text-[12px] justify-center cursor-pointer">
                     <span className='typography-medium text-[14px] text-[var(--color-blueLight)] flex justify-around w-full'>{dropdownTitle} <img src={icon}/></span>
                 </div>
             </Button>

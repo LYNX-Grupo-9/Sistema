@@ -7,6 +7,7 @@ import { Search } from "../../components/search";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { HistoryComponent } from "../../components/HistoryComponent";
+import { Layout } from "../../components/Layout";
 
 export function Home() {
 
@@ -25,14 +26,15 @@ export function Home() {
     return (
         <>
             <div className="flex h-full w-full">
-                <div className="pt-[20px] ml-[100px] absolute">
+                <Layout/>
+                <div className="pt-[60px] ml-[200px] absolute">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />
                     </div>
                     <div className="flex w-full ">
                         <div>
-                            <div className="bgGlass h-[450px] w-[950px]">
+                            <div className="bgGlass h-[400px] w-[950px]">
                                 <div className="flex justify-between">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Processos em destaque</span>
                                     <DropdownComponent />
