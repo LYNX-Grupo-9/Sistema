@@ -3,6 +3,8 @@ import { InputForm } from "../../components/InputForm";
 import { PossuiConta } from '../../components/PossuiConta';
 import { BtnForm } from '../../components/BtnForm';
 import { useEffect, useState } from "react";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+
 
 export function Cadastro() {
     const [nome, setNome] = useState("");
@@ -26,52 +28,122 @@ export function Cadastro() {
         
     if (nome.trim() === "") {
         document.getElementById("nome").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, nome: "Campo obrigatório" })); 
         hasError = true;
+        toast.error('Nome não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("nome").classList.remove("border-red-500"); 
     }
 
     if (cpf.trim() === "") {
         document.getElementById("cpf").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, cpf: "Campo obrigatório" }));
         hasError = true;
+        toast.error('CPF não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("cpf").classList.remove("border-red-500"); 
     }
   
     if (registroOab.trim() === "") {
         document.getElementById("registroOab").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, registroOab: "Campo obrigatório" }));
         hasError = true;
+        toast.error('OAB não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("registroOab").classList.remove("border-red-500"); 
     }
    
     if (email.trim() === "") {
         document.getElementById("email").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, email: "Campo obrigatório" }));
         hasError = true;
+        toast.error('Email não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("email").classList.remove("border-red-500"); 
     }
     
     if (senha.trim() === "") {
         document.getElementById("senha").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, senha: "Campo obrigatório" }));
         hasError = true;
+        toast.error('Senha não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("senha").classList.remove("border-red-500"); 
     }
 
     if (confirmarSenha.trim() === "") {
         document.getElementById("confirmarSenha").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, confirmarSenha: "Campo obrigatório" }));
         hasError = true;
+        toast.error('Senha não pode estar em branco', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else if (senha !== confirmarSenha) {
         document.getElementById("confirmarSenha").classList.add("border-red-500");
-        setPlaceholders((prev) => ({ ...prev, confirmarSenha: "As senhas não coincidem" }));
         hasError = true;
+        toast.error('As senhas não são iguais', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     } else {
         document.getElementById("confirmarSenha").classList.remove("border-red-500"); 
     }
@@ -94,20 +166,50 @@ export function Cadastro() {
         });
 
         if (response.ok) {
-            alert("Advogado cadastrado com sucesso!");
+            toast.success('Cadastro realizado', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
         } else {
             const erro = await response.json();
-            alert("Erro ao cadastrar: " + (erro.message || "verifique os dados."));
+            toast.error('Erro ao cadastrar', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
         }
     } catch (error) {
-        alert("Erro na conexão com o servidor.");
+        toast.error('Erro na conexão com o servidor', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
     }
 }
 
         return (
         
             <>  
-            
+            <ToastContainer />
             <div className="flex justify-center items-center h-screen w-full p-[15px]">
                 <div className="w-[46%] h-[95%] bg-[url('assets/imgLogin.svg')] bg-cover bg-center rounded-[25px]"></div>
                 <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%]">

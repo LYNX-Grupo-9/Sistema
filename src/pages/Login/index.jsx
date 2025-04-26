@@ -2,6 +2,7 @@ import { BtnForm } from '../../components/BtnForm';
 import { InputForm } from '../../components/InputForm';
 import { PossuiConta } from '../../components/PossuiConta';
 import React, { useState } from 'react';
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 
 export function Login() {
@@ -19,16 +20,36 @@ export function Login() {
         
         if (email.trim() === "") {
             document.getElementById("email").classList.add("border-red-500");
-            setPlaceholders((prev) => ({ ...prev, email: "Campo obrigatório" }));
             hasError = true;
+            toast.error('Email não pode estar em branco', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
         } else {
             document.getElementById("email").classList.remove("border-red-500"); 
         }
         
         if (senha.trim() === "") {
             document.getElementById("senha").classList.add("border-red-500");
-            setPlaceholders((prev) => ({ ...prev, senha: "Campo obrigatório" }));
             hasError = true;
+            toast.error('Senha não pode estar em branco', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
         } else {
             document.getElementById("senha").classList.remove("border-red-500"); 
         }
@@ -52,22 +73,62 @@ export function Login() {
     
                 localStorage.setItem("token", token);
     
-                alert("Login realizado com sucesso!");
+                toast.success('Login realizado', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                    });
             
             } else if (response.status === 401) {
-                alert("Email ou senha incorretos.");
+                toast.error('Email ou senha incorretos', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                    });
             } else {
-                alert("Erro ao fazer login. Tente novamente.");
+                toast.error('Erro ao fazer o login tente novamente', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                    });
             }
         } catch (error) {
-            alert("Erro na conexão com o servidor.");
+            toast.error('Erro na conexão com o servidor', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
         }
     }
 
     return (
 
         <>
-    
+            <ToastContainer/>
             <div className="flex justify-center items-center h-screen w-full p-[15px] ">
                 <div className="w-1/2 h-[95%] flex justify-center items-center flex-col mr-[2%] ">
                     <h1 className='text-[35px] font-[650] text-[#013451] mb-5'>LOGIN</h1>
