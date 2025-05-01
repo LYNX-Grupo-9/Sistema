@@ -25,16 +25,16 @@ export function Home() {
 
     return (
         <>
-            <div className="flex h-full w-full">
+            <div className="flex h-screen w-screen">
                 <Layout/>
-                <div className="pt-[60px] ml-[200px] absolute">
+                <div className="pt-[60px] ml-[13%] absolute">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />
                     </div>
                     <div className="flex w-full ">
                         <div>
-                            <div className="bgGlass h-[400px] w-[950px]">
+                            <div className="bgGlass h-[60%] w-[100%]">
                                 <div className="flex justify-between">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Processos em destaque</span>
                                     <DropdownComponent />
@@ -49,7 +49,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Data de inicio</span>
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
-                                    <div className="overflow-scroll h-[250px]">
+                                    <div className="overflow-scroll h-[300px]">
                                         <HighlightedCases
                                             idCase="1321321"
                                             Customer="Paulo Cesar Dantas"
@@ -137,10 +137,10 @@ export function Home() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mt-[24px] flex">
-                                <div className="bgGlass w-[525px] h-[350px] mr-[12px]">
+                            <div className="mt-[24px] flex h-[35%]">
+                                <div className="bgGlass w-[50%] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
-                                    <div className="h-[220px] overflow-y-scroll py-2.5">
+                                    <div className="h-[200px] overflow-y-scroll py-2.5">
                                         <OverviewNotification message="Nova consulta" />
                                         <OverviewNotification message="Nova consulta" />
                                         <OverviewNotification message="Nova consulta" />
@@ -151,11 +151,11 @@ export function Home() {
                                         <OverviewNotification message="Nova consulta" />
                                     </div>
                                 </div>
-                                <div className="bgGlass w-[400px] h-[350px] ml-[12px] flex flex-col items-center">
+                                <div className="bgGlass w-[50%] ml-[12px] flex flex-col items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Eventos do mês</span>
-                                    <div className="flex w-full pt-[20px]">
+                                    <div className="flex w-full pt-[20px] justify-between">
                                         <span className="text-[var(--grayText)] typography-medium text-[10px]">Nome do evento</span>
-                                        <span className="text-[var(--grayText)] typography-medium text-[10px] ml-[50%]">Data</span>
+                                        <span className="text-[var(--grayText)] typography-medium text-[10px]">Data</span>
                                     </div>
                                     <div className="h-[250px] w-full overflow-scroll">
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
@@ -172,14 +172,14 @@ export function Home() {
                             </div>
                         </div>
                         <div className="mx-[24px]">
-                            <div className="bgGlass w-[500px] h-[250px] mb-[24px] flex flex-col">
+                            <div className="bgGlass h-[30%] mb-[24px] flex flex-col">
                                 <span className="typography-black text-[var(--color-blueDark)] text-[28px]">{today}</span>
                                 <span className="typography-semibold text-[var(--grayText)] text-[20px]">Sem eventos hoje</span>
                                 <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
                                 <span className="typography-semibold text-[var(--color-blueDark)] text-[24px]">Próximo evento</span>
                                 <span className="typography-regular text-[var(--grayText)] text-[20px]">Atendimento Walace - 10 de março 2025</span>
                             </div>
-                            <div className="bgGlass w-[500px] h-[550px]">
+                            <div className="bgGlass h-[65%]">
                                 <div className="flex justify-between items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Histórico</span>
                                     <DropdownComponent />
