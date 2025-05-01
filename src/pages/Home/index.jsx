@@ -28,7 +28,7 @@ export function Home() {
         <>
             <div className="flex h-screen w-screen">
                 <Layout />
-                <div className="pt-[60px] ml-[13%] absolute h-full w-[84%]">
+                <div className="pt-[3%] ml-[13%] absolute h-full w-[84%]">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />
@@ -138,7 +138,7 @@ export function Home() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mt-[24px] flex h-[35%]">
+                            <div className="mt-[2%] flex h-[35%]">
                                 <div className="bgGlass w-[50%] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
                                     <div className="h-[80%] overflow-y-auto py-2.5">
@@ -172,25 +172,25 @@ export function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="mx-[24px] w-[30%]">
-                            <div className="bgGlass h-[30%] mb-[24px] flex flex-col">
-                                <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-xl md:text-2xl lg:text-3xl">
+                        <div className="mx-[2%] w-[30%]">
+                            <div className="bgGlass h-[30%] mb-[4%] flex flex-col justify-around">
+                                <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl">
                                     {today}
                                 </span>
                                 <span className="typography-semibold text-[var(--grayText)] text-base sm:text-lg md:text-xl">
                                     Sem eventos hoje
                                 </span>
                                 <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
-                                <span className="typography-semibold text-[var(--color-blueDark)] text-lg sm:text-xl md:text-2xl">
+                                <span className="typography-semibold text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl">
                                     Próximo evento
                                 </span>
-                                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl truncate">
                                     Atendimento Walace - 10 de março 2025
                                 </span>
                             </div>
 
                             <div className="bgGlass h-[65%]">
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center gap-2">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Histórico</span>
                                     <SingleSelectComponent />
                                 </div>
