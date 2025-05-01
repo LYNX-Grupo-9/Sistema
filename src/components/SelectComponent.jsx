@@ -9,6 +9,7 @@ export function SingleSelectComponent(props) {
     const handleOptionSelect = (option) => {
         setSelectedOption(option);
         setIsOpen(false);
+        props.select(option.id);
     };
 
     return (
@@ -20,12 +21,12 @@ export function SingleSelectComponent(props) {
             >
 
                 {selectedOption ? (
-                    <span className="text-[var(--color-blueDark)] typography-medium">
+                    <span className="text-[var(--color-blueDark)] typography-medium leading-5">
                         {selectedOption.label}
                     </span>
                 ) : (
                     <div className="flex items-center justify-between w-25">
-                        <span className="text-[var(--color-blueDark)] typography-semibold">
+                        <span className="text-[var(--color-blueDark)] typography-semibold leading-5">
                             Ordenar
                         </span>
                     </div>
@@ -50,7 +51,7 @@ export function SingleSelectComponent(props) {
 
             {isOpen && (
                 <div className="absolute top-14 left-0 w-[200px] max-h-[270px] rounded-[10px] border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] p-4 shadow-lg">
-                    <div className="max-h-[200px] overflow-y-auto">
+                    <div className="min-h-[200px] overflow-y-auto">
 
                         {options.map((option) => (
                             <div

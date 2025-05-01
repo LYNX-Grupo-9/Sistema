@@ -14,6 +14,11 @@ const endpoints = {
     newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
     getAllCustomer: () => api.get("/clientes"),
     
+    getOrderByName: () => api.get("/clientes/ordenado-nome"),
+    getOrderByNationality: () => api.get("/clientes/ordenado-naturalidade"),
+    getOrderByBornDate: () => api.get("/clientes/ordenado-nascimento"),
+    getOrderByCases: () => api.get("/clientes/ordenado-processos"),
+    
 }
 
 export default endpoints

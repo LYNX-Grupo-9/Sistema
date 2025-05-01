@@ -8,9 +8,10 @@ import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { CustomerItem } from "../../components/CustomerItem";
 import { Layout } from "../../components/Layout";
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
-import axios from "axios";
+
 
 export function CustomerList() {
+
     const [customerList, setCustomerList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -19,27 +20,104 @@ export function CustomerList() {
     const closeModal = () => setModalOpen(false);
 
     const [filterOptions, setFilterOptions] = useState([])
+    const [orderOptions, setOrderOptions] = useState([])
+    const [selectedOrderOptions, setSelectedOrderOptions] = useState(0)
+
+    function handleOrderChange(selectedOption) {
+        setSelectedOrderOptions(selectedOption);
+    }
 
     useEffect(() => {
         setFilterOptions([
-            { id: 1, label: "New York" },
-            { id: 2, label: "London" },
-            { id: 3, label: "Paris" },
-            { id: 4, label: "Tokyo" },
-            { id: 5, label: "Mumbai" },
-            { id: 6, label: "Sydney" },
-            { id: 7, label: "Dubai" },
-        ])
+            {
+              title: "Quantidade de processos em curso",
+              options: [
+                { id: 1, label: "0" },
+                { id: 2, label: "1-5" },
+                { id: 3, label: "6+" }
+              ]
+            },
+            {
+              title: "Nacionalidade",
+              options: [
+                { id: 4, label: "Brasileiro" },
+                { id: 5, label: "Estrangeiro" }
+            ]
+        },
+            {
+              title: "Tipo de caso",
+              options: [
+                { id: 6, label: "Cível" },
+                { id: 7, label: "Trabalhista" },
+                { id: 8, label: "Penal" },
+                { id: 9, label: "Família" },
+                { id: 10, label: "Tributário" }
+            ]
+        },
+          ])
 
-        api.getAllCustomer()
-            .then((response) => {
-                setCustomerList(response.data)
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error registering user", error);
-            });
-    }, [customerList])
+        setOrderOptions([
+            { id: 1, label: "Nome" },
+            { id: 2, label: "Número de processos " },
+            { id: 3, label: "Nacionalidade" },
+            { id: 4, label: "Data de nascimento" },
+        ])
+        
+        switch (selectedOrderOptions) {
+            case 0:
+                api.getAllCustomer()
+                    .then((response) => {
+                        setCustomerList(response.data)
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error registering user", error);
+                    });
+                break;
+            case 1:
+                api.getOrderByName()
+                    .then((response) => {
+                        setCustomerList(response.data)
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error registering user", error);
+                    });
+                break;
+            case 2:
+                api.getOrderByCases()
+                    .then((response) => {
+                        setCustomerList(response.data)
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error registering user", error);
+                    });
+                break;
+            case 3:
+                api.getOrderByNationality()
+                    .then((response) => {
+                        setCustomerList(response.data)
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error registering user", error);
+                    });
+                break;
+            case 4:
+                api.getOrderByBornDate()
+                    .then((response) => {
+                        setCustomerList(response.data)
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Error registering user", error);
+                    });
+                break;
+            default:
+                break;
+        }
+    }, [customerList, selectedOrderOptions])
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
@@ -50,7 +128,7 @@ export function CustomerList() {
                     <div className="flex gap-4">
                         <Search />
                         <MultiSelectComponent options={filterOptions} />
-                        <SingleSelectComponent options={filterOptions} />
+                        <SingleSelectComponent options={orderOptions} select={handleOrderChange}/>
                     </div>
                     <NewItemButton title="Adicionar Cliente" click={openModal} />
                 </div>
@@ -58,13 +136,13 @@ export function CustomerList() {
                 <div className="bgGlass w-full h-[650px]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[7%]">ID CLIENTE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[16%]">NOME</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">EMAIL</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[13%] ">TELEFONE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[13%] ">NACIONALIDADE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[12%] ">DATA DE REGISTRO</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[13%] ">PROCESSOS EM CURSO</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">ID CLIENTE</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]">NOME</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">EMAIL</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">TELEFONE</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">NACIONALIDADE</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]  ">DATA DE NASCIMENTO</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">PROCESSOS EM CURSO</span>
                         </div>
 
                         <div className=" h-full overflow-scroll">
@@ -77,7 +155,7 @@ export function CustomerList() {
                                     phone={item.telefone}
                                     country={item.naturalidade}
                                     dtNasc={item.dataNascimento}
-                                    qtCases={item.qtdProcessos}
+                                    qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
                                 />
                             ))}
                         </div>
