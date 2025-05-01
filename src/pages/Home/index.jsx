@@ -27,12 +27,12 @@ export function Home() {
         <>
             <div className="flex h-screen w-screen">
                 <Layout/>
-                <div className="pt-[60px] ml-[13%] absolute">
+                <div className="pt-[60px] ml-[13%] absolute h-full">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />
                     </div>
-                    <div className="flex w-full ">
+                    <div className="flex w-full h-[90%]">
                         <div>
                             <div className="bgGlass h-[60%] w-[100%]">
                                 <div className="flex justify-between">
@@ -41,7 +41,7 @@ export function Home() {
                                 </div>
 
                                 <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
-                                <div className="flex flex-col w-full">
+                                <div className="flex flex-col w-full h-[100%] p-[20px]">
                                     <div className="flex w-[85%] justify-between items-center pl-[5%]">
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px]">Id do Processo</span>
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[200px]">Nome do cliente</span>
@@ -49,7 +49,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Data de inicio</span>
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
-                                    <div className="overflow-scroll h-[300px]">
+                                    <div className="overflow-y-auto h-[75%]">
                                         <HighlightedCases
                                             idCase="1321321"
                                             Customer="Paulo Cesar Dantas"
@@ -140,7 +140,7 @@ export function Home() {
                             <div className="mt-[24px] flex h-[35%]">
                                 <div className="bgGlass w-[50%] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
-                                    <div className="h-[200px] overflow-y-scroll py-2.5">
+                                    <div className="h-[200px] overflow-y-auto py-2.5">
                                         <OverviewNotification message="Nova consulta" />
                                         <OverviewNotification message="Nova consulta" />
                                         <OverviewNotification message="Nova consulta" />
@@ -157,7 +157,7 @@ export function Home() {
                                         <span className="text-[var(--grayText)] typography-medium text-[10px]">Nome do evento</span>
                                         <span className="text-[var(--grayText)] typography-medium text-[10px]">Data</span>
                                     </div>
-                                    <div className="h-[250px] w-full overflow-scroll">
+                                    <div className="h-[250px] w-full overflow-y-auto">
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
@@ -188,7 +188,7 @@ export function Home() {
                                     <span className="text-[var(--grayText)] typography-medium text-[12px]">Nome do cliente</span>
                                     <span className="text-[var(--grayText)] typography-medium text-[12px] ml-[15%]">Processos em aberto</span>
                                 </div>
-                                <div className="h-[375px] overflow-scroll">
+                                <div className="h-[80%] overflow-y-auto">
                                     <HistoryComponent title="Lewis Hamilton" message="2" />
                                     <HistoryComponent title="Lewis Hamilton" message="2" />
                                     <HistoryComponent title="Lewis Hamilton" message="2" />
