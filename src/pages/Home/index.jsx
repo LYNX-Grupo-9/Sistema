@@ -191,7 +191,7 @@ export function Home() {
 
                             <div className="bgGlass h-[65%]">
                                 <div className="flex justify-between items-center gap-2">
-                                    <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Histórico</span>
+                                    <span className="typography-black text-[var(--color-blueDark)] md:text-lg lg:text-xl">Histórico</span>
                                     <SingleSelectComponent />
                                 </div>
                                 <div className="flex w-full pt-[20px]">
