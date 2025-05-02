@@ -50,7 +50,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Data de inicio</span>
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
-                                    <div className="overflow-y-auto h-[75%] w-full">
+                                    <div className="overflow-y-auto h-[80%] w-full">
                                         <HighlightedCases
                                             idCase="1321321"
                                             Customer="Paulo Cesar Dantas"

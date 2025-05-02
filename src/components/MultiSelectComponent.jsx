@@ -23,7 +23,7 @@ export function MultiSelectComponent(props) {
   return (
     <div className="relative z-10">
       <div
-        className="border-2 w-[200px] h-[50px] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
+        className="border-2 w-[100%] min-h-[50px] h-[100%] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer gap-4"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedOptions.length > 0 ? (
@@ -69,7 +69,7 @@ export function MultiSelectComponent(props) {
       </div>
 
       {isOpen && (
-        <div className="absolute top-14 left-0 w-[200px] max-h-[300px] rounded-[10px] border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] p-4 overflow-auto">
+        <div className="absolute top-14 left-0 w-[100%] max-h-[300px] rounded-[10px] border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] p-4 overflow-auto">
           {filterGroups.map((group, index) => (
             <div key={index} className="mb-4">
               <h4 className="text-sm text-[var(--color-blueDark)] font-semibold mb-2">

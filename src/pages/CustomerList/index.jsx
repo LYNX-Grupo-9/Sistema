@@ -122,9 +122,9 @@ export function CustomerList() {
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
             <Layout />
-            <div className=" ml-[200px] pt-[80px] w-[85%] absolute">
+            <div className=" ml-[14%] pt-[6%] w-[80%] absolute h-full">
                 <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
-                <div className="flex mt-[60px] mb-[30px] w-full justify-between">
+                <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search />
                         <MultiSelectComponent options={filterOptions} />
@@ -133,7 +133,7 @@ export function CustomerList() {
                     <NewItemButton title="Adicionar Cliente" click={openModal} />
                 </div>
 
-                <div className="bgGlass w-full h-[650px]">
+                <div className="bgGlass w-full h-[70%]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">ID CLIENTE</span>

@@ -16,7 +16,7 @@ export function SingleSelectComponent(props) {
         <div className="relative z-10">
 
             <div
-                className="border-2 w-[100%] h-[40px] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
+                className="border-2 w-[100%] min-h-[50px] h-[100%] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
             >
 
@@ -50,7 +50,7 @@ export function SingleSelectComponent(props) {
 
 
             {isOpen && (
-                <div className="absolute top-14 left-0 w-[100%] max-h-[100%] rounded-[10px] border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] p-4 shadow-lg">
+                <div className="absolute top-14 left-0 w-[100%]  rounded-[10px] border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] p-4 shadow-lg">
                     <div className="min-h-[200px] overflow-y-auto">
 
                         {options.map((option) => (
