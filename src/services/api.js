@@ -19,6 +19,11 @@ const endpoints = {
     getOrderByBornDate: () => api.get("/clientes/ordenado-nascimento"),
     getOrderByCases: () => api.get("/clientes/ordenado-processos"),
     
+    getCustomerBySearch: (searchValue) => api.get("/clientes/buscar",{
+        params: {
+            termo: searchValue,
+        },
+    }),
 }
 
 export default endpoints

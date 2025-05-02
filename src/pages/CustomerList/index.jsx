@@ -22,11 +22,18 @@ export function CustomerList() {
     const [filterOptions, setFilterOptions] = useState([])
     const [orderOptions, setOrderOptions] = useState([])
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0)
+    
+    const [searchValue, setSearchValue] = useState(""
 
+    )
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
     }
-
+    
+    function handleSearchChange(event) {
+        setSearchValue(event.target.value);
+    }
+    
     useEffect(() => {
         setFilterOptions([
             {
@@ -63,6 +70,19 @@ export function CustomerList() {
             { id: 4, label: "Data de nascimento" },
         ])
         
+        searchValue.length > 0 ? api.getCustomerBySearch(searchValue)
+            .then((response) => {  setCustomerList(response.data) })
+            .catch((error) => {
+                console.error("Erro ao buscar usuario via busca", error);
+            })
+        : api.getAllCustomer()
+            .then((response) => {
+                setCustomerList(response.data)  })
+            .catch((error) => {
+                console.error("Error registering user", error);
+            })
+    
+
         switch (selectedOrderOptions) {
             case 0:
                 api.getAllCustomer()
@@ -117,7 +137,9 @@ export function CustomerList() {
             default:
                 break;
         }
-    }, [customerList, selectedOrderOptions])
+
+
+    }, [ selectedOrderOptions, searchValue]);
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
@@ -126,7 +148,7 @@ export function CustomerList() {
                 <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
-                        <Search />
+                        <Search change={handleSearchChange}/>
                         <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange}/>
                     </div>
