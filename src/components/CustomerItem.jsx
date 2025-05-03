@@ -9,9 +9,9 @@ export function CustomerItem(props) {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    function handleNavigation(path) {
+    function handleNavigation(path, id) {
         setIsLoading(true);
-        navigate(path);
+        navigate(path, {state : {id}});
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -32,7 +32,7 @@ export function CustomerItem(props) {
                 <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[15%] mr-[2%] pr-4 truncate">{props.country}</span>
                 <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[15%] mr-[2%] pr-4 truncate">{props.dtNasc}</span>
                 <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[15%] mr-[2%] pr-4 truncate">{props.qtCases}</span>
-                <MidButton title="Detalhes" click={() => handleNavigation("/CustomerDetails")} />
+                <MidButton title="Detalhes" click={() => handleNavigation("/CustomerDetails", props.id)} />
             </div>
         </>
     )

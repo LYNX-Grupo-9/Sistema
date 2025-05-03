@@ -12,8 +12,8 @@ const api = axios.create({
 
 const endpoints = {
     newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
-    getAllCustomer: () => api.get("/clientes"),
-    
+    getAllCustomer: () => api.get("/clientes/listar"),
+    getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
     getOrderByName: () => api.get("/clientes/ordenado-nome"),
     getOrderByNationality: () => api.get("/clientes/ordenado-naturalidade"),
     getOrderByBornDate: () => api.get("/clientes/ordenado-nascimento"),

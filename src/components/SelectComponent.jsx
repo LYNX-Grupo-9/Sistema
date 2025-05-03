@@ -16,7 +16,7 @@ export function SingleSelectComponent(props) {
         <div className="relative z-10">
 
             <div
-                className="border-2 w-[100%] min-h-[50px] h-[100%] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
+                className="border-2 min-w-[200px] w-[100%] min-h-[50px] h-[100%] flex items-center justify-between px-[22px] rounded-[10px] border-[var(--color-blueLight)] bg-[var(--color-light)] cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
             >
 

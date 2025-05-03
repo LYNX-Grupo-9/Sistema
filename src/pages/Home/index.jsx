@@ -50,7 +50,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Data de inicio</span>
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
-                                    <div className="overflow-y-auto h-[80%] w-full">
+                                    <div className="overflow-y-auto h-[75%] w-full">
                                         <HighlightedCases
                                             idCase="1321321"
                                             Customer="Paulo Cesar Dantas"
@@ -158,7 +158,7 @@ export function Home() {
                                         <span className="text-[var(--grayText)] typography-medium text-[10px]">Nome do evento</span>
                                         <span className="text-[var(--grayText)] typography-medium text-[10px]">Data</span>
                                     </div>
-                                    <div className="h-[250px] w-full overflow-y-auto">
+                                    <div className="h-[80%] w-full overflow-y-auto">
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
                                         <MonthEvent title="Audiência Carlos Sainz" date="15/04/2025" />
