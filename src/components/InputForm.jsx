@@ -11,7 +11,7 @@ export function InputForm ({id, label, type, placeholder, onChange,value, ...pro
                 onChange={onChange} 
                 value={value} 
                 placeholder={placeholder} 
-                className="w-[65%] h-[40px] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>
+                className="w-[65%] h-[6vh] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>
         </div>
     );
 } 

@@ -15,13 +15,13 @@ export function InputDuplo (props) {
                     type={props.type} 
                     placeholder={props.placeholder} 
                     onChange={props.onChange1}
-                    className="w-[48%] h-[40px] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>
+                    className="w-[48%] h-[6vh] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>
                 <input 
                     id={props.id2} 
                     type={props.type2} 
                     placeholder={props.placeholder2} 
                     onChange={props.onChange2}
-                    className="w-[48%] h-[40px] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>  
+                    className="w-[48%] h-[6vh] rounded-[5px] border-2 border-[#013451] p-[15px] bg-white text-[16px]"/>  
             </div>
         </div>
     )
