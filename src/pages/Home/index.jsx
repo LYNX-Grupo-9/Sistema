@@ -4,11 +4,12 @@ import { HighlightedCases } from "../../components/HighlightedCases";
 import { MonthEvent } from "../../components/MonthEvent";
 import { OverviewNotification } from "../../components/OverviewNotification";
 import { Search } from "../../components/search";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { HistoryComponent } from "../../components/HistoryComponent";
 import { Layout } from "../../components/Layout";
 import { SingleSelectComponent } from "../../components/SelectComponent";
+import axios from "axios";
 
 export function Home() {
 
@@ -17,12 +18,22 @@ export function Home() {
     }
 
     const [today, setToday] = useState("")
+    const [processos, setProcessos] = useState([])
 
     useEffect(() => {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
-    })
+
+        axios.get("http://localhost:3000/processos")
+            .then((response) => {
+                setProcessos(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar dados:", error);
+            });
+    }, [])
 
     return (
         <>
@@ -51,90 +62,16 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
                                     <div className="overflow-y-auto h-[75%] w-full">
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
-                                        <HighlightedCases
-                                            idCase="1321321"
-                                            Customer="Paulo Cesar Dantas"
-                                            type="Aposentadoria"
-                                            initialDate="10/10/2010"
-                                            end="10/10/2020"
-                                        />
+                                        {processos.map((processo) => (
+                                            <HighlightedCases
+                                                key={processo.id}
+                                                idCase={processo.idCase}
+                                                Customer={processo.Customer}
+                                                type={processo.type}
+                                                initialDate={processo.initialDate}
+                                                end={processo.end}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
                             </div>
