@@ -14,10 +14,16 @@ export default function App() {
       <Routes>
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/home" element={<Home/>} />
+        {/* <Route path="/home" element={<Home/>} />
         <Route path="/CustomerDetails" element={<CustomerDetails/>} />
-        <Route path="/CustomerList" element={<CustomerList/>} />
-
+        <Route path="/CustomerList" element={</>} /> */}
+        <Route path="/login" index element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="home" element={<Home />} />
+          <Route path="customerdetails" element={<CustomerDetails />} />
+          <Route path="customerlist" element={<CustomerList />} />
+        </Route>
       </Routes>
 
 

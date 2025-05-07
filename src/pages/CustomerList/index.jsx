@@ -158,8 +158,7 @@ export function CustomerList() {
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
-            <Layout />
-            <div className=" ml-[14%] pt-[6%] w-[80%] absolute h-full">
+            <div className="pl-20 p-10 w-[80%] absolute h-full">
                 <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
@@ -183,7 +182,7 @@ export function CustomerList() {
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {customerList.map((item, index) => (
+                            {/* {customerList  && customerList.map((item, index) => (
                                 <CustomerItem
                                     key={item.idCliente}
                                     id={item.idCliente}
@@ -193,8 +192,7 @@ export function CustomerList() {
                                     country={item.naturalidade}
                                     dtNasc={item.dataNascimento}
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
-                                />
-                            ))}
+                                /> */}
                         </div>
                     </div>
                 </div>

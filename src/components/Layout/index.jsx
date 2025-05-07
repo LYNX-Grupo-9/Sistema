@@ -5,7 +5,7 @@ import { IconDocs } from '../IconDocs';
 import { IconCalendar } from '../IconCalendar';
 import { IconAi } from '../IconAi';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import LoadingSVG from '../../assets/loading.svg';
 
 export function Layout() {
@@ -14,6 +14,7 @@ export function Layout() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
+    // Função para lidar com a navegação e o estado de carregamento
     function handleNavigation(path) {
         setIsLoading(true);
         navigate(path);
@@ -24,21 +25,21 @@ export function Layout() {
 
     const pageMapping = {
         '/home': 'home',
-        '/CustomerList': 'CustomerList',
+        '/costumerlist': 'costumerlist',
+        '/costumerdetails': 'costumerlist',
         '/processos': 'processos',
         '/agenda': 'agenda',
         '/ia': 'ia',
-        '/CustomerDetails': 'CustomerList',
     };
 
     const currentPage = pageMapping[location.pathname] || 'home';
 
     const whiteBarMapping = {
-        home: "93%",
-        CustomerList: "83%",
-        processos: "73%",
-        agenda: "63%",
-        ia: "53%"
+        home: "416px",
+        clientes: "312px",
+        processos: "208px",
+        agenda: "104px",
+        ia: "0px"
     }
 
     const whiteBarStyle = {
@@ -66,24 +67,24 @@ export function Layout() {
                 ">
                     <img src={TemisLogo} alt="" className='w-2/3 cursor-pointer' />
 
-                    <div className='flex flex-col items-center gap-10 w-full relative h-full'>
-                        <div className='w-full flex justify-center items-center h-[8%]' onClick={() => handleNavigation('/home')}>
+                    <div className='flex flex-col items-center gap-10 w-full relative'>
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/home')}>
                             <IconHome actualcolor={currentPage == "home" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-[8%]' onClick={() => handleNavigation('/CustomerList')}>
-                            <IconProfile actualcolor={currentPage == "CustomerList" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/customerlist')}>
+                            <IconProfile actualcolor={currentPage == "costumerlist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-[8%]' onClick={() => handleNavigation('/processos')}>
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/processos')}>
                             <IconDocs actualcolor={currentPage == "processos" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-[8%]' onClick={() => handleNavigation('/agenda')}>
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/agenda')}>
                             <IconCalendar actualcolor={currentPage == "agenda" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-[8%]' onClick={() => handleNavigation('/ia')}>
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/ia')}>
                             <IconAi actualcolor={currentPage == "ia" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
