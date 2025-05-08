@@ -1,0 +1,74 @@
+/* calendar.css */
+
+.rbc-calendar {
+    font-family: 'Inter', sans-serif;
+    background: white;
+    border-radius: 8px;
+}
+
+.rbc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.rbc-toolbar-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: uppercase;
+}
+
+.rbc-btn-group button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.rbc-header {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #666;
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.rbc-event {
+    background-color: #e0f7e9;
+    color: #27ae60;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 1rem;
+    border: none;
+}
+
+.rbc-event-label {
+    display: none;
+}
+
+.rbc-date-cell {
+    padding: 0.5rem;
+    text-align: right;
+    font-weight: 500;
+}
+
+.rbc-today {
+    background: #ecf0f1;
+}
+
+.rbc-off-range-bg {
+    background: #f4f4f4;
+}
+
+.rbc-row-content {
+    color: #013451;
+    font-size: 1.25rem;
+}
+
+.rbc-day-bg {
+    padding: 10px;
+}
