@@ -34,7 +34,6 @@ export function CustomerList() {
     }
 
     useEffect(() => {
-        // Configuração das opções de filtro e ordenação
         setFilterOptions([
             {
                 title: "Quantidade de processos em curso",
@@ -71,13 +70,13 @@ export function CustomerList() {
         ]);
     }, []);
 
-    // Debounce para o valor da busca
+
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setDebouncedSearchValue(searchValue); // Define o valor debounced após o timeout
-        }, 300); // 300ms de atraso (ajuste conforme necessário)
+            setDebouncedSearchValue(searchValue); 
+        }, 300); 
 
-        return () => clearTimeout(delayDebounceFn); // Limpa o timeout anterior se o usuário continuar digitando
+        return () => clearTimeout(delayDebounceFn); 
     }, [searchValue]);
 
     useEffect(() => {
@@ -154,11 +153,11 @@ export function CustomerList() {
                     break;
             }
         }
-    }, [debouncedSearchValue, selectedOrderOptions]); // Executa sempre que o valor debounced ou a ordenação mudar
+    }, [debouncedSearchValue, selectedOrderOptions]); 
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
-            <div className="pl-20 p-10 w-[80%] absolute h-full">
+            <div className="p-[5%] w-[90%] absolute h-full">
                 <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
@@ -182,7 +181,7 @@ export function CustomerList() {
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {/* {customerList  && customerList.map((item, index) => (
+                            {customerList  && customerList.map((item, index) => (
                                 <CustomerItem
                                     key={item.idCliente}
                                     id={item.idCliente}
@@ -192,7 +191,9 @@ export function CustomerList() {
                                     country={item.naturalidade}
                                     dtNasc={item.dataNascimento}
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
-                                /> */}
+                                />
+                            ))}
+                            
                         </div>
                     </div>
                 </div>

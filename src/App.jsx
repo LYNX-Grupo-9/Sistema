@@ -14,9 +14,6 @@ export default function App() {
       <Routes>
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        {/* <Route path="/home" element={<Home/>} />
-        <Route path="/CustomerDetails" element={<CustomerDetails/>} />
-        <Route path="/CustomerList" element={</>} /> */}
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/" element={<Layout />}>
