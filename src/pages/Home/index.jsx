@@ -37,9 +37,8 @@ export function Home() {
 
     return (
         <>
-            <div className="flex h-screen w-screen">
-                <Layout />
-                <div className="pt-[3%] ml-[13%] absolute h-full w-[84%]">
+            <div className="flex h-full w-full">
+                <div className="p-10 pl-20 absolute h-full w-[84%]">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                         <Search />

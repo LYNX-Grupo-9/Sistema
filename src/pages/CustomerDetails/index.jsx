@@ -25,10 +25,9 @@ export function CustomerDetails() {
     }, []);
 
     return (
-        <div className="flex w-screen h-screen bg-[var(--bgColor-primary))]">
-            <Layout />
-            <div className="pl-[14%] pt-[6%] flex gap-10 w-[95%] h-full absolute">
-                <div className="flex flex-col gap-6 w-full">
+        <div className="flex w-full h-full bg-[var(--bgColor-primary))] items-center justify-center">   
+            <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
+                <div className="flex flex-col gap-6 w-1/2">
                     <div className="bgGlass w-full h-[10%] flex justify-center items-center">
                         <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
                     </div>
@@ -44,7 +43,7 @@ export function CustomerDetails() {
                         <CustomerInfo title="Profissão" value={customerData.profissao} />
                     </div>
                 </div>
-                <div className="flex flex-col gap-6 w-full">
+                <div className="flex flex-col gap-6 w-1/2">
                     <div className="bgGlass w-full h-[40%] flex flex-col">
                         <div className="flex w-full justify-between items-center">
                             <span className="typography-semibold text-3xl text-[var(--color-blueDark)]">Processos</span>

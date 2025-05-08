@@ -7,7 +7,7 @@ export function CustomerStep3({ user, setUser }) {
             <MainInput label="Tipo de documento de identificação" placeholder="Insira o tipo de documento" value={user.tipoDocumento} onChange={(e) => setUser({ ...user, tipoDocumento: e.target.value })}/>
             <MainInput label="Documento de identificação" placeholder="Insira o documento do cliente" value={user.documento} onChange={(e) => setUser({ ...user, documento: e.target.value })}/>
             <MainInput label="Passaporte (opcional)" placeholder="Insira o passaporte do cliente" value={user.passaporte} onChange={(e) => setUser({ ...user, passaporte: e.target.value })}/>
-            <MainInput label="Habilitação de motorista" placeholder="Insira o habilitação do cliente" value={user.cnh} onChange={(e) => setUser({ ...user, cnh: e.target.value })}/>
+            <MainInput label="Habilitação de motorista (opcional)" placeholder="Insira o habilitação do cliente" value={user.cnh} onChange={(e) => setUser({ ...user, cnh: e.target.value })}/>
             
         </div>
 

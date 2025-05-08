@@ -24,7 +24,7 @@ export function SelectInput({ label, options, value, onChange, placeholder }) {
               paddingLeft: 5,
               backgroundColor: "var(--color-light)",
               fontSize: 16,
-              borderWidth: 2
+              borderWidth: 2,
             }),
             singleValue: (base) => ({
               ...base,
