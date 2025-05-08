@@ -181,7 +181,8 @@ export function CustomerList() {
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {customerList  && customerList.map((item, index) => (
+                            {
+                            customerList  && customerList.map((item, index) => (
                                 <CustomerItem
                                     key={item.idCliente}
                                     id={item.idCliente}
@@ -193,7 +194,6 @@ export function CustomerList() {
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
                                 />
                             ))}
-                            
                         </div>
                     </div>
                 </div>
