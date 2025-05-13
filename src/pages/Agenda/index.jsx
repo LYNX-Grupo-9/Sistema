@@ -12,7 +12,8 @@ import { ptBR } from 'date-fns/locale';
 import '../../global/calendar.css';
 import { useState } from 'react';
 import { NewItemButton } from '../../components/Buttons/NewItemButton';
-
+import { CirclePlus } from 'lucide-react';
+import { FormNewEvent } from '../../components/FormNewEvent';
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -31,29 +32,34 @@ const localizer = dateFnsLocalizer({
 // Eventos de exemplo
 const events = [
     {
-        title: 'Reunião com o time ',
+        title: 'Reunião com o time',
         start: new Date(2025, 4, 10, 10, 0),
         end: new Date(2025, 4, 10, 11, 30),
-        allDay: false,
+        color: '#a6f4c5'
     },
     {
         title: 'Almoço com cliente',
         start: new Date(2025, 4, 11, 12, 0),
         end: new Date(2025, 4, 11, 13, 0),
-    },
-    {
-        title: 'Nome do evento',
-        start: new Date(2025, 4, 12, 9, 30),  // 12 de maio de 2025, 09:30
-        end: new Date(2025, 4, 12, 14, 0),    // 12 de maio de 2025, 11:00
-        allDay: false, // ou true, se for o dia inteiro
+        color: '#d0f0fd'
     }
 ];
+
+
 
 export default function Agenda() {
 
     const [currentDate, setCurrentDate] = useState(new Date());
     const [currentView, setCurrentView] = useState('month');
+    const [showEventForm, setShowEventForm] = useState(false);
 
+    function closeEventForm() {
+        setShowEventForm(false);
+    }
+
+    function openEventForm() {
+        setShowEventForm(true);
+    }
 
     return (
         <>
@@ -73,7 +79,10 @@ export default function Agenda() {
                     </div>
                     <div className="w-full h-0.5 bg-[color:#d9d9d9]"></div>
                     <div className="h-1/2 px-10 pt-10">
-                        <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Categorias</span>
+                        <div className='w-full flex justify-between items-center'>
+                            <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Categorias</span>
+                            <CirclePlus className='cursor-pointer' color='#013451' size={30} />
+                        </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
                             <Category corCategoria="#0093A6" nomeCategoria="Categoria XPTO" qtdEventos='12' />
                         </div>
@@ -81,8 +90,17 @@ export default function Agenda() {
                 </div>
                 <div className='bg-white h-screen w-full'>
                     <div className='px-5 pt-14 flex flex-col gap-4'>
-                        <div className='self-end'>
-                            <NewItemButton title="Novo evento" />
+                        <div className='self-end relative'>
+                            <NewItemButton title="Novo evento" onClick={openEventForm} />
+                            <div style={{
+                                position: 'absolute',
+                                right: 0,
+                                top: '5rem', // top-20 = 5rem (20 * 0.25rem)
+                                zIndex: 40,
+                                display: showEventForm ? 'block' : 'none'
+                            }} >
+                                <FormNewEvent onClose={closeEventForm} />
+                            </div>
                         </div>
                         <Calendar
                             localizer={localizer}
@@ -101,6 +119,17 @@ export default function Agenda() {
                                 today: 'Hoje',
                                 previous: 'Anterior',
                                 next: 'Próximo',
+                            }}
+                            eventPropGetter={(event) => {
+                                return {
+                                    style: {
+                                        backgroundColor: event.color || '#e3fcec',
+                                        color: '#000',
+                                        borderRadius: '4px',
+                                        border: 'none',
+                                        padding: '2px 4px',
+                                    },
+                                };
                             }}
                         />
                     </div>
