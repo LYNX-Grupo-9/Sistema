@@ -6,6 +6,7 @@ import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
 import { CustomerList } from "./pages/CustomerList";
+import { Institucional } from "./pages/Institucional";
 
 
 export default function App() {
@@ -19,11 +20,13 @@ export default function App() {
         <Route path="/CustomerList" element={</>} /> */}
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/institucional" element={<Institucional />} />
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<Home />} />
           <Route path="customerdetails" element={<CustomerDetails />} />
           <Route path="customerlist" element={<CustomerList />} />
         </Route>
+        
       </Routes>
 
 
