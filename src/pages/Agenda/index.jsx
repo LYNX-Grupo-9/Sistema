@@ -10,10 +10,12 @@ import getDay from 'date-fns/getDay';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { ptBR } from 'date-fns/locale';
 import '../../global/calendar.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NewItemButton } from '../../components/Buttons/NewItemButton';
 import { CirclePlus } from 'lucide-react';
 import { FormNewEvent } from '../../components/FormNewEvent';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -29,29 +31,22 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-// Eventos de exemplo
-const events = [
-    {
-        title: 'Reunião com o time',
-        start: new Date(2025, 4, 10, 10, 0),
-        end: new Date(2025, 4, 10, 11, 30),
-        color: '#a6f4c5'
-    },
-    {
-        title: 'Almoço com cliente',
-        start: new Date(2025, 4, 11, 12, 0),
-        end: new Date(2025, 4, 11, 13, 0),
-        color: '#d0f0fd'
-    }
-];
 
-
+const apiBaseURL = 'http://localhost:3001';
 
 export default function Agenda() {
 
     const [currentDate, setCurrentDate] = useState(new Date());
     const [currentView, setCurrentView] = useState('month');
     const [showEventForm, setShowEventForm] = useState(false);
+    const [categorias, setCategorias] = useState([]);
+    const [events, setEvents] = useState([]);
+    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
+
+    useEffect(() => {
+        getCategorias();
+        getEvents();
+    }, []);
 
     function closeEventForm() {
         setShowEventForm(false);
@@ -61,6 +56,57 @@ export default function Agenda() {
         setShowEventForm(true);
     }
 
+    function getCategorias() {
+
+        axios.get(apiBaseURL + `/categoria_evento?idadvogado=${idAdvogado}`)
+            .then(response => {
+                console.log('Categorias:', response.data);
+                setCategorias(response.data);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar categorias:', error);
+            });
+
+    }
+
+    function showCategorias(categorias) {
+
+        if (categorias.length > 0) {
+            const categoriesMap = categorias.map((categoria, index) => (
+                <Category
+                    key={index}
+                    corCategoria={categoria.cor}
+                    nomeCategoria={categoria.nome}
+                    qtdEventos={0}
+                />
+            ));
+
+            return categoriesMap;
+        }
+
+        return <></>;
+    }
+
+    function getEvents () {
+        axios.get(apiBaseURL + `/evento?idadvogado=${idAdvogado}`)
+        .then(response => {
+            console.log('Eventos:', response.data);
+            const eventsData = response.data.map(event => ({
+                id: event.idevento,
+                title: event.nome,
+                start:  new Date(`${event.data}T${event.hora_inicio}:00`),
+                end: new Date(`${event.data}T${event.hora_fim}:00`),
+                allDay: true,
+                color: event.cor_categoria
+            }));
+            
+            console.log('Eventos:', eventsData);
+            setEvents(eventsData);
+        }).catch(error => {
+            toast.error('Erro ao buscar eventos:', error);
+        })
+    }
+''
     return (
         <>
             <div className="flex h-[99vh] w-full">
@@ -84,7 +130,8 @@ export default function Agenda() {
                             <CirclePlus className='cursor-pointer' color='#013451' size={30} />
                         </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
-                            <Category corCategoria="#0093A6" nomeCategoria="Categoria XPTO" qtdEventos='12' />
+                            {/* <Category corCategoria="#0093A6" nomeCategoria="Categoria XPTO" qtdEventos='12' /> */}
+                            {categorias.length > 0 && showCategorias(categorias)}
                         </div>
                     </div>
                 </div>
@@ -95,11 +142,11 @@ export default function Agenda() {
                             <div style={{
                                 position: 'absolute',
                                 right: 0,
-                                top: '5rem', // top-20 = 5rem (20 * 0.25rem)
+                                top: '5rem', 
                                 zIndex: 40,
                                 display: showEventForm ? 'block' : 'none'
                             }} >
-                                <FormNewEvent onClose={closeEventForm} />
+                                <FormNewEvent onClose={closeEventForm} categorys={categorias} />
                             </div>
                         </div>
                         <Calendar
@@ -111,7 +158,7 @@ export default function Agenda() {
                             onNavigate={date => setCurrentDate(date)}
                             views={['month', 'day']}
                             culture="pt-BR"
-                            style={{ height: 800 }}
+                            style={{ height: 800 , maxWidth: '100%'}}
                             messages={{
                                 month: 'Mês',
                                 week: 'Semana',

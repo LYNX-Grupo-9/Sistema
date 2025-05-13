@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FormNEInput } from "./FormNEInput.jsx";
 import { Calendar, ChevronDown, Clock10, MoveRight, UsersRound, X } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import { Category } from "../Category/index.jsx";
 
 const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     const hour = i.toString().padStart(2, '0');
@@ -10,16 +12,64 @@ const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     };
 });
 
-export function FormNewEvent({ onClose }) {
+export function FormNewEvent({ onClose, categorys }) {
 
     const [dataSelecionada, setDataSelecionada] = useState(null);
+    const [nomeEvento, setNomeEvento] = useState("");
+    const [horaInicio, setHoraInicio] = useState("");
+    const [horaFim, setHoraFim] = useState("");
+    const [convidado, setConvidado] = useState("");
+    const [categoria, setCategoria] = useState("");
+    const [processo, setProcesso] = useState("");
+    const [descricao, setDescricao] = useState("");
+    
+    function clearInputs() {
+        setNomeEvento("");
+        setDataSelecionada(null);
+        setHoraInicio("");
+        setHoraFim("");
+        setConvidado("");
+        setCategoria("");
+        setProcesso("");
+        setDescricao("");
+    }
+
+
+    function handleSubmit() {
+
+        if (!nomeEvento || !dataSelecionada || horaInicio == '0' || horaFim == '0' || categoria == '0' || !descricao) {
+            toast.error("Por favor, preencha todos os campos antes de salvar.", {
+                theme: "colored",
+            });
+            return;
+        }
+
+        console.log({
+            nomeEvento,
+            dataSelecionada,
+            horaInicio,
+            horaFim,
+            convidado,
+            categoria,
+            processo,
+            descricao
+        });
+    }
+
+    const categoryOptions = categorys.map((category) => (
+        {
+            label: category.nome,
+            value: category.idcategoria_evento
+        }
+    ))
 
     return (
         <>
+            <ToastContainer />
             <div className="px-12 pt-11 pb-8 bg-white border-2 border-gray-300 rounded-xl flex flex-col gap-3.5 min-w-96">
                 <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">Adicionar evento</h1>
                 <div className="w-full h-0.5 bg-gray-300"></div>
-                <FormNEInput placeholder="Nome do evento" />
+                <FormNEInput placeholder="Nome do evento" value={nomeEvento} onChange={e => setNomeEvento(e.target.value)} />
                 <FormNEInput
                     type="date"
                     icon={<Calendar color='#013451' size={20} />}
@@ -32,7 +82,8 @@ export function FormNewEvent({ onClose }) {
                         type="select"
                         icon={<Clock10 color='#013451' />}
                         options={hourlyOptions}
-                        onChange={(e) => console.log(e.target.value)}
+                        value={horaInicio}
+                        onChange={(e) => setHoraInicio(e.target.value)}
                     />
                     <MoveRight color='#013451' size={25} className="w-1/3" />
                     <FormNEInput
@@ -40,16 +91,20 @@ export function FormNewEvent({ onClose }) {
                         type="select"
                         icon={<Clock10 color='#013451' />}
                         options={hourlyOptions}
-                        onChange={(e) => console.log(e.target.value)}
+                        value={horaFim}
+                        onChange={(e) => setHoraFim(e.target.value)}
                     />
                 </div>
-                <FormNEInput optionLabel="Adicionar Convidado" type="select" icon={<UsersRound color='#013451' />} />
-                <FormNEInput optionLabel="Selecionar Categoria" type="select" icon={<ChevronDown color='#013451' />} />
-                <FormNEInput optionLabel="Processo " type="select" icon={<ChevronDown color='#013451' />} />
-                <FormNEInput placeholder="Descrição" />
+                <FormNEInput optionLabel="Adicionar Convidado" type="select" icon={<UsersRound color='#013451' />} value={convidado} onChange={(e) => setConvidado(e.target.value)} />
+                <FormNEInput optionLabel="Selecionar Categoria" type="select" icon={<ChevronDown color='#013451' />} options={categoryOptions} value={categoria} onChange={(e) => setCategoria(e.target.value)} />
+                <FormNEInput optionLabel="Processo " type="select" icon={<ChevronDown color='#013451' />} value={processo} onChange={(e) => setProcesso(e.target.value)} />
+                <FormNEInput placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                 <div className="self-end flex gap-4">
-                    <button onClick={onClose} className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]">Cancelar</button>
-                    <button className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Salvar</button>
+                    <button onClick={() => {
+                        onClose()
+                        clearInputs()
+                    }} className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]">Cancelar</button>
+                    <button onClick={handleSubmit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Salvar</button>
                 </div>
             </div>
         </>

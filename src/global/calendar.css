@@ -13,6 +13,13 @@
     padding: 1rem;
 }
 
+.rbc-btn-group {
+    display: flex;
+    gap: 10px;
+
+
+}
+
 .rbc-toolbar-label {
     font-size: 1.5rem;
     font-weight: 700;
