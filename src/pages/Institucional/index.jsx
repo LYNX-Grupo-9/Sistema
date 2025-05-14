@@ -1,5 +1,8 @@
 import logo from '../../assets/temis-logo.png';
 import menu from '../../assets/menu.svg';
+import agenda from '../../assets/agenda.svg';
+import Carrossel from '../../components/Carrossel';
+
 
 export function Institucional() {
     return (
@@ -31,6 +34,48 @@ export function Institucional() {
                     </p>
                 </div>
             </div>
+            <div className='containerAgenda'>
+                <div className='containerTextAgenda'>
+                    <h1>
+                        Organize sua agenda jurídica 
+                        com clareza e precisão
+                    </h1>
+                    <p>
+                        Gerencie compromissos processuais, 
+                        reuniões e prazos com uma agenda 
+                        pensada para a rotina de escritórios de 
+                        advocacia e profissionais do Direito.
+                    </p>
+                </div>
+                <div className='containerImgAgenda'>
+                    <img src={agenda} alt="Agenda" />
+                </div>
+            </div>
+            <div className='containerSeguranca'>
+                <div className='containerTextSeguranca'>
+                    <h1>
+                        Organize seu escritório com 
+                        eficiência e segurança
+                    </h1>
+                    <p>
+                        Nosso sistema jurídico foi desenvolvido 
+                        especialmente para escritórios de advocacia 
+                        que buscam integrar todas as áreas 
+                        essenciais da prática jurídica em um único 
+                        ambiente intuitivo e seguro.
+                        Com ele, você gerencia clientes, acompanha 
+                        processos e armazena documentos de 
+                        forma simples, ágil e centralizada.
+                    </p>
+                </div>
+                <div className='containerImgSeguranca'>
+                    <div className='carrossel'>
+                        <Carrossel />
+                    </div>
+                </div>
+            </div>
+            <div className='containerContato'></div>
+            <div className='footer'></div>
         </div>
     );
 }

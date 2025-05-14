@@ -30,7 +30,7 @@ body {
       #3C6A89,
       #013451
     );
-    height: 100vh;
+    height: 90vh;
     width: 100%;
     display: flex;
     align-items: center;
@@ -87,3 +87,107 @@ body {
 
     }
 }
+
+.containerAgenda {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .containerTextAgenda {
+    width: 80%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3vh;
+
+    h1 {
+      font-size: 20px;
+      color: #013451;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 16px;
+      color: #000;
+      text-align: center;
+    }
+
+  }
+
+  .containerImgAgenda {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
+
+.containerSeguranca {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .containerTextSeguranca {
+    width: 85%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3vh;
+
+    h1 {
+      font-size: 20px;
+      color: #013451;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 16px;
+      color: #000;
+      text-align: center;
+    }
+
+  }
+
+  .containerImgSeguranca {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/src/assets/faixa.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  
+    .carrossel {
+      width: 100%;
+      height: 55%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+.containerContato {
+  width: 100%;
+  height: 100vh;
+  background-color: green;
+}
+
+.footer {
+  width: 100%;
+  height: 40vh;
+  background-color: gray;
+}
+  
