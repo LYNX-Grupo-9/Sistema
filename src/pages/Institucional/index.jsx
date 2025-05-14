@@ -2,6 +2,8 @@ import logo from '../../assets/temis-logo.png';
 import menu from '../../assets/menu.svg';
 import agenda from '../../assets/agenda.svg';
 import Carrossel from '../../components/Carrossel';
+import { Form } from '../../components/Form';
+import { Redes } from '../../components/Redes';
 
 
 export function Institucional() {
@@ -74,8 +76,54 @@ export function Institucional() {
                     </div>
                 </div>
             </div>
-            <div className='containerContato'></div>
-            <div className='footer'></div>
+            <div className='containerContato'>
+                <div className='containerTextContato'>
+                    <h1>
+                        Entre em contato
+                    </h1>
+                </div>
+                <div className='containerForm'>
+                    <Form />
+                </div>
+            </div>
+            <div className='footer'>
+                <div className="info">
+                    <div className='containerInfo'>
+                        <h1>
+                            Atendimento
+                        </h1>
+                        <p>
+                            De segunda a sábado,
+                            das 8h - 15h
+                        </p>
+                    </div>
+                    <div className='containerInfo'>
+                        <h1>
+                            Endereço
+                        </h1>
+                        <p>
+                            Rua XPTO, 660
+                        </p>
+                    </div>
+                    <div className='containerInfo'>
+                        <h1>
+                            Informações Legais
+                        </h1>
+                        <p>
+                            CNPJ: XXXXXXXXXXX
+                            OAB: XXXXXXXXXXXXXX
+                        </p>
+                    </div>
+                </div>
+                <div className="redes">
+                    <Redes />
+                </div>
+            </div>
+            <div className='direitoAutoral'>
+                <p>
+                    © Lynx Technology - todos os direitos reservados 
+                </p>
+            </div>
         </div>
     );
 }

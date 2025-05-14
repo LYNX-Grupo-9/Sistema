@@ -182,12 +182,181 @@ body {
 .containerContato {
   width: 100%;
   height: 100vh;
-  background-color: green;
+  background-color: #013451;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5vh;
+
+  .containerTextContato {
+    margin-top: 8vh;
+    width: 80%;
+    height: 5%;
+
+    h1 {
+      font-size: 30px;
+      color: #FFF;
+      text-align: center;
+      font-weight: 700;
+    }
+
+  }
+
+  .containerForm {
+    width: 80%;
+    height: 65%;
+    border: solid 4px #3C6A89;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  .containerInput {
+      width: 20vh;
+      height: 90%;
+      gap: 5vh;
+      display: flex;
+      flex-direction: column;
+
+    .input {
+      width: 100%;
+      height: 3vh;
+      display: flex;
+      flex-direction: column;
+
+        p {
+        font-size: 16px;
+        color: #FFF;
+      }
+
+      input {
+        width: 100%;
+        height: 3vh;
+        background-color: #FFF;
+        border-radius: 5px;
+        border: solid 2px #3C6A89;
+        padding-left: 10px;
+        font-size: 15px;
+      }
+
+    }
+
+    .containerMensagem {
+
+      p {
+        font-size: 16px;
+        color: #FFF;
+      }
+
+      .inputMensagem {
+        width: 100%;
+        height: 10vh;
+        background-color: #FFF;
+        border-radius: 5px;
+        border: solid 2px #3C6A89;
+        padding-left: 10px;
+        font-size: 15px;
+      }
+
+    }
+  }
+
+  button {
+      width: 100%;
+      height: 5vh;
+      background-color: #FFF;
+      border-radius: 30px;
+      color: #013451;
+      transition: all 0.3s;
+    }
+
+  button:hover {
+    cursor: pointer;
+    background-color: #9c9c9c;
+    transition: all 0.3s;
+  }
+
+  }
+
 }
 
 .footer {
   width: 100%;
   height: 40vh;
-  background-color: gray;
+  display: flex;
+  background-color: #013451;
+  align-items: center;
+
+  .info {
+    width: 70%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vh;
+
+    .containerInfo {
+      width: 75%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      h1 {
+        font-size: 15px;
+        color: #FFF;
+        font-weight: 650;
+      }
+
+      p {
+        font-size: 15px;
+        color: #FFF;
+      }
+
+    }
+
+  }
+
+  .redes {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .containerRedes {
+      width: 90%;
+      height: 60%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+
+      img {
+        width: 40px;
+        height: 40px;
+        transition: all 0.3s;
+      }
+
+      img:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+        transition: all 0.3s;
+      }
+    }
+
+  }
+
+}
+
+.direitoAutoral {
+  width: 100%;
+  height: 10vh;
+  background-color: #013451;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+  font-size: 13px;
 }
   
