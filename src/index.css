@@ -5,6 +5,10 @@ body {
     background-color: #F0F0F0;
 }
 
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 @theme {
   --breakpoint-xs: 360px;
   --breakpoint-sm: 640px;
@@ -13,4 +17,73 @@ body {
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1440px;
   --breakpoint-3xl: 1920px;
+}
+
+.sobre {
+  background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0) 40%
+    ),
+    linear-gradient(
+      to bottom,
+      #3C6A89,
+      #013451
+    );
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 25vh;
+
+    .header {
+      width: 95%;
+      height: 10vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 5%;
+      
+      .containerLogo {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        color: #FFF;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .containerMenu {
+        width: 50%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+      }
+
+    }
+
+    .containerText {
+      width: 90%;
+      height: 30vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      h1 {
+        font-size: 20px; 
+        text-align: center;
+        color: #FFF;
+        font-weight: 700;
+      }
+
+      p {
+        font-size: 16px;
+        text-align: center;
+        color: #FFF;
+      }
+
+    }
 }
