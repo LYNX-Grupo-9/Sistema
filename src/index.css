@@ -700,8 +700,8 @@ body {
 
 @media (min-width: 1024px) {
   .sobre .header {
-    width: 110%;
-    margin-left: 13%;
+    width: 100%;
+    margin-left: 12%;
     justify-content: space-between;
   }
 
@@ -755,7 +755,7 @@ body {
   
     .carrossel {
       width: 100%;
-      height: 55%;
+      height: 65%;
       display: flex;
       justify-content: center;
       align-items: center;

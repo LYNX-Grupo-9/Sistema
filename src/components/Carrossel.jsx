@@ -12,7 +12,7 @@ const Carousel = () => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    height: 'auto',
   };
 
   const imageStyle = {
@@ -31,7 +31,7 @@ const Carousel = () => {
       }}
       speed={800}
       spaceBetween={20}
-      slidesPerView={1.5}
+      slidesPerView={2.5}
       centeredSlides={true}
     >
       <SwiperSlide>
@@ -51,7 +51,7 @@ const Carousel = () => {
       </SwiperSlide>
       <SwiperSlide>
         <div style={slideStyle}>
-          <img src={img3} alt="Slide 3" style={imageStyle} />
+          <img src={img2} alt="Slide 3" style={imageStyle} />
         </div>
       </SwiperSlide>
     </Swiper>
