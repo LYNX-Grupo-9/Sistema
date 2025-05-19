@@ -12,7 +12,7 @@ export function Institucional() {
             <div className="sobre">
                 <div className="header">
                     <div className='containerLogo'>
-                        <img src={logo} alt="Logo"  width="70%" height="70%" />
+                        <img src={logo} alt="Logo" />
                         <p>
                             TemisHub
                         </p>
