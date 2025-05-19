@@ -6,7 +6,7 @@ import { SingleSelectComponent } from "../../components/SelectComponent";
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { CustomerItem } from "../../components/CustomerItem";
-import { Layout } from "../../components/Layout";
+
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
 
 export function CustomerList() {
@@ -23,7 +23,7 @@ export function CustomerList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
-    const [debouncedSearchValue, setDebouncedSearchValue] = useState(""); // Para o debounce
+    const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
 
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
@@ -181,7 +181,7 @@ export function CustomerList() {
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {customerList  && customerList.map((item, index) => (
+                            {customerList.map((item, index) => (
                                 <CustomerItem
                                     key={item.idCliente}
                                     id={item.idCliente}
