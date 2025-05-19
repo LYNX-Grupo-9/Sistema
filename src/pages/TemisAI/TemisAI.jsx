@@ -1,50 +1,77 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ChatAIInput } from "../../components/inputs/ChatAIButton";
-
+import { GoogleGenAI } from "@google/genai";
+import { StepOne } from "../../components/Steps/TemisAI/StepOne";
+import { StepTwo } from "../../components/Steps/TemisAI/StepTwo";
+import LoadingSVG from "../../assets/loading.svg";
+import { apikey } from "../../config/gemini";
 export function TemisAI() {
+  const [prompt, setPrompt] = useState("");
+  const [promptResponse, setPromptResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [chatHistory, setChatHistory] = useState([]);
+
+  function handlePromptChange(newPrompt) {
+    setPrompt(newPrompt);
+    setChatHistory((prev) => [
+      ...prev,
+      { role: "user", parts: [{ text: newPrompt }] }
+    ]);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:3002/api/gemini/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: 'Qual a capital da França?' }),
+        if (!prompt) return;
+        setIsLoading(true);
+        const ai = new GoogleGenAI({
+          apiKey: apikey
         });
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+        async function main() {
+          const response = await ai.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: chatHistory,
+          });
+
+          const text = response.text;
+
+          setPromptResponse(text);
+
+          const updatedHistory = [
+            ...chatHistory,
+            { role: "model", parts: [{ text }] }
+          ];
+  
+          setChatHistory(updatedHistory);
         }
 
-        const data = await res.json();
-        console.log(data.text);
+        await main();
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+console.log(chatHistory)
       }
     };
 
     fetchData();
-  }, []);
-  return (
-    <div className="flex flex-col items-center justify-center h-screen w-full">
-      <div className="flex flex-col w-[60%]">
-        <span className="text-6xl typography-semibold"
-          style={{
-            background: "var(--gradientHorizontal)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>Olá, Alvany,
-        </span>
+  }, [prompt]);
 
-        <span className="text-5xl typography-semibold mb-[4%]"
-          style={{
-            background: "var(--gradientHorizontal)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>como posso ajudar?
-        </span>
-        <ChatAIInput />
+  return (
+    <>
+      {isLoading && (
+        <div className="fixed inset-0 bg-[var(--bgTransparentDark)] backdrop-blur-sm flex justify-center items-center z-50">
+          <img src={LoadingSVG} alt="Carregando" className="w-16" />
+        </div>
+      )}
+      <div className="flex flex-col items-center justify-start h-screen w-full ">
+        <div className="flex flex-col w-[60%] h-[90%] overflow-y-auto justify-center">
+          {!prompt ? <StepOne /> : <StepTwo prompt={prompt} promptResponse={promptResponse} chatHistory={chatHistory}/>}
+          <ChatAIInput change={handlePromptChange} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
