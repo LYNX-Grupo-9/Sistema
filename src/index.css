@@ -753,10 +753,10 @@ body {
 
     .containerText {
       width: 90%;
-      height: 30vh;
+      height: 25vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-evenly;
 
       h1 {
         font-size: 20px; 
