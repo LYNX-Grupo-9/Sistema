@@ -1,4 +1,6 @@
-export function Category({ nomeCategoria, corCategoria, qtdEventos }) {
+import { Ban, Pen } from "lucide-react";
+
+export function Category({ nomeCategoria, corCategoria, idCategoria }) {
 
     const colorStyle = `w-2 h-2 rounded-full bg-[color:${corCategoria}]`;
 
@@ -7,8 +9,13 @@ export function Category({ nomeCategoria, corCategoria, qtdEventos }) {
         <div className='flex items-center gap-2.5'>
             <div style={{ backgroundColor: corCategoria, width: '12px', height: '12px', borderRadius: '100%' }}></div>
             <p className='text-2xl font-semibold text-[color:var(--color-grayLight)]'>{nomeCategoria}</p>
-            <div className='flex flex-1 justify-end'>
-                <span className='bg-[color:var(--bgLightGray)] px-5 py-1 rounded-full text-[var(--color-blueDark)] font-semibold text-xl'>{qtdEventos}</span>
+            <div className='flex flex-1 justify-end gap-2'>
+                <button className='cursor-pointer'>
+                    <Pen width={20} color='#3C6A89' />
+                </button>
+                <button className='cursor-pointer'>
+                    <Ban width={20} color="#3C6A89" />
+                </button>
             </div>
         </div>
     )

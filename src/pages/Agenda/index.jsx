@@ -32,7 +32,7 @@ const localizer = dateFnsLocalizer({
 });
 
 
-const apiBaseURL = 'http://localhost:3001';
+const apiBaseURL = 'http://localhost:8080/api/';
 
 export default function Agenda() {
 
@@ -44,9 +44,11 @@ export default function Agenda() {
     const idAdvogado = localStorage.getItem('idAdvogado') || 1;
 
     useEffect(() => {
-        getCategorias();
-        getEvents();
-    }, []);
+        if (idAdvogado) {
+            getCategorias(idAdvogado);
+            getEvents(idAdvogado);
+        }
+    }, [idAdvogado]);
 
     function closeEventForm() {
         setShowEventForm(false);
@@ -56,9 +58,14 @@ export default function Agenda() {
         setShowEventForm(true);
     }
 
-    function getCategorias() {
+    function getCategorias(idAdvogado) {
 
-        axios.get(apiBaseURL + `/categoria_evento?idadvogado=${idAdvogado}`)
+        axios.get(apiBaseURL + `categorias/advogado/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+            }
+        })
             .then(response => {
                 console.log('Categorias:', response.data);
                 setCategorias(response.data);
@@ -76,7 +83,7 @@ export default function Agenda() {
                 <Category
                     key={index}
                     corCategoria={categoria.cor}
-                    nomeCategoria={categoria.nome}
+                    nomeCategoria={categoria.nomeEvento}
                     qtdEventos={0}
                 />
             ));
@@ -87,26 +94,48 @@ export default function Agenda() {
         return <></>;
     }
 
-    function getEvents () {
-        axios.get(apiBaseURL + `/evento?idadvogado=${idAdvogado}`)
-        .then(response => {
-            console.log('Eventos:', response.data);
-            const eventsData = response.data.map(event => ({
-                id: event.idevento,
-                title: event.nome,
-                start:  new Date(`${event.data}T${event.hora_inicio}:00`),
-                end: new Date(`${event.data}T${event.hora_fim}:00`),
-                allDay: true,
-                color: event.cor_categoria
-            }));
-            
-            console.log('Eventos:', eventsData);
-            setEvents(eventsData);
-        }).catch(error => {
-            toast.error('Erro ao buscar eventos:', error);
+    function getEvents(idAdvogado) {
+        axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+            }
         })
+            .then(response => {
+                console.log('Eventos:', response.data);
+                const eventsData = adapterEventRequisitionToValidEvent(response.data);
+                setEvents(eventsData);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos:', error);
+            })
     }
-''
+
+    function adapterEventRequisitionToValidEvent(events) {
+        try {
+            const eventsData = events.map(event => ({
+                id: event.idEvento,
+                title: event.nome,
+                start: new Date(`${event.dataReuniao}T${event.horaInicio}`),
+                end: new Date(`${event.dataReuniao}T${event.horaFim}`),
+                allDay: false,
+                color: event.cor,
+            }));
+
+            console.log('Eventos adaptados:', eventsData);
+
+            return eventsData;
+        } catch (error) {
+            console.error('Erro ao adaptar eventos:', error);
+            return [];
+        }
+    }
+
+
+    function openModalDetails(idEvento) {
+        console.log('Abrindo modal de detalhes do evento');
+    } 
+
+
     return (
         <>
             <div className="flex h-[99vh] w-full">
@@ -142,11 +171,11 @@ export default function Agenda() {
                             <div style={{
                                 position: 'absolute',
                                 right: 0,
-                                top: '5rem', 
+                                top: '5rem',
                                 zIndex: 40,
                                 display: showEventForm ? 'block' : 'none'
                             }} >
-                                <FormNewEvent onClose={closeEventForm} categorys={categorias} />
+                                <FormNewEvent onClose={closeEventForm} />
                             </div>
                         </div>
                         <Calendar
@@ -158,7 +187,7 @@ export default function Agenda() {
                             onNavigate={date => setCurrentDate(date)}
                             views={['month', 'day']}
                             culture="pt-BR"
-                            style={{ height: 800 , maxWidth: '100%'}}
+                            style={{ height: 800, maxWidth: 1220 }}
                             messages={{
                                 month: 'Mês',
                                 week: 'Semana',
@@ -167,6 +196,12 @@ export default function Agenda() {
                                 previous: 'Anterior',
                                 next: 'Próximo',
                             }}
+
+                            onSelectEvent={(event) => {
+                                console.log('Evento clicado:', event);
+                                
+                            }}
+
                             eventPropGetter={(event) => {
                                 return {
                                     style: {

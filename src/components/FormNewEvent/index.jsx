@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormNEInput } from "./FormNEInput.jsx";
 import { Calendar, ChevronDown, Clock10, MoveRight, UsersRound, X } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import { Category } from "../Category/index.jsx";
+import axios from "axios";
+import { set } from "date-fns";
 
 const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     const hour = i.toString().padStart(2, '0');
@@ -12,7 +14,7 @@ const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     };
 });
 
-export function FormNewEvent({ onClose, categorys }) {
+export function FormNewEvent({ onClose }) {
 
     const [dataSelecionada, setDataSelecionada] = useState(null);
     const [nomeEvento, setNomeEvento] = useState("");
@@ -20,9 +22,27 @@ export function FormNewEvent({ onClose, categorys }) {
     const [horaFim, setHoraFim] = useState("");
     const [convidado, setConvidado] = useState("");
     const [categoria, setCategoria] = useState("");
-    const [processo, setProcesso] = useState("");
+    const [processo, setProcesso] = useState("0");
     const [descricao, setDescricao] = useState("");
-    
+    const [categoriaOptions, setCategoriaOptions] = useState([]);
+    const [clientesOptions, setClientesOptions] = useState([]);
+    const [processosOptions, setProcessosOptions] = useState([]);
+    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
+
+    useEffect(() => {
+        if (idAdvogado) {
+            getCategorias(idAdvogado);
+            getClientsByIdAdvogado(idAdvogado);
+        }
+    }, [])
+
+    useEffect(() => {
+        if (convidado != '0') {
+            getProcessosByIdCliente(convidado);
+        }
+    }, [convidado]);
+
+
     function clearInputs() {
         setNomeEvento("");
         setDataSelecionada(null);
@@ -44,24 +64,103 @@ export function FormNewEvent({ onClose, categorys }) {
             return;
         }
 
-        console.log({
-            nomeEvento,
-            dataSelecionada,
-            horaInicio,
-            horaFim,
-            convidado,
-            categoria,
-            processo,
-            descricao
-        });
+        const eventoPayload = {
+            nome: nomeEvento,
+            descricao,
+            local: "",
+            linkReuniao: "",
+            idAdvogado: Number(idAdvogado),
+            idCliente: Number(convidado) ,
+            idCategoria: Number(categoria),
+            idProcesso: Number(processo),
+            dataReuniao: dataSelecionada ? new Date(dataSelecionada).toISOString() : null,
+            horaInicio: `${horaInicio}:00`,
+            horaFim: `${horaFim}:00`,
+        };
+
+        axios.post(`http://localhost:8080/api/eventos`,
+            eventoPayload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+                }
+            }
+        ).then(response => {
+            console.log('Evento criado com sucesso:', response.data);x
+            toast.success("Evento criado com sucesso!")
+            onClose();
+            clearInputs();
+        }).catch(error => {
+            console.error('Erro ao criar evento:', error);
+            toast.error("Erro ao criar evento, tente novamente.")
+        })
+
+
+        console.log(JSON.stringify({eventoPayload}));
     }
 
-    const categoryOptions = categorys.map((category) => (
-        {
-            label: category.nome,
-            value: category.idcategoria_evento
-        }
-    ))
+    function getCategorias(idAdvogado) {
+
+        axios.get(`http://localhost:8080/api/categorias/advogado/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+            }
+        })
+            .then(response => {
+
+                const categoriesMap = response.data.map((categoria, index) => ({
+                    label: categoria.nomeEvento,
+                    value: categoria.idCategoriaEvento,
+                }));
+
+                // console.log('Categorias Options:', categoriesMap);
+                setCategoriaOptions(categoriesMap);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar categorias:', error);
+            });
+
+    }
+
+    function getClientsByIdAdvogado(idAdvogado) {
+        axios.get(`http://localhost:8080/api/clientes/listarPorAdvogado/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+            }
+        })
+            .then(response => {
+                const clientsMap = response.data.map((cliente, index) => ({
+                    label: cliente.nome,
+                    value: cliente.idCliente,
+                }));
+                setClientesOptions(clientsMap);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar clientes:', error);
+            });
+    }
+
+    function getProcessosByIdCliente(idCliente) {
+        axios.get(`http://localhost:8080/api/processos/cliente/${idCliente}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+            }
+        }).then(response => {
+            console.log('Processos:', response.data);
+            const processosMap = response.data.map((processo, index) => ({
+                label: processo.descricao,
+                value: processo.idProcesso,
+            }));
+            setProcessosOptions(processosMap);
+        }).catch(error => {
+            console.error('Erro ao buscar processos:', error);
+        })
+    }   
+
 
     return (
         <>
@@ -95,9 +194,9 @@ export function FormNewEvent({ onClose, categorys }) {
                         onChange={(e) => setHoraFim(e.target.value)}
                     />
                 </div>
-                <FormNEInput optionLabel="Adicionar Convidado" type="select" icon={<UsersRound color='#013451' />} value={convidado} onChange={(e) => setConvidado(e.target.value)} />
-                <FormNEInput optionLabel="Selecionar Categoria" type="select" icon={<ChevronDown color='#013451' />} options={categoryOptions} value={categoria} onChange={(e) => setCategoria(e.target.value)} />
-                <FormNEInput optionLabel="Processo " type="select" icon={<ChevronDown color='#013451' />} value={processo} onChange={(e) => setProcesso(e.target.value)} />
+                <FormNEInput optionLabel="Adicionar Convidado" type="select" icon={<UsersRound color='#013451' />} value={convidado} options={clientesOptions} onChange={(e) => setConvidado(e.target.value)} />
+                <FormNEInput optionLabel="Selecionar Categoria" type="select" icon={<ChevronDown color='#013451' />} options={categoriaOptions} value={categoria} onChange={(e) => setCategoria(e.target.value)} />
+                <FormNEInput optionLabel="Processo " type="select" icon={<ChevronDown color='#013451' />} value={processo} options={processosOptions} disabled={convidado == 0} onChange={(e) => setProcesso(e.target.value)} />
                 <FormNEInput placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                 <div className="self-end flex gap-4">
                     <button onClick={() => {

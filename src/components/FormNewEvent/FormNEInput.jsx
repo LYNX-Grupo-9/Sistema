@@ -6,24 +6,27 @@ import { Calendar } from "lucide-react";
 
 registerLocale("pt-BR", ptBR);
 
-export function FormNEInput({ icon, type = "text", options = [], optionLabel, value, onChange, ...props }) {
+export function FormNEInput({ icon, type = "text", options = [], optionLabel, value, onChange, disabled, ...props }) {
+    const baseStyle = `w-full h-[50px] rounded-[10px] text-[14px] bg-[var(--color-light)]`;
+    const borderStyle = disabled
+        ? "border-2 border-gray-300 text-gray-400 cursor-not-allowed"
+        : "border-2 border-[var(--color-blueLight)] text-gray-500";
 
     return (
         <div className="relative w-full flex items-center">
-            {icon && type != "date" && (
+            {icon && type !== "date" && (
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                    {icon}
+                    {icon}  
                 </div>
             )}
 
             {type === "select" ? (
                 <select
                     {...props}
+                    disabled={disabled}
                     value={value}
                     onChange={onChange}
-                    className={`w-full h-[50px] rounded-[10px] border-2 border-[var(--color-blueLight)] 
-                    bg-[var(--color-light)] text-[16px] pr-4 ${icon ? 'pl-12' : 'px-[15px]'}
-                    appearance-none truncate text-gray-500`}
+                    className={`${baseStyle} ${borderStyle} pr-4 ${icon ? 'pl-12' : 'px-[15px]'} appearance-none truncate`}
                 >
                     {optionLabel && <option value="0">{optionLabel}</option>}
                     {options.map((opt, idx) => (
@@ -33,15 +36,16 @@ export function FormNEInput({ icon, type = "text", options = [], optionLabel, va
                     ))}
                 </select>
             ) : type === "date" ? (
-                <div className="flex items-center gap-4 rounded-[10px] w-full border-2 border-[var(--color-blueLight)] bg-[var(--color-light)] pl-[15px]">
-                    <Calendar color='#013451'/>
+                <div className={`${baseStyle} ${borderStyle} flex items-center gap-4 pl-[15px]`}>
+                    <Calendar color={disabled ? '#9CA3AF' : '#013451'} />
                     <DatePicker
                         selected={value}
                         onChange={onChange}
                         locale="pt-BR"
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecione uma data"
-                        className={`w-full h-[50px] text-[14px] bg-transparentp-[15px] focus:outline-none `}
+                        disabled={disabled}
+                        className={`w-full h-[50px] bg-transparent focus:outline-none ${disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-500'}`}
                         {...props}
                     />
                 </div>
@@ -51,8 +55,8 @@ export function FormNEInput({ icon, type = "text", options = [], optionLabel, va
                     type={type}
                     value={value}
                     onChange={onChange}
-                    className={`w-full h-[50px] rounded-[10px] border-2 border-[var(--color-blueLight)] 
-                    bg-[var(--color-light)] text-[14px] p-[15px] ${icon ? 'pl-12' : ''}`}
+                    disabled={disabled}
+                    className={`${baseStyle} ${borderStyle} p-[15px] ${icon ? 'pl-12' : ''}`}
                 />
             )}
         </div>
