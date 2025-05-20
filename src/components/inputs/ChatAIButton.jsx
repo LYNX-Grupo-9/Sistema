@@ -26,14 +26,14 @@ export function ChatAIInput(props) {
   };
 
   return (
+    <>
     <div
       className="bg-[var(--color-light)] flex justify-between
-     items-center w-[55%] h-auto min-h-[60px] max-h-[200px]
+      items-center w-full h-auto min-h-[60px] max-h-[200px]
       overflow-y-auto border-2 border-[var(--color-blueLight)]
-       rounded-xl text-[var(--gradientHorizontal)] px-[2%]
-       fixed bottom-[5%] z-50
-       "
-    >
+      rounded-xl text-[var(--gradientHorizontal)] px-[2%]
+      "
+      >
       <textarea
         ref={textareaRef}
         className="w-[95%] outline-none resize-none overflow-hidden "
@@ -46,16 +46,17 @@ export function ChatAIInput(props) {
         }}
         onChange={(e) => setPrompt(e.target.value)}
         onKeyDown={handleKeyDown}
-      />
+        />
       <img
         src={sendIcon}
-        className="w-[2%] fixed left-[78%] cursor-pointer"
+        className="w-[3%]  cursor-pointer"
         onClick={() => {
           props.change(prompt);
-          setPrompt(""); // Limpa o input após envio
+          setPrompt(""); 
         }}
         alt="Enviar"
-      />
+        />
     </div>
+  </>
   );
 }

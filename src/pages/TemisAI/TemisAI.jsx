@@ -43,7 +43,7 @@ export function TemisAI() {
             ...chatHistory,
             { role: "model", parts: [{ text }] }
           ];
-  
+
           setChatHistory(updatedHistory);
         }
 
@@ -52,7 +52,6 @@ export function TemisAI() {
         console.error("Error fetching data:", error);
       } finally {
         setIsLoading(false);
-console.log(chatHistory)
       }
     };
 
@@ -66,12 +65,31 @@ console.log(chatHistory)
           <img src={LoadingSVG} alt="Carregando" className="w-16" />
         </div>
       )}
-      <div className="flex flex-col items-center justify-start h-screen w-full ">
-        <div className="flex flex-col w-[60%] h-[90%] overflow-y-auto justify-center">
-          {!prompt ? <StepOne /> : <StepTwo prompt={prompt} promptResponse={promptResponse} chatHistory={chatHistory}/>}
-          <ChatAIInput change={handlePromptChange} />
+      <div className="flex flex-col items-center h-screen w-full relative overflow-y-auto">
+        <div className="flex flex-col w-[60%] h-full pb-[80px] ">
+          {!prompt ? (
+            <>
+              <div className="fixed w-[57%] h-full pb-4 z-10 flex flex-col justify-center">
+                <StepOne />
+                <ChatAIInput change={handlePromptChange} />
+              </div>
+            </>
+          ) : (
+            <>
+              <StepTwo
+                prompt={prompt}
+                promptResponse={promptResponse}
+                chatHistory={chatHistory}
+              />
+              <div className="fixed bottom-0 w-[57%] pb-4 z-10">
+                <ChatAIInput change={handlePromptChange} />
+              </div>
+            </>
+          )}
         </div>
+
       </div>
+
     </>
   );
 }
