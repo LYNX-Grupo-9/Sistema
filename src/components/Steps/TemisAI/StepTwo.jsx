@@ -8,7 +8,7 @@ export function StepTwo({ chatHistory }) {
       {chatHistory.map((item, index) => (
           <div
           key={index}
-          className="flex flex-col items-end  w-full justify-end gap-5 pb-[20%]"
+          className="flex flex-col items-end  w-full justify-end gap-5 pb-[10%]"
           >
           {item.role === "user" && (
               <div className="max-w-[60%] flex bg-[var(--color-light)] rounded-2xl shadow-lg p-[2%] self-end mt-[5%]">
