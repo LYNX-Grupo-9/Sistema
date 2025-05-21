@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChatAIInput } from "../../components/inputs/ChatAIButton";
+import { ChatAIInput } from "../../components/inputs/ChatIAInput";
 import { GoogleGenAI } from "@google/genai";
 import { StepOne } from "../../components/Steps/TemisAI/StepOne";
 import { StepTwo } from "../../components/Steps/TemisAI/StepTwo";
