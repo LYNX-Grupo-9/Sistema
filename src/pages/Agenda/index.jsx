@@ -16,6 +16,7 @@ import { CirclePlus } from 'lucide-react';
 import { FormNewEvent } from '../../components/FormNewEvent';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import ModalEventDetails from '../../components/ModalEventDetails';
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -41,7 +42,8 @@ export default function Agenda() {
     const [showEventForm, setShowEventForm] = useState(false);
     const [categorias, setCategorias] = useState([]);
     const [events, setEvents] = useState([]);
-    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
+    const [idEventDetails, setIdEventDetails] = useState(null);
+    const idAdvogado = localStorage.getItem('idAdvogado') || 1; 
 
     useEffect(() => {
         if (idAdvogado) {
@@ -131,13 +133,30 @@ export default function Agenda() {
     }
 
 
-    function openModalDetails(idEvento) {
+
+    const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
+
+    function closeModalDetails() {
+        setIsModalDetailsOpen(false);
+    }
+
+    function openModalDetails() {
+        setIsModalDetailsOpen(true);
+    }
+
+    function openEventoDetails(idEvento) {
         console.log('Abrindo modal de detalhes do evento');
-    } 
+        setIdEventDetails(idEvento);
+        openModalDetails();
+    }
 
 
     return (
         <>
+        {
+            isModalDetailsOpen &&
+            <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails}/>
+        }
             <div className="flex h-[99vh] w-full">
                 <div className="min-w-2/7 bg-[color:var(--bg-light)] h-full">
                     <div className="h-1/2 px-10 pt-10">
@@ -198,10 +217,8 @@ export default function Agenda() {
                             }}
 
                             onSelectEvent={(event) => {
-                                console.log('Evento clicado:', event);
-                                
+                                openEventoDetails(event.id);
                             }}
-
                             eventPropGetter={(event) => {
                                 return {
                                     style: {
