@@ -11,7 +11,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 export function CustomerRegister({ isOpen, onClose }) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [step, setStep] = useState(1);
-
+  const idAdvogado = localStorage.getItem("idAdvogado");
   const [user, setUser] = useState({
     nome: "",
     documento: "",
@@ -26,7 +26,7 @@ export function CustomerRegister({ isOpen, onClose }) {
     passaporte: "",
     cnh: "",
     naturalidade: "",
-    idAdvogado: 1
+    idAdvogado: Number(idAdvogado),
   });
 
  const errorMessage = (message) => toast.error(message, {

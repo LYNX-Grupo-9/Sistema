@@ -10,7 +10,7 @@ import { CustomerItem } from "../../components/CustomerItem";
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
 
 export function CustomerList() {
-
+    const idAdvogado = localStorage.getItem("idAdvogado");
     const [customerList, setCustomerList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -95,7 +95,7 @@ export function CustomerList() {
         } else {
             switch (selectedOrderOptions) {
                 case 0:
-                    api.getAllCustomer()
+                    api.getAllCustomer(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);

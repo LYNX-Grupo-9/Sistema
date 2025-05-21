@@ -7,9 +7,9 @@ export function ChatAIInput(props) {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Impede quebra de linha
+      event.preventDefault();
       props.change(prompt);
-      setPrompt(""); // Limpa o input após envio
+      setPrompt(""); 
     }
   
     if (event.key === "Tab") {
