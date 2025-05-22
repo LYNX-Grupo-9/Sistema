@@ -43,7 +43,7 @@ export default function Agenda() {
     const [categorias, setCategorias] = useState([]);
     const [events, setEvents] = useState([]);
     const [idEventDetails, setIdEventDetails] = useState(null);
-    const idAdvogado = localStorage.getItem('idAdvogado') || 1; 
+    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
 
     useEffect(() => {
         if (idAdvogado) {
@@ -153,10 +153,10 @@ export default function Agenda() {
 
     return (
         <>
-        {
-            isModalDetailsOpen &&
-            <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails}/>
-        }
+            {
+                isModalDetailsOpen &&
+                <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} />
+            }
             <div className="flex h-[99vh] w-full">
                 <div className="min-w-2/7 bg-[color:var(--bg-light)] h-full">
                     <div className="h-1/2 px-10 pt-10">
