@@ -83,7 +83,7 @@ export function CustomerList() {
         setLoading(true);
 
         if (debouncedSearchValue.length > 0) {
-            api.getCustomerBySearch(debouncedSearchValue)
+            api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
                     setCustomerList(response.data);
                     setLoading(false);
@@ -106,7 +106,7 @@ export function CustomerList() {
                         });
                     break;
                 case 1:
-                    api.getOrderByName()
+                    api.getOrderByName(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -117,7 +117,7 @@ export function CustomerList() {
                         });
                     break;
                 case 2:
-                    api.getOrderByCases()
+                    api.getOrderByCases(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -128,7 +128,7 @@ export function CustomerList() {
                         });
                     break;
                 case 3:
-                    api.getOrderByNationality()
+                    api.getOrderByNationality(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -139,7 +139,7 @@ export function CustomerList() {
                         });
                     break;
                 case 4:
-                    api.getOrderByBornDate()
+                    api.getOrderByBornDate(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);

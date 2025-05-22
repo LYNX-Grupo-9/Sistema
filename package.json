@@ -24,6 +24,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "highlight.js": "^11.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-input-mask": "^3.0.0-alpha.2",
@@ -32,6 +33,7 @@
     "react-router-dom": "^7.4.1",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
+    "rehype-highlight": "^7.0.2",
     "tailwindcss": "^4.1.1"
   },
   "devDependencies": {
