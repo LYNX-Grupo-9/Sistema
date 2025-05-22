@@ -4,6 +4,8 @@ import { Autoplay } from 'swiper/modules';
 import img1 from '../assets/image 2.svg';
 import img2 from '../assets/image 3.svg';
 import img3 from '../assets/image 6.svg';
+import img4 from '../assets/image 4.svg';
+import img5 from '../assets/image 5.svg';
 
 import 'swiper/css';
 
@@ -17,7 +19,6 @@ const Carousel = () => {
 
   const imageStyle = {
     width: '100%',
-    maxWidth: '500px',
     height: 'auto',
   };
 
@@ -51,7 +52,12 @@ const Carousel = () => {
       </SwiperSlide>
       <SwiperSlide>
         <div style={slideStyle}>
-          <img src={img2} alt="Slide 3" style={imageStyle} />
+          <img src={img4} alt="Slide 3" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img5} alt="Slide 3" style={imageStyle} />
         </div>
       </SwiperSlide>
     </Swiper>
