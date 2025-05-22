@@ -7,7 +7,7 @@ import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
 import { CustomerList } from "./pages/CustomerList";
 import { TemisAI } from "./pages/TemisAI/TemisAI";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 export default function App() {
@@ -16,18 +16,35 @@ export default function App() {
       <Routes>
         <Route path="/login" index element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/login" index element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
-          <Route path="customerdetails" element={<CustomerDetails />} />
-          <Route path="customerlist" element={<CustomerList />} />
-          <Route path="temisai" element={<TemisAI />} />
+
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route path="home" element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
+          <Route path="customerdetails" element={
+            <ProtectedRoute>
+              <CustomerDetails />
+            </ProtectedRoute>}
+          />
+          <Route path="customerlist" element={
+            <ProtectedRoute>
+              <CustomerList />
+            </ProtectedRoute>
+          } />
+          <Route path="temisai" element={
+            <ProtectedRoute>
+              <TemisAI />
+            </ProtectedRoute>
+          } />
 
         </Route>
       </Routes>
-
-
     </Router>
   );
 }
