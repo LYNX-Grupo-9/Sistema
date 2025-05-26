@@ -36,7 +36,7 @@ export default function ModalEventDetails({ idEvento, onClose }) {
         return axios.get(apiBaseURL + `eventos/${idEvento}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`
             }
         })
             .then(response => {
@@ -53,7 +53,7 @@ export default function ModalEventDetails({ idEvento, onClose }) {
         return axios.get(apiBaseURL + `clientes/${idCliente}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`
             }
         })
             .then(response => {

@@ -17,6 +17,7 @@ import { FormNewEvent } from '../../components/FormNewEvent';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ModalEventDetails from '../../components/ModalEventDetails';
+import FormCreateCategory from '../../components/FormCreateCategory';
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -43,6 +44,7 @@ export default function Agenda() {
     const [categorias, setCategorias] = useState([]);
     const [events, setEvents] = useState([]);
     const [idEventDetails, setIdEventDetails] = useState(null);
+    const [showCategoryForm, setShowCategoryForm] = useState(false);
     const idAdvogado = localStorage.getItem('idAdvogado') || 1;
 
     useEffect(() => {
@@ -65,7 +67,7 @@ export default function Agenda() {
         axios.get(apiBaseURL + `categorias/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
             }
         })
             .then(response => {
@@ -100,7 +102,7 @@ export default function Agenda() {
         axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BlbWFpbC5jb20iLCJpYXQiOjE3NDc0MTIxMDIsImV4cCI6MTc1MTAxMjEwMn0.Y3q5ZoMdUo-1EnKlDMCXr3ye74TCXW2oflIdN3VzRhPtwwTg0Jdjvw1EdqjvgLEQWH7prBc1kKMtTsdwTRtUPw`,
+                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
             }
         })
             .then(response => {
@@ -150,6 +152,13 @@ export default function Agenda() {
         openModalDetails();
     }
 
+    function closeCategoryForm() {
+        setShowCategoryForm(false);
+    }
+
+    function openCategoryForm() {
+        setShowCategoryForm(true);
+    }
 
     return (
         <>
@@ -173,9 +182,17 @@ export default function Agenda() {
                     </div>
                     <div className="w-full h-0.5 bg-[color:#d9d9d9]"></div>
                     <div className="h-1/2 px-10 pt-10">
-                        <div className='w-full flex justify-between items-center'>
+                        <div className='w-full flex justify-between items-center relative'>
                             <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Categorias</span>
-                            <CirclePlus className='cursor-pointer' color='#013451' size={30} />
+                            <CirclePlus className='cursor-pointer' color='#013451' size={30} onClick={openCategoryForm}/>
+                            <div style={{
+                                position: 'absolute',
+                                left: 0,
+                                zIndex: 40,
+                                display: showCategoryForm ? 'block' : 'none'
+                            }} >
+                                <FormCreateCategory onClose={closeCategoryForm} />
+                            </div>
                         </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
                             {/* <Category corCategoria="#0093A6" nomeCategoria="Categoria XPTO" qtdEventos='12' /> */}
