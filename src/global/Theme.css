@@ -56,6 +56,9 @@
     font-weight: 900;
   }
 
+  --gradientVertical: linear-gradient(180deg, #013451 0%, rgba(60, 106, 137, 1) 100%);
+  --gradientHorizontal: linear-gradient(90deg, #013451 0%, rgba(60, 106, 137, 1) 20%);
+
 
 
 }

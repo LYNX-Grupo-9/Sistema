@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { FormNEInput } from "./FormNEInput.jsx";
 import { Calendar, ChevronDown, Clock10, MoveRight, UsersRound, X } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
-import { Category } from "../Category/index.jsx";
 import axios from "axios";
-import { set } from "date-fns";
+
 
 const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     const hour = i.toString().padStart(2, '0');
@@ -87,7 +86,7 @@ export function FormNewEvent({ onClose }) {
                 }
             }
         ).then(response => {
-            console.log('Evento criado com sucesso:', response.data);x
+            console.log('Evento criado com sucesso:', response.data);
             toast.success("Evento criado com sucesso!")
             onClose();
             clearInputs();
