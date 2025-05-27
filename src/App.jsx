@@ -6,7 +6,8 @@ import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
 import { CustomerList } from "./pages/CustomerList";
-import { TemisAI } from "./pages/TemisAI/TemisAI";
+import { TemisAI } from "./pages/TemisAI/";
+import { CaseList } from "./pages/CaseList/";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 
@@ -40,6 +41,11 @@ export default function App() {
           <Route path="temisai" element={
             <ProtectedRoute>
               <TemisAI />
+            </ProtectedRoute>
+          } />
+          <Route path="caselist" element={
+            <ProtectedRoute>
+              <CaseList />
             </ProtectedRoute>
           } />
 
