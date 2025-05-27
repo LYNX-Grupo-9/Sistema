@@ -15,7 +15,7 @@ import { NewItemButton } from '../../components/Buttons/NewItemButton';
 import { CirclePlus } from 'lucide-react';
 import { FormNewEvent } from '../../components/FormNewEvent';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import ModalEventDetails from '../../components/ModalEventDetails';
 import FormCreateCategory from '../../components/FormCreateCategory';
 import ModalDelete from '../../components/ModalDelete';
@@ -57,6 +57,8 @@ export default function Agenda() {
     const idAdvogado = localStorage.getItem('idAdvogado');
 
 
+
+
     useEffect(() => {
         if (idAdvogado) {
             fetchData();
@@ -71,7 +73,7 @@ export default function Agenda() {
             toast.error('ID do advogado não encontrado. Por favor, faça login novamente.');
         }
     }
-    
+
     function closeEventForm() {
         setShowEventForm(false);
     }
@@ -79,6 +81,8 @@ export default function Agenda() {
     function openEventForm() {
         setShowEventForm(true);
     }
+
+
 
     function getCategorias(idAdvogado) {
 
@@ -119,7 +123,7 @@ export default function Agenda() {
                     qtdEventos={0}
                     excluirCategoria={() => {
                         openModalDelete(categoria.idCategoriaEvento, "categoria");
-                    } }
+                    }}
                 />
             ));
 
@@ -199,7 +203,7 @@ export default function Agenda() {
     function openModalDelete(id, itemType) {
         setIdToDelete(id);
         setDeleteItemType(itemType);
-        
+
         setIsModalDeleteOpen(true);
     }
 
@@ -220,11 +224,11 @@ export default function Agenda() {
 
     }
 
-    
+
 
     return (
         <>
-            {isModalDeleteOpen && <ModalDelete  onClose={closeModalDelete} idToDelete={idToDelete} itemType={deleteItemType} onDeleteSuccess={fetchData}/>}
+            {isModalDeleteOpen && <ModalDelete onClose={closeModalDelete} idToDelete={idToDelete} itemType={deleteItemType} onDeleteSuccess={fetchData} />}
             {
                 isModalDetailsOpen &&
                 <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} onDeleteSuccess={fetchData} />

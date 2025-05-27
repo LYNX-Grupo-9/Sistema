@@ -163,7 +163,6 @@ export function FormNewEvent({ onClose }) {
 
     return (
         <>
-            <ToastContainer />
             <div className="px-12 pt-11 pb-8 bg-white border-2 border-gray-300 rounded-xl flex flex-col gap-3.5 min-w-96">
                 <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">Adicionar evento</h1>
                 <div className="w-full h-0.5 bg-gray-300"></div>

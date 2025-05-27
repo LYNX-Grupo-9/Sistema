@@ -9,14 +9,24 @@ import { CustomerList } from "./pages/CustomerList";
 import Agenda from "./pages/Agenda";
 import { TemisAI } from "./pages/TemisAI/TemisAI";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
 
 
 export default function App() {
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Routes>
         <Route path="/" index element={<Login />} />
-        <Route path="/login"  element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
 
         <Route path="/" element={

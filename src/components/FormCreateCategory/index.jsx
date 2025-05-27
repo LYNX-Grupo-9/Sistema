@@ -149,7 +149,6 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
 
     return (
         <>
-            <ToastContainer />
             <div className="bg-white p-4 flex flex-col gap-4 rounded-lg w-72">
                 <X onClick={onClose} className="self-end" />
                 <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">{isEdit ? "Editar" : "Adicionar "} categoria</h1>

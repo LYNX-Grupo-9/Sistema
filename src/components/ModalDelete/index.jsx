@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuccess }) {
+export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuccess, notify }) {
 
     const [nameItem, setNameItem] = useState(null);
 
@@ -80,24 +81,24 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
         if (itemType === "categoria") {
             deleteCategoria(id).then(response => {
                 if (response) {
-                    console.log("Categoria excluída com sucesso.");
+                    toast.success("Categoria excluída com sucesso.", "success");
                     if (onDeleteSuccess) {
                         onDeleteSuccess();
                     }
                 } else {
-                    console.error("Erro ao excluir categoria.");
+                    toast.error("Erro ao excluir categoria.");
                 }
 
             })
         } else if (itemType === "evento") {
             deleteEvento(id).then(response => {
                 if (response) {
-                    console.log("Evento excluído com sucesso.");
+                    toast.success("Evento excluído com sucesso.");
                     if (onDeleteSuccess) {
                         onDeleteSuccess();
                     }
                 } else {
-                    console.error("Erro ao excluir evento.");
+                    toast.error("Erro ao excluir evento.");
                 }
             });
         }
