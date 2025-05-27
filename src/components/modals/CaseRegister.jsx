@@ -3,20 +3,24 @@ import React, { useState } from "react";
 import CloseIcon from "../../assets/icons/close.svg";
 import { Stepper } from "../Stepper";
 import { LgButton } from "../Buttons/LgButton";
-import {StepOne} from "../Steps/Case/StepOne";
-import {StepTwo} from "../Steps/Case/StepTwo";
-import {StepThree} from "../Steps/Case/StepThree";
+import { StepOne } from "../Steps/Case/StepOne";
+import { StepTwo } from "../Steps/Case/StepTwo";
+import { StepThree } from "../Steps/Case/StepThree";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { ClientTypeSelection } from "../Steps/Case/ClientTypeSelection";
+import { CustomerSelection } from "../Steps/Case/CustomerSelection";
 
 
 export function CaseRegister({ isOpen, onClose }) {
 
+
+  const [clientSelectStep, setClientSelectStep] = useState(1);
   const [step, setStep] = useState(1);
   const idAdvogado = localStorage.getItem("idAdvogado");
   const [caseData, setCaseData] = useState({
     titulo: "",
     numero: "",
-    cliente: "Teste",
+    idCliente: "",
     status: "",
     classe: "",
     assunto: "",
@@ -29,7 +33,7 @@ export function CaseRegister({ isOpen, onClose }) {
     idAdvogado: Number(idAdvogado),
   });
 
- const errorMessage = (message) => toast.error(message, {
+  const errorMessage = (message) => toast.error(message, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -39,31 +43,41 @@ export function CaseRegister({ isOpen, onClose }) {
     progress: undefined,
     theme: "colored",
     transition: Bounce,
-    });
+  });
+  
+  const handleClientSelectionType = (selection) => {
+    if (selection === "existing") {
+      setClientSelectStep(2); 
+      console.log("Existing client selected");
+    } else if (selection === "new") {
+      setClientSelectStep(3); 
+      console.log("New client selected");
+    }
+  }
 
-    const handleNextStep = () => {
-        if (step === 1) {
-          if (!caseData.titulo.trim()) return errorMessage("Preencha o título do caso");
-          if (!caseData.numero.trim()) return errorMessage("Preencha o número do caso");
-          if (!caseData.cliente.trim()) return errorMessage("Preencha o nome do cliente");
-          if (!caseData.status.trim()) return errorMessage("Selecione o status do caso")
-          setStep(2);
-        } 
-        else if (step === 2) {
-          if (!caseData.classe.trim()) return errorMessage("Preencha a classe do caso");
-          if (!caseData.assunto.trim()) return errorMessage("Preencha o assunto do caso");
-          if (!caseData.tribunal.trim()) return errorMessage("Preencha o tribunal responsável");
-          if (!caseData.valor.trim() || isNaN(caseData.valor)) return errorMessage("Preencha um valor válido para o caso");
-          setStep(3);
-        } 
-        else if (step === 3) {
-          if (!caseData.autor.trim()) return errorMessage("Preencha o nome do autor");
-          if (!caseData.advRequerente.trim()) return errorMessage("Preencha o nome do advogado requerente");
-          if (!caseData.reu.trim()) return errorMessage("Preencha o nome do réu");
-          if (!caseData.advReu.trim()) return errorMessage("Preencha o nome do advogado do réu");
-          handleRegister();
-        }
-      };
+  const handleNextStep = () => {
+    if (step === 1) {
+      if (!caseData.titulo.trim()) return errorMessage("Preencha o título do caso");
+      if (!caseData.numero.trim()) return errorMessage("Preencha o número do caso");
+      if (!caseData.cliente.trim()) return errorMessage("Preencha o nome do cliente");
+      if (!caseData.status.trim()) return errorMessage("Selecione o status do caso")
+      setStep(2);
+    }
+    else if (step === 2) {
+      if (!caseData.classe.trim()) return errorMessage("Preencha a classe do caso");
+      if (!caseData.assunto.trim()) return errorMessage("Preencha o assunto do caso");
+      if (!caseData.tribunal.trim()) return errorMessage("Preencha o tribunal responsável");
+      if (!caseData.valor.trim() || isNaN(caseData.valor)) return errorMessage("Preencha um valor válido para o caso");
+      setStep(3);
+    }
+    else if (step === 3) {
+      if (!caseData.autor.trim()) return errorMessage("Preencha o nome do autor");
+      if (!caseData.advRequerente.trim()) return errorMessage("Preencha o nome do advogado requerente");
+      if (!caseData.reu.trim()) return errorMessage("Preencha o nome do réu");
+      if (!caseData.advReu.trim()) return errorMessage("Preencha o nome do advogado do réu");
+      handleRegister();
+    }
+  };
 
 
 
@@ -78,28 +92,35 @@ export function CaseRegister({ isOpen, onClose }) {
           <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={onClose} />
         </div>
 
-        <Stepper currentStep={step} />
+        {
+          clientSelectStep === 1  ? <ClientTypeSelection handleClientSelectionType={handleClientSelectionType}/> : 
+          clientSelectStep === 2 ? <CustomerSelection caseData={caseData} setCaseData={setCaseData}/> :
+            <>
+              <Stepper currentStep={step} />
 
-        <div className="w-full flex-1 overflow-y-auto">
-          {step === 1 ? (
-            <StepOne caseData={caseData} setCaseData={setCaseData} />
-          ) : step === 2 ? (
-            <StepTwo caseData={caseData} setCaseData={setCaseData} />
-          ) : (
-            <StepThree caseData={caseData} setCaseData={setCaseData} />
-          )}
-        </div>
+              <div className="w-full flex-1 overflow-y-auto">
+                {step === 1 ? (
+                  <StepOne caseData={caseData} setCaseData={setCaseData} />
+                ) : step === 2 ? (
+                  <StepTwo caseData={caseData} setCaseData={setCaseData} />
+                ) : (
+                  <StepThree caseData={caseData} setCaseData={setCaseData} />
+                )}
+              </div>
 
-        <div className="w-full flex justify-evenly mt-[5px]">
-          {step > 1 && (
-            <LgButton title="Voltar" click={() => setStep(step - 1)} type="alternative" />
-          )}
-          {step === 3 ? (
-            <LgButton title="Cadastrar" click={handleNextStep} />
-          ) : (
-            <LgButton title="Proximo" click={handleNextStep} />
-          )}
-        </div>
+              <div className="w-full flex justify-evenly mt-[5px]">
+                {step > 1 && (
+                  <LgButton title="Voltar" click={() => setStep(step - 1)} type="alternative" />
+                )}
+                {step === 3 ? (
+                  <LgButton title="Cadastrar" click={handleNextStep} />
+                ) : (
+                  <LgButton title="Proximo" click={handleNextStep} />
+                )}
+              </div>
+
+            </>
+        }
       </div>
       <ToastContainer
         position="top-right"
