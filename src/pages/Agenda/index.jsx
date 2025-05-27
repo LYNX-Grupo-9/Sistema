@@ -227,7 +227,7 @@ export default function Agenda() {
             {isModalDeleteOpen && <ModalDelete  onClose={closeModalDelete} idToDelete={idToDelete} itemType={deleteItemType} onDeleteSuccess={fetchData}/>}
             {
                 isModalDetailsOpen &&
-                <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} />
+                <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} onDeleteSuccess={fetchData} />
             }
             <div className="flex h-[99vh] w-full">
                 <div className="min-w-2/7 bg-[color:var(--bg-light)] h-full">

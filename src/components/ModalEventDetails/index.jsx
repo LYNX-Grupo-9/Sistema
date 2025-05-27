@@ -1,14 +1,16 @@
 import axios from "axios";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react"
+import ModalDelete from "../ModalDelete";
 
 const apiBaseURL = 'http://localhost:8080/api/';
 
-export default function ModalEventDetails({ idEvento, onClose }) {
+export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }) {
 
     const [event, setEvent] = useState(null);
     const [client, setClient] = useState(null);
     const [process, setProcess] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         if (idEvento !== undefined) {
@@ -16,7 +18,6 @@ export default function ModalEventDetails({ idEvento, onClose }) {
                 if (evento) {
                     setEvent(evento);
 
-                    // After getting the event, fetch the client if clienteId exists
                     if (evento.idCliente) {
                         getClientById(evento.idCliente).then(cliente => {
                             if (cliente) {
@@ -121,6 +122,21 @@ export default function ModalEventDetails({ idEvento, onClose }) {
         return `${hour}:${minute}`;
     }
 
+    function handleDelete() {
+        setShowDeleteModal(true);
+    }
+
+    function handleDeleteSuccess() {
+        // Fechar o modal de detalhes
+        onClose();
+
+        // Notificar o componente pai que o evento foi excluído
+        if (onDeleteSuccess) {
+            onDeleteSuccess();
+        }
+    }
+
+
     return (
         <>
             <div className="fixed inset-0 bg-[#0000005d] flex items-center justify-center z-40 " onClick={onClose}>
@@ -165,7 +181,13 @@ export default function ModalEventDetails({ idEvento, onClose }) {
                                 <span className="font-bold text-[var(--color-grayLight)] text-xl">Descrição: </span>
                                 <span className="font-semibold text-[var(--color-grayLight)] text-lg">{process && process.descricao ? process.descricao : "Processo indisponível"}</span>
                             </div>
-                            <div className="self-end flex gap-4">
+                            <div className="self-end flex gap-4 mt-4">
+                                <button
+                                    className="cursor-pointer px-8 py-2 bg-red-500 text-white rounded-[10px]"
+                                    onClick={handleDelete}
+                                >
+                                    Excluir
+                                </button>
                                 <button className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
                                 <button className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]" onClick={onClose}>Ok</button>
                             </div>
@@ -173,6 +195,14 @@ export default function ModalEventDetails({ idEvento, onClose }) {
                     </div>
                 </div>
             </div>
+            {showDeleteModal && (
+                <ModalDelete
+                    onClose={() => setShowDeleteModal(false)}
+                    itemType="evento"
+                    idToDelete={idEvento}
+                    onDeleteSuccess={handleDeleteSuccess}
+                />
+            )}
         </>
     )
 }   

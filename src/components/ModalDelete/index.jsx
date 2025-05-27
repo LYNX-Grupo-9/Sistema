@@ -16,9 +16,18 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
                     console.error("Categoria não encontrada.");
                 }
             });
+        } else if (itemType === "evento") {
+            getEventoById(idToDelete).then(evento => {
+                if (evento) {
+                    console.log("Evento encontrado:", evento);
+                    setNameItem(evento.titulo);
+                } else {
+                    console.error("Evento não encontrado.");
+                }
+            });
         }
 
-    })
+    }, [itemType, idToDelete]);
 
     function getCategoriaById(idCategoria) {
         const token = localStorage.getItem("token");
@@ -43,6 +52,29 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
             });
     }
 
+    function getEventoById(idEvento) {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            return false;
+        }
+
+        return axios.get(`http://localhost:8080/api/eventos/${idEvento}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.error("Erro ao buscar evento:", error);
+                return false;
+            });
+    }
+
 
     function handleDelete(itemType, id) {
         if (itemType === "categoria") {
@@ -57,7 +89,42 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
                 }
 
             })
+        } else if (itemType === "evento") {
+            deleteEvento(id).then(response => {
+                if (response) {
+                    console.log("Evento excluído com sucesso.");
+                    if (onDeleteSuccess) {
+                        onDeleteSuccess();
+                    }
+                } else {
+                    console.error("Erro ao excluir evento.");
+                }
+            });
         }
+    }
+
+    function deleteEvento(idEvento) {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            return;
+        }
+
+        return axios.delete(`http://localhost:8080/api/eventos/${idEvento}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Evento excluído com sucesso:", response.data);
+                return true;
+            })
+            .catch(error => {
+                console.error("Erro ao excluir evento:", error);
+                return false;
+            });
     }
 
     function deleteCategoria(idCategoria) {
@@ -90,7 +157,11 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
             <div className="fixed inset-0 flex items-center justify-center z-[999]">
                 <div className="bg-white p-6 rounded-lg shadow-lg h-fit w-80">
                     <h2 className="text-lg font-semibold mb-4">Confirmação de Exclusão</h2>
-                    {itemType == "categoria" ? <p>Você tem certeza que deseja exluir a categoria "{nameItem}"?</p> : ""}
+                    {itemType === "categoria" ?
+                        <p>Você tem certeza que deseja excluir a categoria "{nameItem}"?</p> :
+                        itemType === "evento" ?
+                            <p>Você tem certeza que deseja excluir o evento "{nameItem}"?</p> :
+                            ""}
                     <div className="mt-4 flex justify-end gap-2">
                         <button
                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
