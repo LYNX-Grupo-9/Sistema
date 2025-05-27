@@ -52,7 +52,7 @@ body {
         gap: 25vh;
   
         .header-mobile {
-          width: 95%;
+          width: 90%;
           height: 10vh;
           display: flex;
           justify-content: center;
@@ -69,16 +69,20 @@ body {
             font-size: 18px;
             font-weight: 700;
   
-            img {
-              width: 60%;
-              height: 85%;
+            .logo {
+              width: 50%;
+              height: 90%;
+              background-image: url('/src/assets/temis-logo.png');
+              background-position: center;
+              background-size: contain;
+              background-repeat: no-repeat;
             }
   
           }
   
           .containerMenu {
-            width: 50%;
-            height: 50%;
+            width: 40%;
+            height: 55%;
             display: flex;
             align-items: center;
           }
@@ -396,29 +400,80 @@ body {
     display: flex;
     flex-direction: column;
 
-    .sobre .header-mobile {
-    padding: 0 2rem;
-    justify-content: space-between;
-  }
-
-  .sobre .header-mobile .containerLogo {
-    width: auto;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-
-  .sobre .header-mobile .containerLogo img {
-    width: 70%;
-    height: 95%; 
-    object-fit: contain;
-  }
-
-  .sobre .header-mobile .containerMenu img {
-    width: 100%;
-    height: 95%;
-    object-fit: contain;
-  }
+    .sobre {
+        background: radial-gradient(circle at center,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 40%),
+          linear-gradient(to bottom,
+            #3C6A89,
+            #013451);
+        height: 90vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 25vh;
+  
+        .header-mobile {
+          width: 90%;
+          height: 10vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          justify-content: space-around;
+          margin-top: 5%;
+  
+          .containerLogo {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: #FFF;
+            font-size: 18px;
+            font-weight: 700;
+  
+            .logo {
+              width: 30%;
+              height: 90%;
+              background-image: url('/src/assets/temis-logo.png');
+              background-position: center;
+              background-size: contain;
+              background-repeat: no-repeat;
+            }
+  
+          }
+  
+          .containerMenu {
+            width: 40%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+          }
+  
+        }
+  
+        .containerText {
+          width: 90%;
+          height: 30vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+  
+          h1 {
+            font-size: 20px;
+            text-align: center;
+            color: #FFF;
+            font-weight: 700;
+          }
+  
+          p {
+            font-size: 16px;
+            text-align: center;
+            color: #FFF;
+          }
+  
+        }
+      }
 
   .containerImgAgenda {
     width: 100%;
@@ -569,29 +624,80 @@ body {
     display: flex;
     flex-direction: column;
 
-    .sobre .header-mobile {
-    padding: 0 2rem;
-    justify-content: space-between;
-  }
-
-  .sobre .header-mobile .containerLogo {
-    width: auto;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-
-  .sobre .header-mobile .containerLogo img {
-    width: 70%;
-    height: 95%; 
-    object-fit: contain;
-  }
-
-  .sobre .header-mobile .containerMenu img {
-    width: 100%;
-    height: 95%;
-    object-fit: contain;
-  }
+    .sobre {
+        background: radial-gradient(circle at center,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 40%),
+          linear-gradient(to bottom,
+            #3C6A89,
+            #013451);
+        height: 90vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 25vh;
+  
+        .header-mobile {
+          width: 90%;
+          height: 10vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          justify-content: space-around;
+          margin-top: 5%;
+  
+          .containerLogo {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: #FFF;
+            font-size: 18px;
+            font-weight: 700;
+  
+            .logo {
+              width: 28%;
+              height: 95%;
+              background-image: url('/src/assets/temis-logo.png');
+              background-position: center;
+              background-size: contain;
+              background-repeat: no-repeat;
+            }
+  
+          }
+  
+          .containerMenu {
+            width: 30%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+          }
+  
+        }
+  
+        .containerText {
+          width: 90%;
+          height: 30vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+  
+          h1 {
+            font-size: 20px;
+            text-align: center;
+            color: #FFF;
+            font-weight: 700;
+          }
+  
+          p {
+            font-size: 16px;
+            text-align: center;
+            color: #FFF;
+          }
+  
+        }
+      }
 
   .containerImgAgenda {
     width: 100%;
@@ -749,79 +855,79 @@ body {
     flex-direction: column;
 
     .sobre {
-  background: radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0) 40%
-    ),
-    linear-gradient(
-      to bottom,
-      #3C6A89,
-      #013451
-    );
-    height: 90vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 10vh;
-
-    .header-mobile {
-      width: 100%;
-      height: 10vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 5%;
-      
-      .containerLogo {
-        width: 20%;
-        height: 100%;
+        background: radial-gradient(circle at center,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 40%),
+          linear-gradient(to bottom,
+            #3C6A89,
+            #013451);
+        height: 90vh;
+        width: 100%;
         display: flex;
         align-items: center;
-        color: #FFF;
-        font-size: 18px;
-        font-weight: 700;
-
-        img {
-          width: 65%;
-          height: 90%;
+        flex-direction: column;
+        gap: 25vh;
+  
+        .header-mobile {
+          width: 90%;
+          height: 10vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          justify-content: space-around;
+          margin-top: 5%;
+  
+          .containerLogo {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: #FFF;
+            font-size: 18px;
+            font-weight: 700;
+  
+            .logo {
+              width: 28%;
+              height: 100%;
+              background-image: url('/src/assets/temis-logo.png');
+              background-position: center;
+              background-size: contain;
+              background-repeat: no-repeat;
+            }
+  
+          }
+  
+          .containerMenu {
+            width: 25%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+          }
+  
         }
-
+  
+        .containerText {
+          width: 90%;
+          height: 25vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+  
+          h1 {
+            font-size: 20px;
+            text-align: center;
+            color: #FFF;
+            font-weight: 700;
+          }
+  
+          p {
+            font-size: 16px;
+            text-align: center;
+            color: #FFF;
+          }
+  
+        }
       }
-
-      .containerMenu {
-        width: 30%;
-        height: 50%;
-        display: flex;
-        align-items: center;
-      }
-
-    }
-
-    .containerText {
-      width: 90%;
-      height: 25vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-
-      h1 {
-        font-size: 20px; 
-        text-align: center;
-        color: #FFF;
-        font-weight: 700;
-      }
-
-      p {
-        font-size: 16px;
-        text-align: center;
-        color: #FFF;
-      }
-
-    }
-}
 
   .containerImgAgenda {
     width: 100%;
@@ -988,9 +1094,13 @@ body {
         display: flex;
         align-items: center;
   
-        img {
-          width: 38%;
+        .logoDesktop {
+          width: 45%;
           height: 100%;
+          background-image: url('/src/assets/temis-logo.png');
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
         }
   
         p {
@@ -1031,6 +1141,13 @@ body {
           color: #013451;
           border-radius: 50px;
           font-weight: 600;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
   
       }
@@ -1079,6 +1196,13 @@ body {
           color: #013451;
           border-radius: 30px;
           font-weight: 550;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
 
       }
@@ -1345,9 +1469,13 @@ body {
         display: flex;
         align-items: center;
   
-        img {
+        .logoDesktop {
           width: 40%;
           height: 100%;
+          background-image: url('/src/assets/temis-logo.png');
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
         }
   
         p {
@@ -1388,6 +1516,13 @@ body {
           color: #013451;
           border-radius: 50px;
           font-weight: 600;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
   
       }
@@ -1436,6 +1571,13 @@ body {
           color: #013451;
           border-radius: 30px;
           font-weight: 550;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
 
       }
@@ -1702,9 +1844,13 @@ body {
         display: flex;
         align-items: center;
   
-        img {
-          width: 42%;
+        .logoDesktop {
+          width: 40%;
           height: 100%;
+          background-image: url('/src/assets/temis-logo.png');
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
         }
   
         p {
@@ -1747,6 +1893,13 @@ body {
           border-radius: 50px;
           font-weight: 600;
           font-size: 25px;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
   
       }
@@ -1796,6 +1949,13 @@ body {
           border-radius: 40px;
           font-weight: 550;
           font-size: 25px;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          cursor: pointer;
+          background-color: #b6b6b6;
+          transition: all 0.3s;
         }
 
       }
