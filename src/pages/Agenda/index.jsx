@@ -18,6 +18,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ModalEventDetails from '../../components/ModalEventDetails';
 import FormCreateCategory from '../../components/FormCreateCategory';
+import ModalDelete from '../../components/ModalDelete';
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -45,15 +46,32 @@ export default function Agenda() {
     const [events, setEvents] = useState([]);
     const [idEventDetails, setIdEventDetails] = useState(null);
     const [showCategoryForm, setShowCategoryForm] = useState(false);
-    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
+    const [isEditCategory, setIsEditCategory] = useState(false);
+    const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
+    const [EditCategoryId, setEditCategoryId] = useState(null);
+
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+    const [idToDelete, setIdToDelete] = useState(null);
+    const [deleteItemType, setDeleteItemType] = useState(null);
+
+    const idAdvogado = localStorage.getItem('idAdvogado');
+
 
     useEffect(() => {
         if (idAdvogado) {
-            getCategorias(idAdvogado);
-            getEvents(idAdvogado);
+            fetchData();
         }
     }, [idAdvogado]);
 
+    function fetchData() {
+        if (idAdvogado) {
+            getCategorias(idAdvogado);
+            getEvents(idAdvogado);
+        } else {
+            toast.error('ID do advogado não encontrado. Por favor, faça login novamente.');
+        }
+    }
+    
     function closeEventForm() {
         setShowEventForm(false);
     }
@@ -64,10 +82,17 @@ export default function Agenda() {
 
     function getCategorias(idAdvogado) {
 
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
         axios.get(apiBaseURL + `categorias/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                'Authorization': `Bearer ${token}`,
             }
         })
             .then(response => {
@@ -85,10 +110,16 @@ export default function Agenda() {
         if (categorias.length > 0) {
             const categoriesMap = categorias.map((categoria, index) => (
                 <Category
+                    editarCategoria={() => {
+                        openEditCategoryForm(categoria.idCategoriaEvento)
+                    }}
                     key={index}
                     corCategoria={categoria.cor}
                     nomeCategoria={categoria.nomeEvento}
                     qtdEventos={0}
+                    excluirCategoria={() => {
+                        openModalDelete(categoria.idCategoriaEvento, "categoria");
+                    } }
                 />
             ));
 
@@ -97,12 +128,18 @@ export default function Agenda() {
 
         return <></>;
     }
-
     function getEvents(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
         axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                'Authorization': `Bearer ${token}`,
             }
         })
             .then(response => {
@@ -136,7 +173,6 @@ export default function Agenda() {
 
 
 
-    const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
 
     function closeModalDetails() {
         setIsModalDetailsOpen(false);
@@ -160,8 +196,35 @@ export default function Agenda() {
         setShowCategoryForm(true);
     }
 
+    function openModalDelete(id, itemType) {
+        setIdToDelete(id);
+        setDeleteItemType(itemType);
+        
+        setIsModalDeleteOpen(true);
+    }
+
+    function closeModalDelete() {
+        setIsModalDeleteOpen(false);
+    }
+
+    function openCreateCategoryForm() {
+        setIsEditCategory(false);
+        openCategoryForm();
+        setEditCategoryId(null);
+    }
+
+    function openEditCategoryForm(idCategoria) {
+        setIsEditCategory(true);
+        openCategoryForm();
+        setEditCategoryId(idCategoria);
+
+    }
+
+    
+
     return (
         <>
+            {isModalDeleteOpen && <ModalDelete  onClose={closeModalDelete} idToDelete={idToDelete} itemType={deleteItemType} onDeleteSuccess={fetchData}/>}
             {
                 isModalDetailsOpen &&
                 <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} />
@@ -184,14 +247,14 @@ export default function Agenda() {
                     <div className="h-1/2 px-10 pt-10">
                         <div className='w-full flex justify-between items-center relative'>
                             <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Categorias</span>
-                            <CirclePlus className='cursor-pointer' color='#013451' size={30} onClick={openCategoryForm}/>
+                            <CirclePlus className='cursor-pointer' color='#013451' size={30} onClick={openCreateCategoryForm} />
                             <div style={{
                                 position: 'absolute',
                                 left: 0,
                                 zIndex: 40,
                                 display: showCategoryForm ? 'block' : 'none'
                             }} >
-                                <FormCreateCategory onClose={closeCategoryForm} />
+                                <FormCreateCategory onClose={closeCategoryForm} isEdit={isEditCategory} idCategoria={EditCategoryId} onSuccess={fetchData}/>
                             </div>
                         </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
@@ -239,7 +302,7 @@ export default function Agenda() {
                             eventPropGetter={(event) => {
                                 return {
                                     style: {
-                                        backgroundColor: event.color || '#e3fcec',
+                                        backgroundColor: event.color || '#c9c9c9BF',
                                         color: '#000',
                                         borderRadius: '4px',
                                         border: 'none',

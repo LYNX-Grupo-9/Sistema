@@ -8,21 +8,31 @@ export default function ModalEventDetails({ idEvento, onClose }) {
 
     const [event, setEvent] = useState(null);
     const [client, setClient] = useState(null);
-
+    const [process, setProcess] = useState(null);
 
     useEffect(() => {
         if (idEvento !== undefined) {
             getEventById(idEvento).then(evento => {
                 if (evento) {
                     setEvent(evento);
-                    console.log(evento);
 
                     // After getting the event, fetch the client if clienteId exists
                     if (evento.idCliente) {
                         getClientById(evento.idCliente).then(cliente => {
                             if (cliente) {
                                 setClient(cliente);
-                                console.log("Cliente encontrado:", cliente);
+
+                                if (evento.idProcesso) {
+                                    getProcessById(evento.idProcesso).then(processo => {
+                                        if (processo) {
+                                            setProcess(processo);
+                                            console.log("Processo encontrado:", processo);
+                                        } else {
+                                            console.error("Processo não encontrado para o cliente:", evento.idProcesso);
+                                            setProcess(null);
+                                        }
+                                    });
+                                }
                             }
                         });
                     }
@@ -33,40 +43,70 @@ export default function ModalEventDetails({ idEvento, onClose }) {
 
 
     async function getEventById(idEvento) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            return false;
+        }
+
         return axios.get(apiBaseURL + `eventos/${idEvento}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`
+                'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
                 return response.data;
             })
             .catch(error => {
-                console.error('Erro ao buscar evento:', error);
                 return false;
             });
     }
 
 
     async function getClientById(idCliente) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            return false;
+        }
+
         return axios.get(apiBaseURL + `clientes/${idCliente}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`
+                'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
-                console.log(response.data);
                 return response.data;
             })
             .catch(error => {
-                console.error('Erro ao buscar evento:', error);
                 return false;
             });
     }
 
+    async function getProcessById(idProcesso) {
+        const token = localStorage.getItem('token');
 
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            return false;
+        }
+
+        return axios.get(apiBaseURL + `processos/${idProcesso}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            return response.data;
+        }).catch(error => {
+            console.error('Erro ao buscar processo:', error);
+            return false;
+        })
+    }
 
     function formatDateBR(dateString) {
         if (!dateString) return "";
@@ -121,6 +161,10 @@ export default function ModalEventDetails({ idEvento, onClose }) {
                             </div>
                             <div className="w-full bg-gray-300 h-0.5 rounded-full my-4"></div>
                             <span className="typography-black text-[var(--color-blueDark)] text-xl ">Processo: </span>
+                            <div>
+                                <span className="font-bold text-[var(--color-grayLight)] text-xl">Descrição: </span>
+                                <span className="font-semibold text-[var(--color-grayLight)] text-lg">{process && process.descricao ? process.descricao : "Processo indisponível"}</span>
+                            </div>
                             <div className="self-end flex gap-4">
                                 <button className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
                                 <button className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]" onClick={onClose}>Ok</button>
