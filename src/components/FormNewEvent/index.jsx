@@ -23,6 +23,8 @@ export function FormNewEvent({ onClose }) {
     const [categoria, setCategoria] = useState("");
     const [processo, setProcesso] = useState("0");
     const [descricao, setDescricao] = useState("");
+    const [linkReuniao, setLinkReuniao] = useState("");
+    const [local, setLocal] = useState("");
     const [categoriaOptions, setCategoriaOptions] = useState([]);
     const [clientesOptions, setClientesOptions] = useState([]);
     const [processosOptions, setProcessosOptions] = useState([]);
@@ -69,7 +71,7 @@ export function FormNewEvent({ onClose }) {
             local: "",
             linkReuniao: "",
             idAdvogado: Number(idAdvogado),
-            idCliente: Number(convidado) ,
+            idCliente: Number(convidado),
             idCategoria: Number(categoria),
             idProcesso: Number(processo),
             dataReuniao: dataSelecionada ? new Date(dataSelecionada).toISOString() : null,
@@ -77,12 +79,20 @@ export function FormNewEvent({ onClose }) {
             horaFim: `${horaFim}:00`,
         };
 
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            toast.error("Erro ao criar evento, tente novamente.");
+            return;
+        }
+
         axios.post(`http://localhost:8080/api/eventos`,
             eventoPayload,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                    'Authorization': `Bearer ${token}`,
                 }
             }
         ).then(response => {
@@ -96,15 +106,23 @@ export function FormNewEvent({ onClose }) {
         })
 
 
-        console.log(JSON.stringify({eventoPayload}));
+        console.log(JSON.stringify({ eventoPayload }));
     }
 
     function getCategorias(idAdvogado) {
 
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            toast.error("Erro ao criar evento, tente novamente.");
+            return;
+        }
+
         axios.get(`http://localhost:8080/api/categorias/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                'Authorization': `Bearer ${token}`,
             }
         })
             .then(response => {
@@ -124,10 +142,19 @@ export function FormNewEvent({ onClose }) {
     }
 
     function getClientsByIdAdvogado(idAdvogado) {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            toast.error("Erro ao criar evento, tente novamente.");
+            return;
+        }
+
         axios.get(`http://localhost:8080/api/clientes/listarPorAdvogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                'Authorization': `Bearer ${token}`,
             }
         })
             .then(response => {
@@ -143,10 +170,20 @@ export function FormNewEvent({ onClose }) {
     }
 
     function getProcessosByIdCliente(idCliente) {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            toast.error("Erro ao criar evento, tente novamente.");
+            return;
+        }
+
+
         axios.get(`http://localhost:8080/api/processos/cliente/${idCliente}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZHZvZ2Fkb0BnbWFpbC5jb20iLCJpYXQiOjE3NDgyMDAxNjcsImV4cCI6MTc1MTgwMDE2N30.PvnDENQ5TAzvIQLl8IdUc79fylmkTJgbTSrQ55l5tjVjjGA0ys0vWhESdyTZj70spM30-lQduQTrqcSIt8MkMg`,
+                'Authorization': `Bearer ${token}`,
             }
         }).then(response => {
             console.log('Processos:', response.data);
@@ -158,7 +195,7 @@ export function FormNewEvent({ onClose }) {
         }).catch(error => {
             console.error('Erro ao buscar processos:', error);
         })
-    }   
+    }
 
 
     return (
@@ -195,6 +232,8 @@ export function FormNewEvent({ onClose }) {
                 <FormNEInput optionLabel="Adicionar Convidado" type="select" icon={<UsersRound color='#013451' />} value={convidado} options={clientesOptions} onChange={(e) => setConvidado(e.target.value)} />
                 <FormNEInput optionLabel="Selecionar Categoria" type="select" icon={<ChevronDown color='#013451' />} options={categoriaOptions} value={categoria} onChange={(e) => setCategoria(e.target.value)} />
                 <FormNEInput optionLabel="Processo " type="select" icon={<ChevronDown color='#013451' />} value={processo} options={processosOptions} disabled={convidado == 0} onChange={(e) => setProcesso(e.target.value)} />
+                <FormNEInput placeholder="Link (Opcional)" value={linkReuniao} onChange={(e) => setLinkReuniao(e.target.value)} />
+                <FormNEInput placeholder="Local (Opcional)" value={local} onChange={(e) => setLocal(e.target.value)} />
                 <FormNEInput placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                 <div className="self-end flex gap-4">
                     <button onClick={() => {

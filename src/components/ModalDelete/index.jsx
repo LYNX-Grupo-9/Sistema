@@ -21,7 +21,7 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
             getEventoById(idToDelete).then(evento => {
                 if (evento) {
                     console.log("Evento encontrado:", evento);
-                    setNameItem(evento.titulo);
+                    setNameItem(evento.nome);
                 } else {
                     console.error("Evento não encontrado.");
                 }
