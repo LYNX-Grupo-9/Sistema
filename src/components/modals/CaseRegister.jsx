@@ -9,18 +9,20 @@ import { StepThree } from "../Steps/Case/StepThree";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import { ClientTypeSelection } from "../Steps/Case/ClientTypeSelection";
 import { CustomerSelection } from "../Steps/Case/CustomerSelection";
-
+import { CustomerRegister } from "./CustomerRegister";
 
 export function CaseRegister({ isOpen, onClose }) {
-
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [caseModalOpen, setCaseModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
   const [clientSelectStep, setClientSelectStep] = useState(1);
   const [step, setStep] = useState(1);
   const idAdvogado = localStorage.getItem("idAdvogado");
+  const [newCustomer, setNewCustomer] = useState(false);
   const [caseData, setCaseData] = useState({
     titulo: "",
     numero: "",
-    idCliente: "",
+    idCliente: 0,
     status: "",
     classe: "",
     assunto: "",
@@ -32,6 +34,14 @@ export function CaseRegister({ isOpen, onClose }) {
     advReu: "",
     idAdvogado: Number(idAdvogado),
   });
+  const closeBothModals = () => {
+    setModalOpen(false);   
+    onClose();               
+  };
+  
+  const closeOnlyCustomerModal = () => {
+    setModalOpen(false);
+  }
 
   const errorMessage = (message) => toast.error(message, {
     position: "top-right",
@@ -44,14 +54,17 @@ export function CaseRegister({ isOpen, onClose }) {
     theme: "colored",
     transition: Bounce,
   });
-  
+
   const handleClientSelectionType = (selection) => {
     if (selection === "existing") {
-      setClientSelectStep(2); 
-      console.log("Existing client selected");
+      setNewCustomer(false);
+      setClientSelectStep(2);
     } else if (selection === "new") {
-      setClientSelectStep(3); 
-      console.log("New client selected");
+      setNewCustomer(true);
+      openModal();
+      setClientSelectStep(3);
+    } else if (selection === "selected") {
+      setClientSelectStep(3);
     }
   }
 
@@ -59,7 +72,6 @@ export function CaseRegister({ isOpen, onClose }) {
     if (step === 1) {
       if (!caseData.titulo.trim()) return errorMessage("Preencha o título do caso");
       if (!caseData.numero.trim()) return errorMessage("Preencha o número do caso");
-      if (!caseData.cliente.trim()) return errorMessage("Preencha o nome do cliente");
       if (!caseData.status.trim()) return errorMessage("Selecione o status do caso")
       setStep(2);
     }
@@ -93,33 +105,34 @@ export function CaseRegister({ isOpen, onClose }) {
         </div>
 
         {
-          clientSelectStep === 1  ? <ClientTypeSelection handleClientSelectionType={handleClientSelectionType}/> : 
-          clientSelectStep === 2 ? <CustomerSelection caseData={caseData} setCaseData={setCaseData}/> :
-            <>
-              <Stepper currentStep={step} />
+          clientSelectStep === 1 ? <ClientTypeSelection handleClientSelectionType={handleClientSelectionType} /> :
+            clientSelectStep === 2 ? <CustomerSelection caseData={caseData} setCaseData={setCaseData} type={handleClientSelectionType} /> :
+              <>
+                <Stepper currentStep={step} />
 
-              <div className="w-full flex-1 overflow-y-auto">
-                {step === 1 ? (
-                  <StepOne caseData={caseData} setCaseData={setCaseData} />
-                ) : step === 2 ? (
-                  <StepTwo caseData={caseData} setCaseData={setCaseData} />
-                ) : (
-                  <StepThree caseData={caseData} setCaseData={setCaseData} />
-                )}
-              </div>
+                <div className="w-full flex-1 overflow-y-auto">
+                  {
+                    (step === 1 ? (
+                      <StepOne caseData={caseData} setCaseData={setCaseData} />
+                    ) : step === 2 ? (
+                      <StepTwo caseData={caseData} setCaseData={setCaseData} />
+                    ) : (
+                      <StepThree caseData={caseData} setCaseData={setCaseData} />
+                    ))}
+                </div>
 
-              <div className="w-full flex justify-evenly mt-[5px]">
-                {step > 1 && (
-                  <LgButton title="Voltar" click={() => setStep(step - 1)} type="alternative" />
-                )}
-                {step === 3 ? (
-                  <LgButton title="Cadastrar" click={handleNextStep} />
-                ) : (
-                  <LgButton title="Proximo" click={handleNextStep} />
-                )}
-              </div>
+                <div className="w-full flex justify-evenly mt-[5px]">
+                  {step > 1 && (
+                    <LgButton title="Voltar" click={() => setStep(step - 1)} type="alternative" />
+                  )}
+                  {step === 3 ? (
+                    <LgButton title="Cadastrar" click={handleNextStep} />
+                  ) : (
+                    <LgButton title="Proximo" click={handleNextStep} />
+                  )}
+                </div>
 
-            </>
+              </>
         }
       </div>
       <ToastContainer
@@ -135,7 +148,15 @@ export function CaseRegister({ isOpen, onClose }) {
         theme="colored"
         transition={Bounce}
       />
+      <CustomerRegister
+        isOpen={modalOpen}
+        onClose={closeBothModals}
+        caseFlow={true} 
+        closeModal={closeOnlyCustomerModal}
+        />
+
     </div>
+
   ) : null
 
 }

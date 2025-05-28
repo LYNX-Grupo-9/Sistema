@@ -198,7 +198,7 @@ export function CustomerList() {
                     </div>
                 </div>
             </div>
-            <CustomerRegister isOpen={modalOpen} onClose={closeModal} />
+            <CustomerRegister isOpen={modalOpen} onClose={closeModal} caseFlow={false}/>
         </div>
     );
 }
