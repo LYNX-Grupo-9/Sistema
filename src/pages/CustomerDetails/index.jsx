@@ -7,6 +7,7 @@ import { Layout } from "../../components/Layout";
 import api from "../../services/api";
 import { useLocation } from "react-router-dom";
 import { SingleSelectComponent } from "../../components/SelectComponent";
+import { ButtonAnexo } from "../../components/ButtonAnexo";
 
 export function CustomerDetails() {
     const location = useLocation();
@@ -98,6 +99,7 @@ export function CustomerDetails() {
                     </div>
                 </div>
             </div>
+            <ButtonAnexo />
         </div>
     )
 }
