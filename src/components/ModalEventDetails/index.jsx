@@ -2,6 +2,8 @@ import axios from "axios";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react"
 import ModalDelete from "../ModalDelete";
+import FormCreateCategory from "../FormCreateCategory";
+import { FormNewEvent } from "../FormNewEvent";
 
 const apiBaseURL = 'http://localhost:8080/api/';
 
@@ -11,8 +13,13 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
     const [client, setClient] = useState(null);
     const [process, setProcess] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
 
     useEffect(() => {
+        fetchData(idEvento)
+    }, [idEvento]);
+
+    function fetchData(idEvento) {
         if (idEvento !== undefined) {
             getEventById(idEvento).then(evento => {
                 if (evento) {
@@ -40,8 +47,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                 }
             });
         }
-    }, [idEvento]);
-
+    }
 
     async function getEventById(idEvento) {
         const token = localStorage.getItem('token');
@@ -136,9 +142,25 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
         }
     }
 
+    function openModalEdit() {
+        setShowEditForm(true);
+    }
+
+    function closeModalEdit() {
+        setShowEditForm(false)
+    }
 
     return (
         <>
+            {
+                showEditForm &&
+                <>
+                    <div className="fixed inset-0 bg-black opacity-40 z-[998]" onClick={closeModalEdit}></div>
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-center z-[999]">
+                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEvento} onEditSuccess={() => {fetchData(idEvento)}} />
+                    </div>
+                </>
+            }
             <div className="fixed inset-0 bg-[#0000005d] flex items-center justify-center z-40 " onClick={onClose}>
             </div>
             <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-start bg-white rounded-lg shadow-lg p-6 z-50">
@@ -188,7 +210,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                                 >
                                     Excluir
                                 </button>
-                                <button className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
+                                <button onClick={openModalEdit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
                                 <button className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]" onClick={onClose}>Ok</button>
                             </div>
                         </div>

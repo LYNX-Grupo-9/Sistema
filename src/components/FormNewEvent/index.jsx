@@ -13,7 +13,7 @@ const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
     };
 });
 
-export function FormNewEvent({ onClose }) {
+export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSuccess }) {
 
     const [dataSelecionada, setDataSelecionada] = useState(null);
     const [nomeEvento, setNomeEvento] = useState("");
@@ -28,12 +28,17 @@ export function FormNewEvent({ onClose }) {
     const [categoriaOptions, setCategoriaOptions] = useState([]);
     const [clientesOptions, setClientesOptions] = useState([]);
     const [processosOptions, setProcessosOptions] = useState([]);
+
     const idAdvogado = localStorage.getItem('idAdvogado') || 1;
 
     useEffect(() => {
         if (idAdvogado) {
             getCategorias(idAdvogado);
             getClientsByIdAdvogado(idAdvogado);
+        }
+
+        if (isEdit && idEvento) {
+            getEventById(idEvento);
         }
     }, [])
 
@@ -54,6 +59,7 @@ export function FormNewEvent({ onClose }) {
         setProcesso("");
         setDescricao("");
     }
+
 
 
     function handleSubmit() {
@@ -87,6 +93,24 @@ export function FormNewEvent({ onClose }) {
             return;
         }
 
+        if (isEdit) {
+            axios.patch(`http://localhost:8080/api/eventos/${idEvento}`, eventoPayload, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then(response => {
+                console.log(response.data)
+                toast.success("Evento editado com sucesso!")
+                onEditSuccess && onEditSuccess()
+                onClose()
+            }).catch(error => {
+                console.error("Erro ao alterar" + error)
+            })
+            return;
+        }
+
+
         axios.post(`http://localhost:8080/api/eventos`,
             eventoPayload,
             {
@@ -100,6 +124,7 @@ export function FormNewEvent({ onClose }) {
             toast.success("Evento criado com sucesso!")
             onClose();
             clearInputs();
+            onSuccess && onSuccess();
         }).catch(error => {
             console.error('Erro ao criar evento:', error);
             toast.error("Erro ao criar evento, tente novamente.")
@@ -197,11 +222,47 @@ export function FormNewEvent({ onClose }) {
         })
     }
 
+    function getEventById(idEvento) {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error('Token de autenticação não encontrado.');
+            toast.error("Erro ao buscar evento, tente novamente.");
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/${idEvento}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => {
+            const evento = response.data;
+            setNomeEvento(evento.nome);
+            setDataSelecionada(new Date(evento.dataReuniao).toISOString().split('T')[0]);
+            setHoraInicio(evento.horaInicio.slice(0, -3));
+            setHoraFim(evento.horaFim.slice(0, -3));
+            setConvidado(evento.idCliente);
+            setCategoria(evento.idCategoria);
+            setProcesso(evento.idProcesso);
+            setDescricao(evento.descricao);
+            setLinkReuniao(evento.linkReuniao || "");
+            setLocal(evento.local || "");
+
+        }).catch(error => {
+            console.error('Erro ao buscar evento:', error);
+        });
+    }
 
     return (
         <>
-            <div className="px-12 pt-11 pb-8 bg-white border-2 border-gray-300 rounded-xl flex flex-col gap-3.5 min-w-96">
-                <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">Adicionar evento</h1>
+            <div className="px-12 pt-11 pb-8 bg-white border-2 border-gray-300 rounded-xl flex flex-col gap-3.5 min-w-96 shadow-lg">
+                {
+                    isEdit ?
+                        <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">Editar evento</h1>
+                        :
+                        <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">Adicionar evento</h1>
+                }
                 <div className="w-full h-0.5 bg-gray-300"></div>
                 <FormNEInput placeholder="Nome do evento" value={nomeEvento} onChange={e => setNomeEvento(e.target.value)} />
                 <FormNEInput
@@ -240,7 +301,7 @@ export function FormNewEvent({ onClose }) {
                         onClose()
                         clearInputs()
                     }} className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]">Cancelar</button>
-                    <button onClick={handleSubmit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Salvar</button>
+                    <button onClick={handleSubmit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">{isEdit ? "Editar" : "Salvar"}</button>
                 </div>
             </div>
         </>

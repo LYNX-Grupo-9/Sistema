@@ -254,7 +254,8 @@ export default function Agenda() {
                             <CirclePlus className='cursor-pointer' color='#013451' size={30} onClick={openCreateCategoryForm} />
                             <div style={{
                                 position: 'absolute',
-                                left: 0,
+                                left: "105%",
+                                top: "10%",
                                 zIndex: 40,
                                 display: showCategoryForm ? 'block' : 'none'
                             }} >
@@ -278,7 +279,7 @@ export default function Agenda() {
                                 zIndex: 40,
                                 display: showEventForm ? 'block' : 'none'
                             }} >
-                                <FormNewEvent onClose={closeEventForm} />
+                                <FormNewEvent onSuccess={fetchData} onClose={closeEventForm} />
                             </div>
                         </div>
                         <Calendar
