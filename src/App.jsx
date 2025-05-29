@@ -5,6 +5,7 @@ import { Cadastro } from "./pages/Cadastro";
 import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
+import { CaseDetails } from "./pages/CaseDetails";
 import { CustomerList } from "./pages/CustomerList";
 import { TemisAI } from "./pages/TemisAI/";
 import { CaseList } from "./pages/CaseList/";
@@ -46,6 +47,11 @@ export default function App() {
           <Route path="caselist" element={
             <ProtectedRoute>
               <CaseList />
+            </ProtectedRoute>
+          } />
+          <Route path="casedetails" element={
+            <ProtectedRoute>
+              <CaseDetails />
             </ProtectedRoute>
           } />
 

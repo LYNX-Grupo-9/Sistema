@@ -31,7 +31,7 @@ export function CustomerDetails() {
                     <div className="bgGlass w-full h-[10%] flex justify-center items-center">
                         <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
                     </div>
-                    <div className="bgGlass w-full h-[70%] flex flex-col items-center gap-5 overflow-y-auto">
+                    <div className="bgGlass w-full h-[85%] flex flex-col items-center gap-5 overflow-y-auto">
 
                         <CustomerInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
                         <CustomerInfo title="Data de nascimento" value={customerData.dataNascimento} />
@@ -41,6 +41,8 @@ export function CustomerDetails() {
                         <CustomerInfo title="Email" value={customerData.email} />
                         <CustomerInfo title="Telefone" value={customerData.telefone} />
                         <CustomerInfo title="Profissão" value={customerData.profissao} />
+                        <CustomerInfo title="Habilitação" value={customerData.cnh} />
+                        <CustomerInfo title="Passaporte" value={customerData.passaporte} />
                     </div>
                 </div>
                 <div className="flex flex-col gap-6 w-1/2">

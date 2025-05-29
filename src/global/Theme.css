@@ -17,7 +17,7 @@
     --success: #009E0D;
 
     --gradientVertical: linear-gradient(180deg, #013451 0%, rgba(60, 106, 137, 1) 100%);
-    --gradientHorizontal: linear-gradient(90deg, #013451 0%, rgba(60, 106, 137, 1) 20%);
+    --gradientHorizontal: linear-gradient(90deg, #013451 0%, rgba(60, 106, 137, 1) 100%);
 
     .bgGlass {
         background: rgba(255, 255, 255, 0.6); 
