@@ -115,7 +115,7 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         axios.post(`http://localhost:8080/api/eventos`,
             eventoPayload,
             {
-                headers: {
+                headers: {  
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 }

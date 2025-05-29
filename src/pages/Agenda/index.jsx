@@ -54,6 +54,10 @@ export default function Agenda() {
     const [idToDelete, setIdToDelete] = useState(null);
     const [deleteItemType, setDeleteItemType] = useState(null);
 
+    const [nextEvents, setNextEvents] = useState([]);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [idEventoEdit, setIdEventoEdit] = useState(null);
+
     const idAdvogado = localStorage.getItem('idAdvogado');
 
 
@@ -69,6 +73,7 @@ export default function Agenda() {
         if (idAdvogado) {
             getCategorias(idAdvogado);
             getEvents(idAdvogado);
+            getEventsNext7days(idAdvogado);
         } else {
             toast.error('ID do advogado não encontrado. Por favor, faça login novamente.');
         }
@@ -175,7 +180,52 @@ export default function Agenda() {
         }
     }
 
+    function getEventsNext7days(idAdvogado) {
+        const token = localStorage.getItem('token');
 
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}/7dias`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log('Eventos próximos:', response.data);
+                setNextEvents(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos próximos:', error);
+            })
+    }
+
+    function formatarLegenda(dataStr) {
+        const hoje = new Date();
+        const [ano, mes, dia] = dataStr.split("-");
+        const data = new Date(Number(ano), Number(mes) - 1, Number(dia)); // Corrigido
+
+        const ehHoje = data.toDateString() === hoje.toDateString();
+
+        const legenda =
+            `Dia ${data.getDate()}, ${data.toLocaleDateString("pt-BR", {
+                weekday: "long",
+            })}${ehHoje ? " - Hoje" : ""}`;
+
+        return legenda.charAt(0).toUpperCase() + legenda.slice(1);
+    }
+
+    const eventosPorDia = nextEvents.reduce((acc, evento) => {
+        const data = evento.dataReuniao;
+        if (!acc[data]) acc[data] = [];
+        acc[data].push(evento);
+        return acc;
+    }, {});
+
+
+    const datasOrdenadas = Object.keys(eventosPorDia).sort();
 
 
     function closeModalDetails() {
@@ -224,6 +274,15 @@ export default function Agenda() {
 
     }
 
+    function openModalEdit() {
+        setShowEditForm(true);
+    }
+
+    function closeModalEdit() {
+        setShowEditForm(false)
+    }
+
+
 
 
     return (
@@ -233,18 +292,38 @@ export default function Agenda() {
                 isModalDetailsOpen &&
                 <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} onDeleteSuccess={fetchData} />
             }
+            {
+                showEditForm &&
+                <>
+                    <div className="fixed inset-0 bg-black opacity-40 z-[998]" onClick={closeModalEdit}></div>
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-center z-[999]">
+                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEventoEdit} onEditSuccess={fetchData} />
+                    </div>|
+                </>
+            }
             <div className="flex h-[99vh] w-full">
                 <div className="min-w-2/7 bg-[color:var(--bg-light)] h-full">
                     <div className="h-1/2 px-10 pt-10">
-                        <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Próximos eventos</span>
+                        <span className="typography-black text-[var(--color-blueDark)] text-3xl ">Eventos da semana</span>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4"  >
-                            <EventDay legenda={"Dia 11, Terça-Feira - Hoje"} />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
-                            <NextEvent horaEvento="8:45" localEvento="Remoto" nomeEvento="Reunião XPTO" />
+                            {datasOrdenadas.map((data) => (
+                                <>
+                                    <EventDay legenda={formatarLegenda(data)} />
+                                    {eventosPorDia[data].map((evento) => (
+                                        <NextEvent
+                                            onEditClick={() => {
+                                                setIdEventoEdit(evento.idEvento);
+                                                openModalEdit();
+                                            }}
+                                            onDeleteClick={() => openModalDelete(evento.idEvento, "evento")}
+                                            key={evento.idEvento}
+                                            horaEvento={evento.horaInicio.slice(0, 5)}
+                                            localEvento={evento.local || "Remoto"}
+                                            nomeEvento={evento.nome}
+                                        />
+                                    ))}
+                                </>
+                            ))}
                         </div>
                     </div>
                     <div className="w-full h-0.5 bg-[color:#d9d9d9]"></div>
@@ -259,7 +338,7 @@ export default function Agenda() {
                                 zIndex: 40,
                                 display: showCategoryForm ? 'block' : 'none'
                             }} >
-                                <FormCreateCategory onClose={closeCategoryForm} isEdit={isEditCategory} idCategoria={EditCategoryId} onSuccess={fetchData}/>
+                                <FormCreateCategory onClose={closeCategoryForm} isEdit={isEditCategory} idCategoria={EditCategoryId} onSuccess={fetchData} />
                             </div>
                         </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
