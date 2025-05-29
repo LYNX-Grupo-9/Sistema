@@ -19,11 +19,20 @@
   --success: #009E0D;
 
 
+
   --gradientVertical: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
   --gradientHorizontal: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(60, 106, 137, 1) 100%);
 
   .bgGlass {
     background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(80px);
+    -webkit-backdrop-filter: blur(80px);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 1);
+    padding: 5%;
+  }
+  .bgDarkGlass {
+    background: rgba(68, 68, 68, 0.7);
     backdrop-filter: blur(80px);
     -webkit-backdrop-filter: blur(80px);
     border-radius: 15px;
