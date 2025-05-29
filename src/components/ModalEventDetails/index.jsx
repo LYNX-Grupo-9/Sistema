@@ -2,7 +2,6 @@ import axios from "axios";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react"
 import ModalDelete from "../ModalDelete";
-import FormCreateCategory from "../FormCreateCategory";
 import { FormNewEvent } from "../FormNewEvent";
 
 const apiBaseURL = 'http://localhost:8080/api/';
@@ -117,7 +116,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
 
     function formatDateBR(dateString) {
         if (!dateString) return "";
-        const date = new Date(dateString);
+        const date = new Date(dateString + 'T00:00:00');
         if (isNaN(date)) return dateString;
         return date.toLocaleDateString('pt-BR');
     }
@@ -157,7 +156,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                 <>
                     <div className="fixed inset-0 bg-black opacity-40 z-[998]" onClick={closeModalEdit}></div>
                     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-center z-[999]">
-                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEvento} onEditSuccess={() => {fetchData(idEvento)}} />
+                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEvento} onEditSuccess={() => { fetchData(idEvento) }} onSuccess={onDeleteSuccess}/>
                     </div>
                 </>
             }
