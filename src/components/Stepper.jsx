@@ -3,7 +3,7 @@ export function Stepper(props) {
     return (
         <div className="flex justify-center gap-3 w-full items-center h-[9%]">
             <div
-                className="w-[7.5%] h-[100%] rounded-[30px] flex justify-center items-center"
+                className="w-[7.5%] h-[80%] rounded-[30px] flex justify-center items-center"
                 style={{
                     backgroundColor: props.currentStep === 1 ? 'var(--color-blueDark)' : 'var(--success)',
                 }}
@@ -16,7 +16,7 @@ export function Stepper(props) {
             <div className="w-[100px] h-[6px] bg-[var(--lineSeparator)] rounded-2xl"></div>
 
             <div
-                className="w-[7.5%] h-[100%] rounded-[30px] flex justify-center items-center"
+                className="w-[7.5%] h-[80%] rounded-[30px] flex justify-center items-center"
                 style={{
                     backgroundColor: props.currentStep === 2 ? 'var(--color-blueDark)' :
                     props.currentStep < 2 ? 'var(--color-light)' :
@@ -35,7 +35,7 @@ export function Stepper(props) {
                 <div className="w-[100px] h-[6px] bg-[var(--lineSeparator)] rounded-2xl"></div>
                 
             <div
-                className="w-[7.5%] h-[100%] rounded-[30px] flex justify-center items-center"
+                className="w-[7.5%] h-[80%] rounded-[30px] flex justify-center items-center"
                 style={{
                     backgroundColor: props.currentStep === 3 ? 'var(--color-blueDark)' :
                     props.currentStep < 3 ? 'var(--color-light)' :

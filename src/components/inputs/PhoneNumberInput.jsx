@@ -1,4 +1,6 @@
-import { InputMask } from '@react-input/mask';
+import React, { useState } from 'react';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 export function PhoneNumberInput(props) {
     return (
@@ -6,12 +8,30 @@ export function PhoneNumberInput(props) {
             <span className="w-[65%] h-[30%] text-[16px] typography-semibold text-[var(--color-blueDark)]">
                 {props.label}
             </span>
-            <InputMask
-                value={props.value}
-                onChange={props.onChange}
-                mask="+__ (__) _____-____" replacement={{ _: /\d/ }} placeholder='Insira o telefone do cliente'
-                className='w-[65%] h-[50px] rounded-[10px] border-2 border-[var(--color-blueLight)] p-[15px] bg-[var(--color-light)] text-[16px]' />
-        </div>
 
-    )
+            <PhoneInput
+                country={'br'}
+                value={props.inputValue} // Vincula o valor ao estado do componente pai
+                onChange={props.change} 
+                inputStyle={{
+                    height: '50px',
+                    borderRadius: '10px',
+                    border: '2px solid var(--color-blueLight)',
+                    padding: '15px 60px',
+                    backgroundColor: 'var(--color-light)',
+                    fontSize: '16px',
+                    color: 'var(--color-blueDark)',
+                    width: '65.5%',
+                    positionr: 'relative',
+                    left: '17.5%',
+                }}
+                buttonStyle={{
+                    backgroundColor: 'var(--color-light)',
+                    border: '2px solid var(--color-blueLight)',
+                    borderRadius: '10px',
+                    left: '17.5%',
+                }}
+            />
+        </div>
+    );
 }

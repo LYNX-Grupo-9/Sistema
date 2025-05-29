@@ -1,12 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import { BtnForm } from '../../components/BtnForm';
 import { InputForm } from '../../components/InputForm';
 import { PossuiConta } from '../../components/PossuiConta';
-import React, { useState } from 'react';
+import React, { useState, } from 'react';
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 
 export function Login() {
-  
+        const navigate = useNavigate();
         const [email, setEmail] = useState("");
         const [senha, setSenha] = useState("");
         
@@ -69,9 +70,11 @@ export function Login() {
     
             if (response.ok) {
                 const data = await response.json();
+                const lawyerId = data.idAdvogado;
                 const token = data.token;
     
                 localStorage.setItem("token", token);
+                localStorage.setItem("idAdvogado", lawyerId);
     
                 toast.success('Login realizado', {
                     position: "top-right",
@@ -84,6 +87,10 @@ export function Login() {
                     theme: "colored",
                     transition: Bounce,
                     });
+
+                    setTimeout(() => {
+                        navigate("/home");
+                    }, 3000);
             
             } else if (response.status === 401) {
                 toast.error('Email ou senha incorretos', {
