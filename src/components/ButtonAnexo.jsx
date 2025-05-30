@@ -27,6 +27,7 @@ export function ButtonAnexo() {
     // Listar arquivos do Supabase Storage
     async function listFiles() {
         try {
+            setNewAttachment(false);
             setStatus('Buscando arquivos...');
             const { data, error } = await supabase.storage
                 .from(bucketName)
@@ -168,31 +169,63 @@ export function ButtonAnexo() {
                             />
 
                             {
-                                newAttachment ?
-
+                                newAttachment ? (
                                     <>
-                                        <button
-                                            className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-                                            onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                                            disabled={uploading}
+                                        <div
+                                            onDragOver={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                e.currentTarget.classList.add("border-blue-500");
+                                            }}
+                                            onDragLeave={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                e.currentTarget.classList.remove("border-blue-500");
+                                            }}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                e.currentTarget.classList.remove("border-blue-500");
+                                                const droppedFiles = e.dataTransfer.files;
+                                                if (droppedFiles && droppedFiles.length > 0) {
+                                                    setFile(droppedFiles[0]);
+                                                }
+                                            }}
+                                            className="w-full p-8 border-2 border-dashed border-gray-300 rounded-lg text-center text-white hover:border-blue-500 transition-all duration-200"
                                         >
-                                            Selecionar Arquivo
-                                        </button><button
-                                            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-                                            onClick={handleUpload}
-                                            disabled={!file || uploading}
-                                        >
-                                            {uploading ? "Enviando..." : "Adicionar Anexo"}
-                                        </button><button
-                                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
-                                            onClick={listFiles}
-                                        >
-                                            Ver Anexos
-                                        </button>
+                                            <img src={icon} alt="Ícone de Anexo" className="mx-auto w-12 mb-4" />
+                                            <p className="text-lg">Arraste e solte o arquivo aqui ou</p>
+                                            <button
+                                                className="mt-2 bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                                onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                                                disabled={uploading}
+                                            >
+                                                Selecionar Arquivo
+                                            </button>
+                                            {file && (
+                                                <p className="mt-2 text-sm text-gray-300">
+                                                    Arquivo selecionado: <strong>{file.name}</strong>
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="mt-4 flex gap-4 justify-end">
+                                            <button
+                                                className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                                onClick={handleUpload}
+                                                disabled={!file || uploading}
+                                            >
+                                                {uploading ? "Enviando..." : "Adicionar Anexo"}
+                                            </button>
+                                            <button
+                                                className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                                                onClick={listFiles}
+                                            >
+                                                Ver Anexos
+                                            </button>
+                                        </div>
                                     </>
-
-                                    :
-
+                                ) : (
                                     <>
                                         <div className="flex items-center bg-[var(--bgMedium))] p-4 px-8 rounded-lg ">
                                             <div className="w-full flex items-center gap-4 ">
@@ -202,17 +235,17 @@ export function ButtonAnexo() {
                                             <button onClick={() => setNewAttachment(true)}>
                                                 <img src={Plus} alt="Ícone de Anexo" className="w-[100%] text-white" />
                                             </button>
-                                        </div><div className="flex flex-col gap-4 bg-[var(--bgDark)] p-8 rounded-lg w-full">
+                                        </div>
+                                        <div className="flex flex-col gap-4 bg-[var(--bgDark)] p-8 rounded-lg w-full ">
                                             {files.length > 0 ? (
                                                 <table className="w-full ">
-                                                    <tbody>
+                                                    <tbody className="flex flex-col h-[300px] overflow-y-auto"> 
                                                         {files.filter(f => !f.name.endsWith('/')).map(f => (
-                                                            <tr key={f.name} className="flex justify-between items-center bg-[var(--bgMedium)] rounded-[20px] mb-4 p-2 px-8">
-                                                                <td className="p- text-[20px] text-[var(--color-light)] typography-medium">{f.name}</td>
-
+                                                            <tr key={f.name} className="flex justify-between items-center bg-[var(--bgMedium)] rounded-[20px] mb-4 p-2 px-8 ">
+                                                                <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[300px] truncate">{f.name}</td>
                                                                 <td className="p-1">
                                                                     <button
-                                                                        className=" px-2 py-1  mr-2"
+                                                                        className="px-2 py-1 mr-2"
                                                                         onClick={async () => {
                                                                             const { data, error } = await supabase
                                                                                 .storage
@@ -229,7 +262,7 @@ export function ButtonAnexo() {
                                                                         <img src={viewIcon} />
                                                                     </button>
                                                                     <button
-                                                                        className=" px-2 py-1 "
+                                                                        className="px-2 py-1"
                                                                         onClick={() => handleDelete(f.name)}
                                                                         title="Excluir"
                                                                     >
@@ -245,9 +278,9 @@ export function ButtonAnexo() {
                                             )}
                                         </div>
                                     </>
-
-
+                                )
                             }
+
                         </div>
                     </div>
                 </div>
