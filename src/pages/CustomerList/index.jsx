@@ -5,7 +5,7 @@ import { SingleSelectComponent } from "../../components/SelectComponent";
 
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
-import { CustomerItem } from "../../components/CustomerItem";
+import { EntityItem } from "../../components/EntityItem";
 
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
 
@@ -182,7 +182,7 @@ export function CustomerList() {
 
                         <div className=" h-full overflow-scroll">
                             {customerList.map((item, index) => (
-                                <CustomerItem
+                                <EntityItem
                                     key={item.idCliente}
                                     id={item.idCliente}
                                     name={item.nome}

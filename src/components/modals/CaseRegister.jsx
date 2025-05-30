@@ -21,24 +21,24 @@ export function CaseRegister({ isOpen, onClose }) {
   const [newCustomer, setNewCustomer] = useState(false);
   const [caseData, setCaseData] = useState({
     titulo: "",
-    numero: "",
+    numeroProcesso: "",
     idCliente: 0,
     status: "",
-    classe: "",
+    classeProcessual: "",
     assunto: "",
     tribunal: "",
     valor: "",
     autor: "",
-    advRequerente: "",
+    nomeAdvogado: "",
     reu: "",
     advReu: "",
     idAdvogado: Number(idAdvogado),
   });
   const closeBothModals = () => {
-    setModalOpen(false);   
-    onClose();               
+    setModalOpen(false);
+    onClose();
   };
-  
+
   const closeOnlyCustomerModal = () => {
     setModalOpen(false);
   }
@@ -71,12 +71,12 @@ export function CaseRegister({ isOpen, onClose }) {
   const handleNextStep = () => {
     if (step === 1) {
       if (!caseData.titulo.trim()) return errorMessage("Preencha o título do caso");
-      if (!caseData.numero.trim()) return errorMessage("Preencha o número do caso");
+      if (!caseData.numeroProcesso.trim()) return errorMessage("Preencha o número do caso");
       if (!caseData.status.trim()) return errorMessage("Selecione o status do caso")
+      if (!caseData.classeProcessual.trim()) return errorMessage("Preencha a classe do caso");
       setStep(2);
     }
     else if (step === 2) {
-      if (!caseData.classe.trim()) return errorMessage("Preencha a classe do caso");
       if (!caseData.assunto.trim()) return errorMessage("Preencha o assunto do caso");
       if (!caseData.tribunal.trim()) return errorMessage("Preencha o tribunal responsável");
       if (!caseData.valor.trim() || isNaN(caseData.valor)) return errorMessage("Preencha um valor válido para o caso");
@@ -94,8 +94,18 @@ export function CaseRegister({ isOpen, onClose }) {
 
 
   const handleRegister = () => {
-    console.log(caseData);
+    console.log("Registering case with data:", caseData);
+    api.newCase(caseData)
+      .then((response) => {
+        console.log("Case registered successfully", response.data);
+        closeBothModals();
 
+        location.reload();
+
+      })
+      .catch((error) => {
+        console.error("Error registering user", error);
+      });
   }
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
@@ -151,9 +161,9 @@ export function CaseRegister({ isOpen, onClose }) {
       <CustomerRegister
         isOpen={modalOpen}
         onClose={closeBothModals}
-        caseFlow={true} 
+        caseFlow={true}
         closeModal={closeOnlyCustomerModal}
-        />
+      />
 
     </div>
 

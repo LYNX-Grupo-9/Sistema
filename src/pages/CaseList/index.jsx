@@ -5,7 +5,7 @@ import { SingleSelectComponent } from "../../components/SelectComponent";
 
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
-import { CustomerItem } from "../../components/CustomerItem";
+import { EntityItem } from "../../components/EntityItem";
 
 import { CaseRegister } from "../../components/modals/CaseRegister";
 
@@ -15,6 +15,7 @@ export function CaseList() {
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
+
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
@@ -23,7 +24,24 @@ export function CaseList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
+    const [nameCustomer, setNameCustomer] = useState("");
     const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
+
+    const [customerNamesMap, setCustomerNamesMap] = useState({});
+
+    useEffect(() => {
+        api.getAllCustomer(idAdvogado)
+            .then((response) => {
+                const map = {};
+                response.data.forEach(cliente => {
+                    map[cliente.idCliente] = cliente.nome;
+                });
+                setCustomerNamesMap(map);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar todos os clientes", error);
+            });
+    }, []);
 
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
@@ -36,124 +54,120 @@ export function CaseList() {
     useEffect(() => {
         setFilterOptions([
             {
-                title: "Quantidade de processos em curso",
-                options: [
-                    { id: 1, label: "0" },
-                    { id: 2, label: "1-5" },
-                    { id: 3, label: "6+" }
-                ]
-            },
-            {
                 title: "Nacionalidade",
                 options: [
-                    { id: 4, label: "Brasileiro" },
-                    { id: 5, label: "Estrangeiro" }
+                    { id: 4, label: "Até R$ 5.000" },
+                    { id: 5, label: "R$ 5.001 a R$ 20.000" },
+                    { id: 6, label: "R$ 20.001 a R$ 100.000" },
+                    { id: 7, label: "Acima de R$ 100.000" },
+               
                 ]
             },
             {
-                title: "Tipo de caso",
+                title: "Status do Processo",
                 options: [
-                    { id: 6, label: "Cível" },
-                    { id: 7, label: "Trabalhista" },
-                    { id: 8, label: "Penal" },
-                    { id: 9, label: "Família" },
-                    { id: 10, label: "Tributário" }
+                    { id: 8, label: "Protocolado" },
+                    { id: 9, label: "Sentenciado" },
+                    { id: 10, label: "Fase de recursão" },
+                    { id: 11, label: "Trânsito em julgado" },
+                    { id: 12, label: "Arquivado" }
                 ]
             },
         ]);
 
         setOrderOptions([
-            { id: 1, label: "Nome" },
-            { id: 2, label: "Número de processos " },
-            { id: 3, label: "Nacionalidade" },
-            { id: 4, label: "Data de nascimento" },
+            { id: 1, label: "Cliente" },
+            { id: 2, label: "Número de processos" },
+            { id: 3, label: "Valor da ação" },
+            { id: 4, label: "Status do Processo" },
         ]);
     }, []);
 
 
-    // useEffect(() => {
-    //     const delayDebounceFn = setTimeout(() => {
-    //         setDebouncedSearchValue(searchValue); 
-    //     }, 300); 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            setDebouncedSearchValue(searchValue);
+        }, 300);
 
-    //     return () => clearTimeout(delayDebounceFn); 
-    // }, [searchValue]);
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchValue]);
 
-    // useEffect(() => {
-    //     setLoading(true);
+    useEffect(() => {
+        setLoading(true);
 
-    //     if (debouncedSearchValue.length > 0) {
-    //         api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
-    //             .then((response) => {
-    //                 setCustomerList(response.data);
-    //                 setLoading(false);
-    //             })
-    //             .catch((error) => {
-    //                 console.error("Erro ao buscar usuário via busca", error);
-    //                 setLoading(false);
-    //             });
-    //     } else {
-    //         switch (selectedOrderOptions) {
-    //             case 0:
-    //                 api.getAllCustomer(idAdvogado)
-    //                     .then((response) => {
-    //                         setCustomerList(response.data);
-    //                         setLoading(false);
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Erro ao obter todos os clientes", error);
-    //                         setLoading(false);
-    //                     });
-    //                 break;
-    //             case 1:
-    //                 api.getOrderByName(idAdvogado)
-    //                     .then((response) => {
-    //                         setCustomerList(response.data);
-    //                         setLoading(false);
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Erro ao ordenar por nome", error);
-    //                         setLoading(false);
-    //                     });
-    //                 break;
-    //             case 2:
-    //                 api.getOrderByCases(idAdvogado)
-    //                     .then((response) => {
-    //                         setCustomerList(response.data);
-    //                         setLoading(false);
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Erro ao ordenar por casos", error);
-    //                         setLoading(false);
-    //                     });
-    //                 break;
-    //             case 3:
-    //                 api.getOrderByNationality(idAdvogado)
-    //                     .then((response) => {
-    //                         setCustomerList(response.data);
-    //                         setLoading(false);
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Erro ao ordenar por nacionalidade", error);
-    //                         setLoading(false);
-    //                     });
-    //                 break;
-    //             case 4:
-    //                 api.getOrderByBornDate(idAdvogado)
-    //                     .then((response) => {
-    //                         setCustomerList(response.data);
-    //                         setLoading(false);
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Erro ao ordenar por data de nascimento", error);
-    //                         setLoading(false);
-    //                     });
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    // }, [debouncedSearchValue, selectedOrderOptions]); 
+        if (debouncedSearchValue.length > 0) {
+            api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
+                .then((response) => {
+                    setCustomerList(response.data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error("Erro ao buscar usuário via busca", error);
+                    setLoading(false);
+                });
+        } else {
+            switch (selectedOrderOptions) {
+                case 0:
+                    api.getAllCases(idAdvogado)
+                        .then((response) => {
+                            setCustomerList(response.data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao obter todos os clientes", error);
+                            setLoading(false);
+                        });
+                    break;
+                case 1:
+                    api.getOrderByName(idAdvogado)
+                        .then((response) => {
+                            setCustomerList(response.data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao ordenar por nome", error);
+                            setLoading(false);
+                        });
+                    break;
+                case 2:
+                    api.getOrderByCases(idAdvogado)
+                        .then((response) => {
+                            setCustomerList(response.data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao ordenar por casos", error);
+                            setLoading(false);
+                        });
+                    break;
+                case 3:
+                    api.getOrderByNationality(idAdvogado)
+                        .then((response) => {
+                            setCustomerList(response.data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao ordenar por nacionalidade", error);
+                            setLoading(false);
+                        });
+                    break;
+                case 4:
+                    api.getOrderByBornDate(idAdvogado)
+                        .then((response) => {
+                            setCustomerList(response.data);
+                            setLoading(false);
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao ordenar por data de nascimento", error);
+                            setLoading(false);
+                        });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [debouncedSearchValue, selectedOrderOptions]);
+
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
@@ -171,28 +185,31 @@ export function CaseList() {
                 <div className="bgGlass w-full h-[70%]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">Número do processo</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]">Titulo</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">Cliente</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">Classe</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">Status</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Número do processo</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Titulo</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Cliente</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Classe</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Status</span>
 
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {customerList.map((item, index) => (
-                                <CustomerItem
-                                    key={item.idCliente}
-                                    id={item.idCliente}
-                                    name={item.nome}
-                                    email={item.email}
-                                    phone={item.telefone}
-                                    country={item.naturalidade}
-                                    dtNasc={item.dataNascimento}
-                                    qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
-                                />
-                            ))}
+                            {
                             
+                            customerList.map((item, index) => (
+                                
+                                <EntityItem
+                                key={index}
+                                id={item.idProcesso}
+                                caseNumber={item.numeroProcesso}
+                                title={item.titulo}
+                                customer={customerNamesMap[String(item.idCliente)] || "Carregando..."} 
+                                classe={item.classeProcessual}
+                                status={item.status}
+                                type="case"
+                            />
+                            ))}
+
                         </div>
                     </div>
                 </div>

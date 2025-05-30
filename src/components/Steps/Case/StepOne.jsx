@@ -29,7 +29,7 @@ export function StepOne({ caseData, setCaseData }) {
     return (
         <div className="h-full flex flex-col gap-6 pt-10">
             <MainInput label="Titulo processo" placeholder="Insira o titulo do processo" value={caseData.titulo} onChange={(e) => setCaseData({ ...caseData, titulo: e.target.value })} />
-            <MainInput label="Número do processo" placeholder="Insira o número do processo" value={caseData.numero} onChange={(e) => setCaseData({ ...caseData, numero: e.target.value })} />
+            <MainInput label="Número do processo" placeholder="Insira o número do processo" value={caseData.numeroProcesso} onChange={(e) => setCaseData({ ...caseData, numeroProcesso: e.target.value })} />
             <SelectInput
                 label="Status do processo"
                 options={status}
@@ -37,7 +37,7 @@ export function StepOne({ caseData, setCaseData }) {
                 onChange={handleStatusChange}
                 placeholder="Digite para filtrar"
             />
-            <MainInput label="Classe processual" placeholder="Insira a classe do processo" value={caseData.classe} onChange={(e) => setCaseData({ ...caseData, classe: e.target.value })} />
+            <MainInput label="Classe processual" placeholder="Insira a classe do processo" value={caseData.classeProcessual} onChange={(e) => setCaseData({ ...caseData, classeProcessual: e.target.value })} />
       
         </div>
 
