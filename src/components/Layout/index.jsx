@@ -27,7 +27,7 @@ export function Layout() {
         '/home': 'home',
         '/costumerlist': 'costumerlist',
         '/costumerdetails': 'costumerlist',
-        '/processos': 'processos',
+        '/caselist': 'caselist',
         '/agenda': 'agenda',
         '/temisai': 'temisai',
     };
@@ -37,7 +37,7 @@ export function Layout() {
     const whiteBarMapping = {
         home: "416px",
         clientes: "312px",
-        processos: "208px",
+        caselist: "208px",
         agenda: "104px",
         temisai: "0px"
     }
@@ -76,8 +76,8 @@ export function Layout() {
                             <IconProfile actualcolor={currentPage == "costumerlist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/processos')}>
-                            <IconDocs actualcolor={currentPage == "processos" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/caselist')}>
+                            <IconDocs actualcolor={currentPage == "caselist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/agenda')}>

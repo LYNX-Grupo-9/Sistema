@@ -24,7 +24,11 @@ const endpoints = {
     getOrderByNationality: (idAdvogado) => api.get("/clientes/ordenado-naturalidade", { params: { idAdvogado } }),
     getOrderByBornDate: (idAdvogado) => api.get("/clientes/ordenado-nascimento", { params: { idAdvogado } }),
     getOrderByCases: (idAdvogado) => api.get("/clientes/ordenado-processos", { params: { idAdvogado } }),
-    
+
+    getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
+    newCase: (data) => api.post("/processos", data),
+    getCaseById: (id) => api.get(`/processos/${id}`),
+
     getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clientes/buscar",{
         params: {
             termo: searchValue,

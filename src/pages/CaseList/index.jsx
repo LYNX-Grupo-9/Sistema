@@ -7,13 +7,14 @@ import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
 
-import { CustomerRegister } from "../../components/modals/CustomerRegister";
+import { CaseRegister } from "../../components/modals/CaseRegister";
 
-export function CustomerList() {
+export function CaseList() {
     const idAdvogado = localStorage.getItem("idAdvogado");
     const [customerList, setCustomerList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -23,7 +24,24 @@ export function CustomerList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
+    const [nameCustomer, setNameCustomer] = useState("");
     const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
+
+    const [customerNamesMap, setCustomerNamesMap] = useState({});
+
+    useEffect(() => {
+        api.getAllCustomer(idAdvogado)
+            .then((response) => {
+                const map = {};
+                response.data.forEach(cliente => {
+                    map[cliente.idCliente] = cliente.nome;
+                });
+                setCustomerNamesMap(map);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar todos os clientes", error);
+            });
+    }, []);
 
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
@@ -36,47 +54,42 @@ export function CustomerList() {
     useEffect(() => {
         setFilterOptions([
             {
-                title: "Quantidade de processos em curso",
-                options: [
-                    { id: 1, label: "0" },
-                    { id: 2, label: "1-5" },
-                    { id: 3, label: "6+" }
-                ]
-            },
-            {
                 title: "Nacionalidade",
                 options: [
-                    { id: 4, label: "Brasileiro" },
-                    { id: 5, label: "Estrangeiro" }
+                    { id: 4, label: "Até R$ 5.000" },
+                    { id: 5, label: "R$ 5.001 a R$ 20.000" },
+                    { id: 6, label: "R$ 20.001 a R$ 100.000" },
+                    { id: 7, label: "Acima de R$ 100.000" },
+               
                 ]
             },
             {
-                title: "Tipo de caso",
+                title: "Status do Processo",
                 options: [
-                    { id: 6, label: "Cível" },
-                    { id: 7, label: "Trabalhista" },
-                    { id: 8, label: "Penal" },
-                    { id: 9, label: "Família" },
-                    { id: 10, label: "Tributário" }
+                    { id: 8, label: "Protocolado" },
+                    { id: 9, label: "Sentenciado" },
+                    { id: 10, label: "Fase de recursão" },
+                    { id: 11, label: "Trânsito em julgado" },
+                    { id: 12, label: "Arquivado" }
                 ]
             },
         ]);
 
         setOrderOptions([
-            { id: 1, label: "Nome" },
-            { id: 2, label: "Número de processos " },
-            { id: 3, label: "Nacionalidade" },
-            { id: 4, label: "Data de nascimento" },
+            { id: 1, label: "Cliente" },
+            { id: 2, label: "Número de processos" },
+            { id: 3, label: "Valor da ação" },
+            { id: 4, label: "Status do Processo" },
         ]);
     }, []);
 
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setDebouncedSearchValue(searchValue); 
-        }, 300); 
+            setDebouncedSearchValue(searchValue);
+        }, 300);
 
-        return () => clearTimeout(delayDebounceFn); 
+        return () => clearTimeout(delayDebounceFn);
     }, [searchValue]);
 
     useEffect(() => {
@@ -95,7 +108,7 @@ export function CustomerList() {
         } else {
             switch (selectedOrderOptions) {
                 case 0:
-                    api.getAllCustomer(idAdvogado)
+                    api.getAllCases(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -153,52 +166,55 @@ export function CustomerList() {
                     break;
             }
         }
-    }, [debouncedSearchValue, selectedOrderOptions]); 
+    }, [debouncedSearchValue, selectedOrderOptions]);
+
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
             <div className="p-[5%] w-[90%] absolute h-full">
-                <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
+                <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Processos</span>
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search change={handleSearchChange} />
                         <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                     </div>
-                    <NewItemButton title="Adicionar Cliente" click={openModal} />
+                    <NewItemButton title="Adicionar Processo" click={openModal} />
                 </div>
 
                 <div className="bgGlass w-full h-[70%]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">ID CLIENTE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]">NOME</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">EMAIL</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">TELEFONE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">NACIONALIDADE</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]  ">DATA DE NASCIMENTO</span>
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">PROCESSOS EM CURSO</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Número do processo</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Titulo</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Cliente</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Classe</span>
+                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Status</span>
+
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {customerList.map((item, index) => (
-                                <EntityItem
-                                    key={item.idCliente}
-                                    id={item.idCliente}
-                                    name={item.nome}
-                                    email={item.email}
-                                    phone={item.telefone}
-                                    country={item.naturalidade}
-                                    dtNasc={item.dataNascimento}
-                                    qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
-                                />
-                            ))}
+                            {
                             
+                            customerList.map((item, index) => (
+                                
+                                <EntityItem
+                                key={index}
+                                id={item.idProcesso}
+                                caseNumber={item.numeroProcesso}
+                                title={item.titulo}
+                                customer={customerNamesMap[String(item.idCliente)] || "Carregando..."} 
+                                classe={item.classeProcessual}
+                                status={item.status}
+                                type="case"
+                            />
+                            ))}
+
                         </div>
                     </div>
                 </div>
             </div>
-            <CustomerRegister isOpen={modalOpen} onClose={closeModal} caseFlow={false}/>
+            <CaseRegister isOpen={modalOpen} onClose={closeModal} />
         </div>
     );
 }

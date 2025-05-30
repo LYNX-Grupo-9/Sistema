@@ -8,7 +8,11 @@ import { CustomerStep2 } from "../Steps/CustomerStep2";
 import { CustomerStep3 } from "../Steps/CustomerStep3";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 
-export function CustomerRegister({ isOpen, onClose }) {
+export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal}) {
+
+ const handleClose = () => {
+    onClose();
+  }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [step, setStep] = useState(1);
   const idAdvogado = localStorage.getItem("idAdvogado");
@@ -85,8 +89,10 @@ export function CustomerRegister({ isOpen, onClose }) {
     api.newCustomer(user)
       .then((response) => {
         console.log("User registered successfully", response.data);
-        onClose();
-        location.reload();
+        closeModal();
+        if(!caseFlow) {
+          location.reload();
+        }
       })
       .catch((error) => {
         console.error("Error registering user", error);
@@ -98,7 +104,7 @@ export function CustomerRegister({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
       <div className="bg-[var(--color-light)] p-4 md:p-10 shadow-xl w-full md:w-[45%] h-full md:h-[80%] flex flex-col rounded-none md:rounded-[40px]">
         <div className="w-full flex justify-end ">
-          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={onClose} />
+          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={handleClose} />
         </div>
 
         <Stepper currentStep={step} />

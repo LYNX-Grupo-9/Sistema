@@ -5,9 +5,12 @@ import { Cadastro } from "./pages/Cadastro";
 import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
+import { CaseDetails } from "./pages/CaseDetails";
 import { CustomerList } from "./pages/CustomerList";
+
+import { TemisAI } from "./pages/TemisAI/";
+import { CaseList } from "./pages/CaseList/";
 import Agenda from "./pages/Agenda";
-import { TemisAI } from "./pages/TemisAI/TemisAI";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 
@@ -56,6 +59,16 @@ export default function App() {
               <TemisAI />
             </ProtectedRoute>
           } />
+
+          <Route path="caselist" element={
+            <ProtectedRoute>
+              <CaseList />
+            </ProtectedRoute>
+          } />
+          <Route path="casedetails" element={
+            <ProtectedRoute>
+              <CaseDetails />
+
           <Route path="agenda" element={
             <ProtectedRoute>
               <Agenda />
