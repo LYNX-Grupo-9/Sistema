@@ -68,6 +68,8 @@ export default function App() {
           <Route path="casedetails" element={
             <ProtectedRoute>
               <CaseDetails />
+            </ProtectedRoute>
+          } />
 
           <Route path="agenda" element={
             <ProtectedRoute>
