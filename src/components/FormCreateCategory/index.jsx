@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { FormNEInput } from "../FormNewEvent/FormNEInput";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -10,13 +10,20 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     const [color, setColor] = useState("#000000"); // Default color
     const idAdvogado = localStorage.getItem("idAdvogado");
 
-
+    useEffect(() => {
+        clearInputs();
+    }, [isEdit])
 
     useEffect(() => {
         if (isEdit) {
             getCategoriaById(idCategoria);
         }
     }, [isEdit, idCategoria]);
+
+    function clearInputs() {
+        setNome("");
+        setColor("#000000"); // Reset to default color
+    }
 
     function getCategoriaById(idCategoria) {
         console.log("Buscando categoria com ID:", idCategoria);
@@ -149,7 +156,7 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
 
     return (
         <>
-            <div className="bg-white p-4 flex flex-col gap-4 rounded-lg w-72">
+            <div className="bg-white px-12 pt-11 pb-8 border-2 border-gray-300  flex flex-col gap-4 rounded-lg min-w-72 shadow-lgs">
                 <X onClick={onClose} className="self-end" />
                 <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">{isEdit ? "Editar" : "Adicionar "} categoria</h1>
                 <label className="block text-sm font-medium text-gray-700">Nome: </label>

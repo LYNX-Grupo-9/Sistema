@@ -10,7 +10,7 @@ function EventDay({ legenda }) {
     )
 }
 
-function NextEvent({nomeEvento, horaEvento, localEvento}) {
+function NextEvent({nomeEvento, horaEvento, localEvento, onDeleteClick, onEditClick}) {
     return (
         <>
             <div className="px-5 py-3 bg-[color:var(--bgLightGray)] rounded-xl flex h-fit gap-5 items-center">
@@ -23,10 +23,10 @@ function NextEvent({nomeEvento, horaEvento, localEvento}) {
                     <span className='text-[color:var(--color-grayLight)]'>{localEvento}</span>
                 </div>
                 <div className='flex gap-2'>
-                    <button className='cursor-pointer'>
+                    <button className='cursor-pointer' onClick={onEditClick}>
                         <Pen width={20} color='#3C6A89' />
                     </button>
-                    <button className='cursor-pointer'>
+                    <button className='cursor-pointer' onClick={onDeleteClick}>
                         <Ban width={20} color="#3C6A89" />
                     </button>
                 </div>
