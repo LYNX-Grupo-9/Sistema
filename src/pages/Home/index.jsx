@@ -9,26 +9,97 @@ import { ptBR } from "date-fns/locale";
 import { HistoryComponent } from "../../components/HistoryComponent";
 import { Layout } from "../../components/Layout";
 import { SingleSelectComponent } from "../../components/SelectComponent";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ModalScheduling } from "../../components/ModalScheduling";
 
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
 
 export function Home() {
 
     const [today, setToday] = useState("")
+    const [solicitacoes, setSolicitacoes] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [idSolicitacao, setIdSolicitacao] = useState(null);
+
+    const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
 
+
+        fetchData(idAdvogado);
     }, [])
+
+    function fetchData(idAdvogado) {
+        getSolicitacoeByAdvId(idAdvogado);
+    }
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
 
+    function getSolicitacoeByAdvId(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/solicitacao-agendamento/advogado/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setSolicitacoes(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar solicitacoes:', error);
+            })
+    }
+
+    function showNotificacoes(notificacoes) {
+        if (!notificacoes || notificacoes.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhuma notificação
+                </span>
+            );
+        }
+
+        return notificacoes.map((notificacao, index) => {
+            if (notificacao.visualizado == false) {
+                return <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+            }
+
+        })
+
+    }
+
+    function openModal() {
+        setIsModalOpen(true);
+    }
+
+    function closeModal() {
+        setIsModalOpen(false);
+    }
+
+    function handleModalSolicitacao(idSolicitacao) {
+        setIdSolicitacao(idSolicitacao);
+        openModal();
+
+    }
+
     return (
         <>
+            {isModalOpen && (
+                <ModalScheduling idSolicitacao={idSolicitacao} onClose={closeModal} />
+            )}
             <div className="flex h-full w-full">
                 <div className="p-10 pl-20 absolute h-full w-[92%]">
                     <div className="flex justify-between mb-[20px] pr-[20px]">
@@ -53,7 +124,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
                                     <div className="overflow-y-auto h-[75%] w-full">
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -61,14 +132,7 @@ export function Home() {
                                 <div className="bgGlass w-[50%] mr-[12px]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
                                     <div className="h-[80%] overflow-y-auto py-2.5">
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
-                                        <OverviewNotification message="Nova consulta" />
+                                        {solicitacoes && showNotificacoes(solicitacoes)}
                                     </div>
                                 </div>
                                 <div className="bgGlass w-[50%] ml-[12px] flex flex-col items-center">
