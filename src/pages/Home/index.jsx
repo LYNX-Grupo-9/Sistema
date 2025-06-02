@@ -9,31 +9,23 @@ import { ptBR } from "date-fns/locale";
 import { HistoryComponent } from "../../components/HistoryComponent";
 import { Layout } from "../../components/Layout";
 import { SingleSelectComponent } from "../../components/SelectComponent";
-import axios from "axios";
+
 
 export function Home() {
 
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
     const [today, setToday] = useState("")
-    const [processos, setProcessos] = useState([])
 
     useEffect(() => {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
 
-        axios.get("http://localhost:3000/processos")
-            .then((response) => {
-                setProcessos(response.data);
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar dados:", error);
-            });
     }, [])
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
 
     return (
         <>
@@ -61,16 +53,7 @@ export function Home() {
                                         <span className="typography-medium text-[10px] text-[var(--grayText)] w-[150px] ">Previsão de conclusão</span>
                                     </div>
                                     <div className="overflow-y-auto h-[75%] w-full">
-                                        {processos.map((processo) => (
-                                            <HighlightedCases
-                                                key={processo.id}
-                                                idCase={processo.idCase}
-                                                Customer={processo.Customer}
-                                                type={processo.type}
-                                                initialDate={processo.initialDate}
-                                                end={processo.end}
-                                            />
-                                        ))}
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -125,31 +108,7 @@ export function Home() {
                                 </span>
                             </div>
 
-                            <div className="bgGlass h-[65%]">
-                                <div className="flex justify-between items-center gap-2">
-                                    <span className="typography-black text-[var(--color-blueDark)] md:text-lg lg:text-xl">Histórico</span>
-                                    <SingleSelectComponent />
-                                </div>
-                                <div className="flex w-full pt-[20px]">
-                                    <span className="text-[var(--grayText)] typography-medium text-[12px]">Nome do cliente</span>
-                                    <span className="text-[var(--grayText)] typography-medium text-[12px] ml-[15%]">Processos em aberto</span>
-                                </div>
-                                <div className="h-[80%] overflow-y-auto">
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                    <HistoryComponent title="Lewis Hamilton" message="2" />
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
