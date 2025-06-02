@@ -14,10 +14,21 @@ export function CustomerDetails() {
     const { id } = location.state || {};
 
     const [customerData, setCustomerData] = useState([]);
+    const [casesData, setCasesData] = useState([]);
     useEffect(() => {
         api.getCustomerById(id)
             .then((response) => {
                 setCustomerData(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar cliente:", error);
+            });
+    }, []);
+    useEffect(() => {
+        api.getCasesByCustomerId(id)
+            .then((response) => {
+                setCasesData(response.data);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -57,20 +68,26 @@ export function CustomerDetails() {
                         {customerData?.processos?.length > 0 ? (
                             <>
                                 <div className="flex w-[80%] justify-between items-center pl-[4%]">
-                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Id do Processo</span>
-                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Tipo</span>
-                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[23%] ">Data de inicio</span>
-                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[25%] ">Previsão de conclusão</span>
+                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Número do processo</span>
+                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Titulo</span>
+                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[23%] ">Classe</span>
+                                    <span className="typography-medium text-[10px] text-[var(--grayText)] w-[25%] ">Status</span>
                                 </div>
                                 <div className="flex-1 h-[65%] overflow-y-auto">
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
-                                    <CustomerCase idCase="1321321" type="Aposentadoria" initialDate="10/10/2010" end="10/10/2020" />
+                                    {
+                                        casesData.map((caseItem) => (
+                                            <CustomerCase 
+                                                key={caseItem.idProcesso} 
+                                                idCase={caseItem.idProcesso} 
+                                                type={caseItem.titulo} 
+                                                initialDate={caseItem.classeProcessual} 
+                                                end={caseItem.status} 
+                                                customer={customerData.nome}
+                                            />
+                                        ))
+                                    }
+
+                                 
                                 </div>
                             </>
                         ) : (

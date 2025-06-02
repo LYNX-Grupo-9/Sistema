@@ -28,6 +28,7 @@ const endpoints = {
     getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
     newCase: (data) => api.post("/processos", data),
     getCaseById: (id) => api.get(`/processos/${id}`),
+    getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
 
     getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clientes/buscar",{
         params: {
