@@ -3,8 +3,8 @@ import { EntityInfo } from "../../components/EntityInfo";
 import edit from "../../assets/icons/edit.svg";
 import api from "../../services/api";
 import { useLocation } from "react-router-dom";
-import { AttachmentButton } from "../../components/Buttons/AttachmentButton";
 import { ExternalTJSP } from "../../components/Buttons/ExternalTJSP";
+import { ButtonAnexo } from "../../components/ButtonAnexo";
 
 export function CaseDetails() {
     const location = useLocation();
@@ -41,7 +41,7 @@ export function CaseDetails() {
                         <EntityInfo title="Valor da ação" value={caseData.valor} />
                     </div>
                 </div>
-                <div className="flex flex-col w-1/2 flex flex-col h-full justify-center gap-15">
+                <div className="flex flex-col w-1/2 h-full justify-center gap-15">
                     <div className="flex flex-col gap-6">
                         <div className="bgGlass w-full h-[20%] flex justify-start items-center">
                             <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">Partes envolvidas</span>
@@ -55,7 +55,7 @@ export function CaseDetails() {
                     </div>
                     <div className=" flex flex-col gap-6 ">
                         <ExternalTJSP />
-                        <AttachmentButton />
+                        <ButtonAnexo />
                     </div>
                 </div>
             </div>

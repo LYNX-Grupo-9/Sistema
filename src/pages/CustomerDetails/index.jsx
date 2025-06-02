@@ -32,7 +32,7 @@ export function CustomerDetails() {
                     <div className="bgGlass w-full h-[10%] flex justify-center items-center">
                         <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
                     </div>
-                    <div className="bgGlass w-full h-[90%] flex flex-col items-center gap-5 overflow-y-auto">
+                    <div className="bgGlass w-full h-[83%] flex flex-col items-center gap-5 overflow-y-auto">
 
                         <EntityInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
                         <EntityInfo title="Data de nascimento" value={customerData.dataNascimento} />
@@ -99,9 +99,9 @@ export function CustomerDetails() {
                                 </div>
                         }
                     </div>
+            <ButtonAnexo />
                 </div>
             </div>
-            <ButtonAnexo />
         </div>
     )
 }

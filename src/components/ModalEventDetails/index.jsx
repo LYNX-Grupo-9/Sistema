@@ -200,7 +200,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                             <span className="typography-black text-[var(--color-blueDark)] text-xl ">Processo: </span>
                             <div>
                                 <span className="font-bold text-[var(--color-grayLight)] text-xl">Descrição: </span>
-                                <span className="font-semibold text-[var(--color-grayLight)] text-lg">{process && process.descricao ? process.descricao : "Processo indisponível"}</span>
+                                <span className="font-semibold text-[var(--color-grayLight)] text-lg">{process && process.assunto ? process.assunto : "Processo indisponível"}</span>
                             </div>
                             <div className="self-end flex gap-4 mt-4">
                                 <button

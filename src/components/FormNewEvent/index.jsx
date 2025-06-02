@@ -214,7 +214,7 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         }).then(response => {
             console.log('Processos:', response.data);
             const processosMap = response.data.map((processo, index) => ({
-                label: processo.descricao,
+                label: processo.titulo,
                 value: processo.idProcesso,
             }));
             setProcessosOptions(processosMap);
