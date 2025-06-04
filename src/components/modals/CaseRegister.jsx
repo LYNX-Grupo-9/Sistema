@@ -79,7 +79,6 @@ export function CaseRegister({ isOpen, onClose }) {
     else if (step === 2) {
       if (!caseData.assunto.trim()) return errorMessage("Preencha o assunto do caso");
       if (!caseData.tribunal.trim()) return errorMessage("Preencha o tribunal responsável");
-      if (!caseData.valor.trim() || isNaN(caseData.valor)) return errorMessage("Preencha um valor válido para o caso");
       setStep(3);
     }
     else if (step === 3) {
