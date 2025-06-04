@@ -7,6 +7,7 @@ import Plus from "../assets/icons/plusWhite.svg";
 // Importa o supabase-js
 import { createClient } from "@supabase/supabase-js";
 import iconAttachment from '../assets/icons/attachment.svg';
+import axios from "axios";
 
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -102,6 +103,37 @@ export function ButtonAnexo() {
     }
 
     // Upload de arquivo
+
+    function postAnexo (idCliente, iditem, idProcesso, nomeAnexo) {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            return false
+        }
+
+        console.log({
+            idCliente,
+            idItem: iditem, 
+            idProcesso, 
+            nomeAnexo
+        })
+
+        axios.post("http://localhost:8080/api/anexos", {
+            idCliente: idCliente ?? null,
+            idItem: iditem ?? null,
+            idProcesso: idProcesso ?? null,
+            nomeAnexo: nomeAnexo ?? null
+        },{
+            headers: {
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json"
+            }
+        }).then (response => {
+            console.log(response)
+        }).catch (error => {
+            console.error(error)
+        })
+    }
+
     async function handleUpload() {
         if (!file) return;
         setUploading(true);
@@ -109,7 +141,13 @@ export function ButtonAnexo() {
         // Adicione uma barra ao final do folderPath se não houver
         const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
         const filePath = `${normalizedFolderPath}${file.name}`;
-        const { error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
+        const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
+        
+        if (data) {
+            console.log(data)
+            postAnexo(1, data.id, null, "testePost")
+        }
+
         if (error) {
             setStatus("Erro ao enviar anexo");
         } else {
