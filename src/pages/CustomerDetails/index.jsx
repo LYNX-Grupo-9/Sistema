@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { CustomerCase } from "../../components/CustomerCases";
-import { CustomerInfo } from "../../components/CustomerInfo";
+import { EntityInfo } from "../../components/EntityInfo";
 import { DropdownComponent } from "../../components/DropdownComponent";
 import { EventCard } from "../../components/EventCard";
 import { Layout } from "../../components/Layout";
 import api from "../../services/api";
 import { useLocation } from "react-router-dom";
 import { SingleSelectComponent } from "../../components/SelectComponent";
+import { ButtonAnexo } from "../../components/ButtonAnexo";
 
 export function CustomerDetails() {
     const location = useLocation();
@@ -25,22 +26,24 @@ export function CustomerDetails() {
     }, []);
 
     return (
-        <div className="flex w-full h-full bg-[var(--bgColor-primary))] items-center justify-center">   
+        <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">   
             <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
-                <div className="flex flex-col gap-6 w-1/2">
+                <div className="flex flex-col gap-6 w-1/2 h-full">
                     <div className="bgGlass w-full h-[10%] flex justify-center items-center">
                         <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
                     </div>
-                    <div className="bgGlass w-full h-[70%] flex flex-col items-center gap-5 overflow-y-auto">
+                    <div className="bgGlass w-full h-[83%] flex flex-col items-center gap-5 overflow-y-auto">
 
-                        <CustomerInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
-                        <CustomerInfo title="Data de nascimento" value={customerData.dataNascimento} />
-                        <CustomerInfo title="Naturalidade" value={customerData.naturalidade} />
-                        <CustomerInfo title="Endereço" value={customerData.endereco} />
-                        <CustomerInfo title="Gênero" value={customerData.genero} />
-                        <CustomerInfo title="Email" value={customerData.email} />
-                        <CustomerInfo title="Telefone" value={customerData.telefone} />
-                        <CustomerInfo title="Profissão" value={customerData.profissao} />
+                        <EntityInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
+                        <EntityInfo title="Data de nascimento" value={customerData.dataNascimento} />
+                        <EntityInfo title="Naturalidade" value={customerData.naturalidade} />
+                        <EntityInfo title="Endereço" value={customerData.endereco} />
+                        <EntityInfo title="Gênero" value={customerData.genero} />
+                        <EntityInfo title="Email" value={customerData.email} />
+                        <EntityInfo title="Telefone" value={customerData.telefone} />
+                        <EntityInfo title="Profissão" value={customerData.profissao} />
+                        <EntityInfo title="Habilitação" value={customerData.cnh} />
+                        <EntityInfo title="Passaporte" value={customerData.passaporte} />
                     </div>
                 </div>
                 <div className="flex flex-col gap-6 w-1/2">
@@ -96,6 +99,7 @@ export function CustomerDetails() {
                                 </div>
                         }
                     </div>
+            <ButtonAnexo />
                 </div>
             </div>
         </div>

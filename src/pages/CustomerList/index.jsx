@@ -5,12 +5,12 @@ import { SingleSelectComponent } from "../../components/SelectComponent";
 
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
-import { CustomerItem } from "../../components/CustomerItem";
-import { Layout } from "../../components/Layout";
+import { EntityItem } from "../../components/EntityItem";
+
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
 
 export function CustomerList() {
-
+    const idAdvogado = localStorage.getItem("idAdvogado");
     const [customerList, setCustomerList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -23,7 +23,7 @@ export function CustomerList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
-    const [debouncedSearchValue, setDebouncedSearchValue] = useState(""); // Para o debounce
+    const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
 
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
@@ -34,7 +34,6 @@ export function CustomerList() {
     }
 
     useEffect(() => {
-        // Configuração das opções de filtro e ordenação
         setFilterOptions([
             {
                 title: "Quantidade de processos em curso",
@@ -71,20 +70,20 @@ export function CustomerList() {
         ]);
     }, []);
 
-    // Debounce para o valor da busca
+
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setDebouncedSearchValue(searchValue); // Define o valor debounced após o timeout
-        }, 300); // 300ms de atraso (ajuste conforme necessário)
+            setDebouncedSearchValue(searchValue); 
+        }, 300); 
 
-        return () => clearTimeout(delayDebounceFn); // Limpa o timeout anterior se o usuário continuar digitando
+        return () => clearTimeout(delayDebounceFn); 
     }, [searchValue]);
 
     useEffect(() => {
         setLoading(true);
 
         if (debouncedSearchValue.length > 0) {
-            api.getCustomerBySearch(debouncedSearchValue)
+            api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
                     setCustomerList(response.data);
                     setLoading(false);
@@ -96,7 +95,7 @@ export function CustomerList() {
         } else {
             switch (selectedOrderOptions) {
                 case 0:
-                    api.getAllCustomer()
+                    api.getAllCustomer(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -107,7 +106,7 @@ export function CustomerList() {
                         });
                     break;
                 case 1:
-                    api.getOrderByName()
+                    api.getOrderByName(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -118,7 +117,7 @@ export function CustomerList() {
                         });
                     break;
                 case 2:
-                    api.getOrderByCases()
+                    api.getOrderByCases(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -129,7 +128,7 @@ export function CustomerList() {
                         });
                     break;
                 case 3:
-                    api.getOrderByNationality()
+                    api.getOrderByNationality(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -140,7 +139,7 @@ export function CustomerList() {
                         });
                     break;
                 case 4:
-                    api.getOrderByBornDate()
+                    api.getOrderByBornDate(idAdvogado)
                         .then((response) => {
                             setCustomerList(response.data);
                             setLoading(false);
@@ -154,11 +153,11 @@ export function CustomerList() {
                     break;
             }
         }
-    }, [debouncedSearchValue, selectedOrderOptions]); // Executa sempre que o valor debounced ou a ordenação mudar
+    }, [debouncedSearchValue, selectedOrderOptions]); 
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
-            <div className="pl-20 p-10 w-[80%] absolute h-full">
+            <div className="p-[5%] w-[90%] absolute h-full">
                 <span className="typography-bold text-[var(--color-blueDark)] text-4xl">Central de Clientes</span>
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
@@ -182,8 +181,8 @@ export function CustomerList() {
                         </div>
 
                         <div className=" h-full overflow-scroll">
-                            {/* {customerList  && customerList.map((item, index) => (
-                                <CustomerItem
+                            {customerList.map((item, index) => (
+                                <EntityItem
                                     key={item.idCliente}
                                     id={item.idCliente}
                                     name={item.nome}
@@ -192,12 +191,14 @@ export function CustomerList() {
                                     country={item.naturalidade}
                                     dtNasc={item.dataNascimento}
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
-                                /> */}
+                                />
+                            ))}
+                            
                         </div>
                     </div>
                 </div>
             </div>
-            <CustomerRegister isOpen={modalOpen} onClose={closeModal} />
+            <CustomerRegister isOpen={modalOpen} onClose={closeModal} caseFlow={false}/>
         </div>
     );
 }

@@ -6,11 +6,16 @@ import { LgButton } from "../Buttons/LgButton";
 import { CustomerStep1 } from "../Steps/CustomerStep1";
 import { CustomerStep2 } from "../Steps/CustomerStep2";
 import { CustomerStep3 } from "../Steps/CustomerStep3";
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 
+export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal}) {
 
-export function CustomerRegister({ isOpen, onClose }) {
+ const handleClose = () => {
+    onClose();
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [step, setStep] = useState(1);
-
+  const idAdvogado = localStorage.getItem("idAdvogado");
   const [user, setUser] = useState({
     nome: "",
     documento: "",
@@ -25,28 +30,69 @@ export function CustomerRegister({ isOpen, onClose }) {
     passaporte: "",
     cnh: "",
     naturalidade: "",
-    idAdvogado: 1
+    idAdvogado: Number(idAdvogado),
   });
 
+ const errorMessage = (message) => toast.error(message, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+    transition: Bounce,
+    });
 
-  const handleNextStep = () => {
-    console.log(user)
-    if (step === 1) {
-      setStep(2);
-    } else if (step === 2) {
-      setStep(3);
-    } else if (step === 3) {
+    const handleNextStep = () => {
+      if (step === 1) {
+        if (!user.nome.trim()) return errorMessage("Preencha o nome do cliente");
+        if (!user.dataNascimento) return errorMessage("Preencha a data de nascimento");
+        if (!user.genero) return errorMessage("Selecione o gênero");
+        if (!user.estadoCivil) return errorMessage("Selecione o estado civil");
+        if (!user.naturalidade.trim()) return errorMessage("Preencha a naturalidade");
+    
+        converterParaISO(user.dataNascimento);
+        setStep(2);
+      }
+    
+      else if (step === 2) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!user.email.trim()) return errorMessage("Preencha o e-mail");
+        if (!emailRegex.test(user.email)) return errorMessage("E-mail inválido");
+        if (!user.telefone.trim()) return errorMessage("Preencha o telefone");
+        if (!user.endereco.trim()) return errorMessage("Preencha o endereço");
+        if (!user.profissao.trim()) return errorMessage("Preencha a profissão");
+        
+        
+        setStep(3);
+      }
+      
+      else if (step === 3) {
+        if (!user.tipoDocumento) return errorMessage("Selecione o tipo de documento");
+        if (!user.documento.trim() || user.documento.length < 5) return errorMessage("Preencha um número de documento válido");
+        handleRegister()
+      }
+    
+    };
+    
 
-      console.log("Final Step", user);
-    }
-  }
+  const converterParaISO = (data) => {
+    const partes = data.split("-");
+    if (partes.length !== 3) return null;
+    const [dia, mes, ano] = partes;
+    setUser({ ...user, dataNascimento: `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` });
+  };
 
   const handleRegister = () => {
     api.newCustomer(user)
       .then((response) => {
         console.log("User registered successfully", response.data);
-        onClose();
-        location.reload();
+        closeModal();
+        if(!caseFlow) {
+          location.reload();
+        }
       })
       .catch((error) => {
         console.error("Error registering user", error);
@@ -55,14 +101,15 @@ export function CustomerRegister({ isOpen, onClose }) {
 
   }
   return isOpen ? (
-    <div className="absolute w-screen h-screen z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
-      <div className="bg-[var(--color-light)] p-10 rounded-[40px] shadow-xl  w-[45%] h-[80%] flex flex-col ">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
+      <div className="bg-[var(--color-light)] p-4 md:p-10 shadow-xl w-full md:w-[45%] h-full md:h-[80%] flex flex-col rounded-none md:rounded-[40px]">
         <div className="w-full flex justify-end ">
-          <img src={CloseIcon} className="w-[5%] mb-6" onClick={onClose} />
+          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={handleClose} />
         </div>
 
         <Stepper currentStep={step} />
-        <div className="w-full h-[100%]  overflow-y-auto">
+
+        <div className="w-full flex-1 overflow-y-auto">
           {step === 1 ? (
             <CustomerStep1 user={user} setUser={setUser} />
           ) : step === 2 ? (
@@ -74,19 +121,29 @@ export function CustomerRegister({ isOpen, onClose }) {
 
         <div className="w-full flex justify-evenly mt-[5px]">
           {step > 1 && (
-            <LgButton
-              title="Voltar"
-              click={() => setStep(step - 1)}
-              type="alternative"
-            />
+            <LgButton title="Voltar" click={() => setStep(step - 1)} type="alternative" />
           )}
           {step === 3 ? (
-            <LgButton title="Cadastrar" click={handleRegister} />
+            <LgButton title="Cadastrar" click={handleNextStep} />
           ) : (
             <LgButton title="Proximo" click={handleNextStep} />
           )}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </div>
-  ) : null;
+  ) : null
+
 }

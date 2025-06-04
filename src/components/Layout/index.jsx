@@ -14,7 +14,7 @@ export function Layout() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    // Função para lidar com a navegação e o estado de carregamento
+
     function handleNavigation(path) {
         setIsLoading(true);
         navigate(path);
@@ -27,9 +27,9 @@ export function Layout() {
         '/home': 'home',
         '/costumerlist': 'costumerlist',
         '/costumerdetails': 'costumerlist',
-        '/processos': 'processos',
+        '/caselist': 'caselist',
         '/agenda': 'agenda',
-        '/ia': 'ia',
+        '/temisai': 'temisai',
     };
 
     const currentPage = pageMapping[location.pathname] || 'home';
@@ -37,9 +37,9 @@ export function Layout() {
     const whiteBarMapping = {
         home: "416px",
         clientes: "312px",
-        processos: "208px",
+        caselist: "208px",
         agenda: "104px",
-        ia: "0px"
+        temisai: "0px"
     }
 
     const whiteBarStyle = {
@@ -76,16 +76,16 @@ export function Layout() {
                             <IconProfile actualcolor={currentPage == "costumerlist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/processos')}>
-                            <IconDocs actualcolor={currentPage == "processos" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/caselist')}>
+                            <IconDocs actualcolor={currentPage == "caselist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/agenda')}>
                             <IconCalendar actualcolor={currentPage == "agenda" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
-                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/ia')}>
-                            <IconAi actualcolor={currentPage == "ia" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/temisai')}>
+                            <IconAi actualcolor={currentPage == "temisai" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div style={whiteBarStyle}></div>
