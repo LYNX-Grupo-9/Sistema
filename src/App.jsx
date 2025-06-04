@@ -7,6 +7,7 @@ import { Home } from "./pages/Home";
 import { CustomerDetails } from "./pages/CustomerDetails";
 import { CaseDetails } from "./pages/CaseDetails";
 import { CustomerList } from "./pages/CustomerList";
+import { Institucional } from "./pages/Institucional";
 
 import { TemisAI } from "./pages/TemisAI/";
 import { CaseList } from "./pages/CaseList/";
@@ -30,9 +31,10 @@ export default function App() {
         theme="colored"
       />
       <Routes>
-        <Route path="/" index element={<Login />} />
+        <Route path="/" index element={<Institucional />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/institucional" element={<Institucional />} />
 
         <Route path="/" element={
           <ProtectedRoute>
@@ -78,6 +80,7 @@ export default function App() {
           } />
 
         </Route>
+        
       </Routes>
     </Router>
   );

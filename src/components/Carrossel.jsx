@@ -1,0 +1,67 @@
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import img1 from '../assets/image 2.svg';
+import img2 from '../assets/image 3.svg';
+import img3 from '../assets/image 6.svg';
+import img4 from '../assets/image 4.svg';
+import img5 from '../assets/image 5.svg';
+
+import 'swiper/css';
+
+const Carousel = () => {
+  const slideStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 'auto',
+  };
+
+  const imageStyle = {
+    width: '100%',
+    height: 'auto',
+  };
+
+  return (
+    <Swiper
+      modules={[Autoplay]}
+      loop={true}
+      autoplay={{
+        delay: 1000,
+        disableOnInteraction: false,
+      }}
+      speed={800}
+      spaceBetween={20}
+      slidesPerView={2.5}
+      centeredSlides={true}
+    >
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img1} alt="Slide 1" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img2} alt="Slide 2" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img3} alt="Slide 3" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img4} alt="Slide 3" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div style={slideStyle}>
+          <img src={img5} alt="Slide 3" style={imageStyle} />
+        </div>
+      </SwiperSlide>
+    </Swiper>
+  );
+};
+
+export default Carousel;
