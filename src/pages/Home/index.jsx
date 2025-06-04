@@ -74,7 +74,11 @@ export function Home() {
 
         return notificacoes.map((notificacao, index) => {
             if (notificacao.visualizado == false) {
-                return <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+                return (
+                    <>
+                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+                    </>
+                )
             }
 
         })
@@ -129,12 +133,7 @@ export function Home() {
                                 </div>
                             </div>
                             <div className="mt-[2%] flex h-[35%]">
-                                <div className="bgGlass w-[50%] mr-[12px]">
-                                    <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
-                                    <div className="h-[80%] overflow-y-auto py-2.5">
-                                        {solicitacoes && showNotificacoes(solicitacoes)}
-                                    </div>
-                                </div>
+
                                 <div className="bgGlass w-[50%] ml-[12px] flex flex-col items-center">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Eventos do mês</span>
                                     <div className="flex w-full pt-[20px] justify-between">
@@ -172,7 +171,14 @@ export function Home() {
                                 </span>
                             </div>
 
-
+                            <div className="bgGlass h-[30%]">
+                                <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Notificação</span>
+                                <div className=" w-full mr-[12px] h-4/5 overflow-y-scroll ">
+                                    <div className="h-full py-2.5">
+                                        {solicitacoes && showNotificacoes(solicitacoes)}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
