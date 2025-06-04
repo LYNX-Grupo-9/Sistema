@@ -5,22 +5,26 @@ import api from "../../services/api";
 import { useLocation } from "react-router-dom";
 import { ExternalTJSP } from "../../components/Buttons/ExternalTJSP";
 import { ButtonAnexo } from "../../components/ButtonAnexo";
+import { EditCase } from "../../components/modals/EditCase";
 
 export function CaseDetails() {
     const location = useLocation();
     const { id, customer } = location.state || {};
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+    const [caseData, setCaseData] = useState([]);
 
-
-    const [caseData, setcaseData] = useState([]);
     useEffect(() => {
         api.getCaseById(id)
             .then((response) => {
-                setcaseData(response.data);
+                setCaseData(response.data);
             })
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
             });
     }, []);
+
 
     return (
         <div className="flex w-full h-full bg-[var(--bgColor-primary))] items-center justify-center">
@@ -28,7 +32,7 @@ export function CaseDetails() {
                 <div className="flex flex-col gap-6 w-1/2 h-full justify-center">
                     <div className="bgGlass w-full h-[10%] flex justify-between items-center">
                         <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">Informações do processo</span>
-                        <img src={edit} className="w-[5%] ml-4 cursor-pointer" alt="Editar" onClick={() => console.log("Editar cliente")} />
+                        <img src={edit} className="w-[5%] ml-4 cursor-pointer" alt="Editar" onClick={openModal} />
                     </div>
                     <div className="bgGlass w-full h-[70%] flex flex-col items-center gap-5 overflow-y-auto">
                         <EntityInfo title="Titulo do processo" value={caseData.titulo} />
@@ -59,6 +63,7 @@ export function CaseDetails() {
                     </div>
                 </div>
             </div>
+            <EditCase isOpen={modalOpen} onClose={closeModal} selectedCaseData={caseData} idProcesso={id}/>
         </div>
     )
 }
