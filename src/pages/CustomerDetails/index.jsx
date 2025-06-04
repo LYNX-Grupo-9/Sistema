@@ -7,8 +7,10 @@ import { useLocation } from "react-router-dom";
 import { SingleSelectComponent } from "../../components/SelectComponent";
 import { ButtonAnexo } from "../../components/ButtonAnexo";
 import ModalEventDetails from "../../components/ModalEventDetails";
+import { format } from 'date-fns';
 
 export function CustomerDetails() {
+
     const location = useLocation();
     const { id } = location.state || {};
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
@@ -72,7 +74,7 @@ export function CustomerDetails() {
                         <div className="bgGlass w-full h-[83%] flex flex-col items-center gap-5 overflow-y-auto">
 
                             <EntityInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
-                            <EntityInfo title="Data de nascimento" value={customerData.dataNascimento} />
+                            <EntityInfo title="Data de nascimento" value={format(new Date(customerData.dataNascimento), 'dd/MM/yyyy')} />
                             <EntityInfo title="Naturalidade" value={customerData.naturalidade} />
                             <EntityInfo title="Endereço" value={customerData.endereco} />
                             <EntityInfo title="Gênero" value={customerData.genero} />
