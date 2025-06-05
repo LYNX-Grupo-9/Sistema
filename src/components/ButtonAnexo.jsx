@@ -158,8 +158,32 @@ export function ButtonAnexo() {
         setUploading(false);
     }
 
+    function deleteAnexo(idAnexo) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        return false;
+    }
+
+    console.log({ idAnexo });
+
+    return axios.delete(`http://localhost:8080/api/anexos/${idAnexo}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        console.log(response);
+        return true;
+    })
+    .catch(error => {
+        console.error(error);
+        return false;
+    });
+}
+
     // Função para deletar arquivo
-    async function handleDelete(fileName) {
+    async function handleDelete(fileName, idAnexo) {
         if (!window.confirm(`Deseja realmente excluir o arquivo "${fileName}"?`)) return;
         setStatus("Excluindo arquivo...");
         const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
@@ -168,6 +192,8 @@ export function ButtonAnexo() {
         if (error) {
             setStatus("Erro ao excluir arquivo");
         } else {
+            console.log(fileName)
+            deleteAnexo(idAnexo)
             setStatus("Arquivo excluído com sucesso!");
             await listFiles();
         }
@@ -304,7 +330,7 @@ export function ButtonAnexo() {
                                                                     </button>
                                                                     <button
                                                                         className="px-2 py-1"
-                                                                        onClick={() => handleDelete(f.name)}
+                                                                        onClick={() => handleDelete(f.name, f.idAnexo)}
                                                                         title="Excluir"
                                                                     >
                                                                         <img src={trashIcon} />
