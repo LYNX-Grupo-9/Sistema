@@ -8,8 +8,15 @@ import { SingleSelectComponent } from "../../components/SelectComponent";
 import { ButtonAnexo } from "../../components/ButtonAnexo";
 import ModalEventDetails from "../../components/ModalEventDetails";
 import { format } from 'date-fns';
+import edit from "../../assets/icons/edit.svg";
+import { CustomerRegister } from "../../components/modals/CustomerRegister";
+
+
 
 export function CustomerDetails() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
 
     const location = useLocation();
     const { id } = location.state || {};
@@ -18,11 +25,22 @@ export function CustomerDetails() {
     const [casesData, setCasesData] = useState([]);
     const [events, setEvents] = useState([]);
     const [idEventDetails, setIdEventDetails] = useState(Number)
+    const [orderOptions, setOrderOptions] = useState([]);
+    const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
+
+    useEffect(() => {
+        setOrderOptions([
+            { id: 1, label: "Cliente" },
+            { id: 2, label: "Número de processos" },
+            { id: 3, label: "Valor da ação" },
+            { id: 4, label: "Status do Processo" },
+        ]);
+    }, []);
+
     useEffect(() => {
         api.getCustomerById(id)
             .then((response) => {
                 setCustomerData(response.data);
-                console.log(response.data);
             })
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
@@ -32,7 +50,6 @@ export function CustomerDetails() {
         api.getCasesByCustomerId(id)
             .then((response) => {
                 setCasesData(response.data);
-                console.log(response.data);
             })
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
@@ -42,7 +59,6 @@ export function CustomerDetails() {
         api.getEventsByCustomerId(id)
             .then((response) => {
                 setEvents(response.data);
-                console.log(response.data);
             })
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
@@ -52,11 +68,14 @@ export function CustomerDetails() {
     function closeModalDetails() {
         setIsModalDetailsOpen(false);
     }
+
     function openModalDetails(id) {
         setIdEventDetails(id)
         setIsModalDetailsOpen(true);
-
-
+    }
+    
+    function handleOrderChange(selectedOption) {
+        setSelectedOrderOptions(selectedOption);
     }
 
     return (
@@ -65,16 +84,24 @@ export function CustomerDetails() {
                 isModalDetailsOpen &&
                 <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} />
             }
+            {
+                modalOpen &&
+                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true}/>
+            }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
                     <div className="flex flex-col gap-6 w-1/2 h-full">
-                        <div className="bgGlass w-full h-[10%] flex justify-center items-center">
+                        <div className="bgGlass w-full h-[10%] flex justify-between items-center">
                             <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
+                            <img src={edit} className="w-[5%] ml-4 cursor-pointer" alt="Editar" onClick={openModal} />
                         </div>
                         <div className="bgGlass w-full h-[83%] flex flex-col items-center gap-5 overflow-y-auto">
 
                             <EntityInfo title="Documento de identificação" value={`${customerData.tipoDocumento} - ${customerData.documento}`} />
-                            <EntityInfo title="Data de nascimento" value={format(new Date(customerData.dataNascimento), 'dd/MM/yyyy')} />
+                            <EntityInfo
+                                title="Data de nascimento"
+                                value={customerData.dataNascimento ? format(new Date(customerData.dataNascimento), 'dd/MM/yyyy') : 'Data inválida'}
+                            />
                             <EntityInfo title="Naturalidade" value={customerData.naturalidade} />
                             <EntityInfo title="Endereço" value={customerData.endereco} />
                             <EntityInfo title="Gênero" value={customerData.genero} />
@@ -89,7 +116,7 @@ export function CustomerDetails() {
                         <div className="bgGlass w-full h-[40%] flex flex-col">
                             <div className="flex w-full justify-between items-center">
                                 <span className="typography-semibold text-3xl text-[var(--color-blueDark)]">Processos</span>
-                                <SingleSelectComponent />
+                                 <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                             </div>
                             <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[20px] mb-[16px]"></div>
 

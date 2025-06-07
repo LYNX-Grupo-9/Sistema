@@ -22,17 +22,17 @@ export function EditCase({ isOpen, onClose, selectedCaseData, idProcesso }) {
             setCaseData({
                 titulo: selectedCaseData.titulo || "",
                 numeroProcesso: selectedCaseData.numeroProcesso || "",
-                idCliente: selectedCaseData.idCliente || "",
+                idCliente: selectedCaseData.idCliente  || "",
                 status: selectedCaseData.status || "",
-                classeProcessual: selectedCaseData.classeProcessual,
-                assunto: selectedCaseData.assunto,
-                tribunal: selectedCaseData.tribunal,
-                valor: selectedCaseData.valor,
-                autor: selectedCaseData.autor,
-                nomeAdvogado: selectedCaseData.nomeAdvogado,
-                reu: selectedCaseData.reu,
-                advReu: selectedCaseData.advReu,
-                idAdvogado: selectedCaseData.idAdvogado,
+                classeProcessual: selectedCaseData.classeProcessual || "",
+                assunto: selectedCaseData.assunto || "",
+                tribunal: selectedCaseData.tribunal || "",
+                valor: selectedCaseData.valor || "",
+                autor: selectedCaseData.autor || "",
+                nomeAdvogado: selectedCaseData.nomeAdvogado || "",
+                reu: selectedCaseData.reu || "",
+                advReu: selectedCaseData.advReu || "",
+                idAdvogado: selectedCaseData.idAdvogado || "",
             });
         }
     }, [selectedCaseData]);
