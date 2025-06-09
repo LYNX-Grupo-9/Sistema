@@ -36,6 +36,27 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             })
     }
 
+    function changeStatusSolicitacao(idSolicitacao) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.put(`http://localhost:8080/api/solicitacao-agendamento/visualizar/${idSolicitacao}`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+            }).catch(error => {
+                toast.error('Erro ao atualizar status:', error);
+            })
+    }
+
     function createEvent() {
 
         const [hora, minuto] = solicitacao.horaSolicitacao.split(':');
@@ -64,7 +85,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
         const token = localStorage.getItem("token");
 
-        console.log("Payload do evento:", eventoPayload); 
+        console.log("Payload do evento:", eventoPayload);
 
         if (!token) {
             console.error('Token de autenticação não encontrado.');
@@ -81,6 +102,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
         }).then(response => {
             console.log(response.data)
             toast.success("Agendamento aceito com sucesso! O cliente será notificado por email.");
+            changeStatusSolicitacao(idSolicitacao);
             sendEmail({
                 nome: solicitacao.nome,
                 data: formatDateBR(solicitacao.dataSolicitacao),
@@ -88,11 +110,21 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
                 local: "Remoto",
                 email: solicitacao.email,
             }, "template_rphntnv")
+            onSuccess && onSuccess();
+            onClose && onClose();
         }).catch(error => {
             console.error("Erro ao criar" + error)
             toast.error("Erro ao criar evento, tente novamente mais tarde.");
         })
         return;
+    }
+
+    function declineScheduling() {
+        changeStatusSolicitacao(idSolicitacao);
+
+        toast.success("Você Recusou a solicitação de agendamento com sucesso! O cliente será notificado por email.");
+
+        onSuccess && onSuccess();
     }
 
     function formatDateBR(dateString) {
@@ -136,6 +168,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
                     <div className="mt-4 flex justify-end gap-2">
                         <button
+                            onClick={declineScheduling}
                             className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
                         >
                             Recusar
