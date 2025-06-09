@@ -25,24 +25,41 @@ export function ButtonAnexo() {
     const [status, setStatus] = useState("");
     const fileInputRef = useRef(null);
     const [newAttachment, setNewAttachment] = useState(false)
+    const [anexosCliente, setAnexosCliente] = useState([]);
 
     // Listar arquivos do Supabase Storage
     async function listFiles() {
-        try {
-            setNewAttachment(false);
-            setStatus('Buscando arquivos...');
-            const { data, error } = await supabase.storage
-                .from(bucketName)
-                .list(folderPath);
-            if (error) throw error;
-            setFiles(data || []);
-            setStatus(`Encontrados ${data?.length || 0} itens`, 'success');
-        } catch (error) {
-            console.error('Error listing files:', error);
-            setStatus(`Erro ao listar arquivos: ${error.message}`, 'error');
-            setFiles([]);
-        }
+    try {
+        setNewAttachment(false);
+        setStatus('Buscando arquivos...');
+
+        const anexos = await fetchAnexosDoCliente(1); 
+
+        const { data: storageFiles, error } = await supabase.storage
+            .from(bucketName)
+            .list(folderPath);
+
+        if (error) throw error;
+
+        // Filtra os arquivos do Supabase com base nos anexos do cliente
+        const arquivosFiltrados = storageFiles
+            .filter(file => anexos.some(anexo => anexo.nomeAnexo === file.name))
+            .map(file => {
+                const anexo = anexos.find(a => a.nomeAnexo === file.name);
+                return {
+                    ...file,
+                    id: anexo?.id
+                };
+            });
+
+        setFiles(arquivosFiltrados);
+        setStatus(`Encontrados ${arquivosFiltrados.length} anexos`, 'success');
+    } catch (error) {
+        console.error('Erro ao listar arquivos:', error);
+        setStatus(`Erro ao listar arquivos: ${error.message}`, 'error');
+        setFiles([]);
     }
+}
 
     function displayFiles(files) {
         if (files.length === 0) {
@@ -91,6 +108,22 @@ export function ButtonAnexo() {
 
         filesContainer.innerHTML = html;
     }
+
+    async function fetchAnexosDoCliente(idCliente) {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`http://localhost:8080/api/anexos/cliente/${idCliente}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setAnexosCliente(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar anexos do cliente:", error);
+        return [];
+    }
+}
 
     function formatFileSize(bytes) {
         if (bytes === 0 || !bytes) return '0 Bytes';
@@ -145,7 +178,7 @@ export function ButtonAnexo() {
         
         if (data) {
             console.log(data)
-            postAnexo(1, data.id, null, "testePost")
+            postAnexo(1, data.id, null, file.name); // Substitua os IDs conforme necessário
         }
 
         if (error) {
