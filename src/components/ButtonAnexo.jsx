@@ -192,7 +192,7 @@ export function ButtonAnexo() {
         if (error) {
             setStatus("Erro ao excluir arquivo");
         } else {
-            console.log(fileName)
+            console.log(fileName, idAnexo)
             deleteAnexo(idAnexo)
             setStatus("Arquivo excluído com sucesso!");
             await listFiles();
@@ -330,7 +330,7 @@ export function ButtonAnexo() {
                                                                     </button>
                                                                     <button
                                                                         className="px-2 py-1"
-                                                                        onClick={() => handleDelete(f.name, f.idAnexo)}
+                                                                        onClick={() => handleDelete(f.name, f.id)}
                                                                         title="Excluir"
                                                                     >
                                                                         <img src={trashIcon} />

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CustomerCase } from "../../components/CustomerCases";
 import { EntityInfo } from "../../components/EntityInfo";
-import { DropdownComponent } from "../../components/DropdownComponent";
 import { EventCard } from "../../components/EventCard";
 import { Layout } from "../../components/Layout";
 import api from "../../services/api";

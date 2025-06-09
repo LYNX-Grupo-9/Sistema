@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { DropdownComponent } from "../../components/DropdownComponent";
 import { HighlightedCases } from "../../components/HighlightedCases";
 import { MonthEvent } from "../../components/MonthEvent";
 import { OverviewNotification } from "../../components/OverviewNotification";
