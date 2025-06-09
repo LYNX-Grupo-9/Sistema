@@ -10,6 +10,7 @@ import { ModalScheduling } from "../../components/ModalScheduling";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/Card";
 import { Calendar, Clock, FileText, TrendingUp, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { Badge } from "../../components/Badge";
 
 const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -246,7 +247,7 @@ export function Home() {
                         </div>
                         <div className="w-[70%]">
                             <div className="h-2/5 flex gap-4 mb-4">
-                                <div className="bgGlass h-[100%] w-[33%] flex flex-col justify-around p-4">
+                                <div className="bgGlassNoPadding px-5 py-7 h-[100%] w-[33%] flex flex-col justify-around">
                                     <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl">
                                         {today}
                                     </span>
@@ -261,11 +262,51 @@ export function Home() {
                                         Atendimento Walace - 10 de março 2025
                                     </span>
                                 </div>
-                                <div className="bgGlass h-[100%] w-[33%]">
-
+                                <div className="bgGlassNoPadding py-5 px-6 h-[100%] w-[33%]">
+                                    <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl ">
+                                        Eventos Por categoria
+                                    </span>
+                                    <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
+                                        {eventosPorCategoria.map((item, index) => (
+                                            <>
+                                                <div key={index} className="flex items-center justify-between">
+                                                    <span className="text-sm font-medium">{item.categoria}</span>
+                                                    <div className="flex items-center gap-3">
+                                                        <div
+                                                            className="w-4 h-4 rounded-full"
+                                                            style={{ backgroundColor: item.cor }}
+                                                        ></div>
+                                                        <Badge variant="outline">{item.quantidade}</Badge>
+                                                    </div>
+                                                </div>
+                                                <div key={index} className="flex items-center justify-between">
+                                                    <span className="text-sm font-medium">{item.categoria}</span>
+                                                    <div className="flex items-center gap-3">
+                                                        <div
+                                                            className="w-4 h-4 rounded-full"
+                                                            style={{ backgroundColor: item.cor }}
+                                                        ></div>
+                                                        <Badge variant="outline">{item.quantidade}</Badge>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="bgGlass h-[100%] w-[33%]">
-
+                                <div className="bgGlassNoPadding py-5 px-6 h-[100%] w-[33%]">
+                                    <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl ">
+                                        Processos por Tipo de Ação
+                                    </span>
+                                    <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
+                                        {processosPorTipo.map((item, index) => (
+                                            <div key={index} className="flex items-center justify-between">
+                                                <span className="text-sm font-medium">{item.tipo}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <Badge variant="outline">{item.quantidade}</Badge>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                             </div>
