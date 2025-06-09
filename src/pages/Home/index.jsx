@@ -29,42 +29,6 @@ const processosPorTipo = [
     { tipo: "LOAS", quantidade: 16 }
 ];
 
-const eventosPorDia = [
-    { dia: "Seg", data: "27/01", eventos: 8 },
-    { dia: "Ter", data: "28/01", eventos: 12 },
-    { dia: "Qua", data: "29/01", eventos: 6 },
-    { dia: "Qui", data: "30/01", eventos: 15 },
-    { dia: "Sex", data: "31/01", eventos: 9 },
-    { dia: "Sáb", data: "01/02", eventos: 3 },
-    { dia: "Dom", data: "02/02", eventos: 1 }
-];
-
-const eventosPorCategoria = [
-    { categoria: "Audiências", quantidade: 25, cor: "#8b5cf6" },
-    { categoria: "Reuniões", quantidade: 18, cor: "#06b6d4" },
-    { categoria: "Prazos judiciais", quantidade: 22, cor: "#f59e0b" },
-    { categoria: "Perícias", quantidade: 12, cor: "#10b981" },
-    { categoria: "Outros", quantidade: 8, cor: "#64748b" }
-];
-
-const audienciasPorTipo = [
-    { tipo: "Aposentadoria", audiencias: 12 },
-    { tipo: "Revisão", audiencias: 8 },
-    { tipo: "Pensão", audiencias: 5 }
-];
-
-const advogadosAtivos = [
-    { nome: "Dr. João Silva", eventos: 18 },
-    { nome: "Dra. Maria Santos", eventos: 15 },
-    { nome: "Dr. Carlos Lima", eventos: 12 },
-    { nome: "Dra. Ana Costa", eventos: 9 }
-];
-
-const prazosProximos = 7;
-const eventosNaoConcluidos = 5;
-const tempoMedioProcesso = "8.5 meses";
-const totalEventosMes = 85;
-
 
 
 export function Home() {
@@ -73,7 +37,8 @@ export function Home() {
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idSolicitacao, setIdSolicitacao] = useState(null);
-
+    const [eventosPorCategoria, setEventosPorCategoria] = useState([]);
+    const [eventosPorDia, setEventosPorDia] = useState([]);
     const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
@@ -88,6 +53,8 @@ export function Home() {
     function fetchData(idAdvogado) {
         console.log("Fetching data for advogado ID:", idAdvogado);
         getSolicitacoeByAdvId(idAdvogado);
+        getQtdEventosPorCategoriaByIdAdv(idAdvogado);
+        getEventosProx7dias(idAdvogado);
     }
 
     function capitalizeFirstLetter(string) {
@@ -157,6 +124,114 @@ export function Home() {
         setIdSolicitacao(idSolicitacao);
         openModal();
 
+    }
+
+    function getQtdEventosPorCategoriaByIdAdv(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/{idAdvogado}?idAdvogado=${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Eventos por categoria recebidos:", response.data);
+                setEventosPorCategoria(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos por categoria:', error);
+            })
+
+    }
+
+    function showEventosPorCategoria(eventos) {
+        if (!eventos || eventos.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhum evento
+                </span>
+            );
+        }
+
+        return Object.entries(eventos).map(([categoria, quantidade], index) => {
+            return (
+                <div key={index} className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{categoria}</span>
+                    <div className="flex items-center gap-3">
+                        <div
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: '#f1f1f1' }}
+                        ></div>
+                        <Badge variant="outline">{quantidade}</Badge>
+                    </div>
+                </div>
+            );
+        })
+    }
+
+    function getEventosProx7dias(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/7dias`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Eventos recebidos:", response.data);
+                const eventosChartData = transformEventosToChartData(response.data);
+                setEventosPorDia(eventosChartData);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos:', error);
+            })
+    }
+
+    function transformEventosToChartData(eventos) {
+        // Obter os próximos 7 dias a partir de hoje
+        const hoje = new Date();
+        const proximosSeteDias = [];
+
+        for (let i = 0; i < 7; i++) {
+            const data = new Date(hoje);
+            data.setDate(hoje.getDate() + i);
+            proximosSeteDias.push({
+                data: data,
+                dataFormatada: format(data, 'dd/MM'),
+                dia: format(data, 'EEE', { locale: ptBR }).charAt(0).toUpperCase() + format(data, 'EEE', { locale: ptBR }).slice(1),
+                eventos: 0
+            });
+        }
+
+        // Contar eventos por dia
+        if (eventos && eventos.length > 0) {
+            eventos.forEach(evento => {
+                const dataEvento = new Date(evento.dataReuniao);
+
+                // Verificar se o evento está nos próximos 7 dias
+                proximosSeteDias.forEach(dia => {
+                    if (format(dia.data, 'yyyy-MM-dd') === evento.dataReuniao) {
+                        dia.eventos++;
+                    }
+                });
+            });
+        }
+
+        return proximosSeteDias.map(dia => ({
+            dia: dia.dia,
+            data: dia.dataFormatada,
+            eventos: dia.eventos
+        }));
     }
 
     return (
@@ -267,7 +342,7 @@ export function Home() {
                                         Eventos Por categoria
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
-                                        {eventosPorCategoria.map((item, index) => (
+                                        {/* {eventosPorCategoria.map((item, index) => (
                                             <>
                                                 <div key={index} className="flex items-center justify-between">
                                                     <span className="text-sm font-medium">{item.categoria}</span>
@@ -279,18 +354,9 @@ export function Home() {
                                                         <Badge variant="outline">{item.quantidade}</Badge>
                                                     </div>
                                                 </div>
-                                                <div key={index} className="flex items-center justify-between">
-                                                    <span className="text-sm font-medium">{item.categoria}</span>
-                                                    <div className="flex items-center gap-3">
-                                                        <div
-                                                            className="w-4 h-4 rounded-full"
-                                                            style={{ backgroundColor: item.cor }}
-                                                        ></div>
-                                                        <Badge variant="outline">{item.quantidade}</Badge>
-                                                    </div>
-                                                </div>
                                             </>
-                                        ))}
+                                        ))} */}
+                                        {eventosPorCategoria && showEventosPorCategoria(eventosPorCategoria)}
                                     </div>
                                 </div>
                                 <div className="bgGlassNoPadding py-5 px-6 h-[100%] w-[33%]">
