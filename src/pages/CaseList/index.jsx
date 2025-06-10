@@ -11,7 +11,7 @@ import { CaseRegister } from "../../components/modals/CaseRegister";
 
 export function CaseList() {
     const idAdvogado = localStorage.getItem("idAdvogado");
-    const [customerList, setCustomerList] = useState([]);
+    const [caseList, setCaseList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -98,7 +98,7 @@ export function CaseList() {
         if (debouncedSearchValue.length > 0) {
             api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
-                    setCustomerList(response.data);
+                    setCaseList(response.data);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -110,7 +110,7 @@ export function CaseList() {
                 case 0:
                     api.getAllCases(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -119,9 +119,9 @@ export function CaseList() {
                         });
                     break;
                 case 1:
-                    api.getOrderByName(idAdvogado)
+                    api.getOrderByNameCustomer(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -132,7 +132,7 @@ export function CaseList() {
                 case 2:
                     api.getOrderByCases(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -143,7 +143,7 @@ export function CaseList() {
                 case 3:
                     api.getOrderByNationality(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -154,7 +154,7 @@ export function CaseList() {
                 case 4:
                     api.getOrderByBornDate(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -196,7 +196,7 @@ export function CaseList() {
                         <div className=" h-full overflow-scroll">
                             {
                             
-                            customerList.map((item, index) => (
+                            caseList.map((item, index) => (
                                 
                                 <EntityItem
                                 key={index}

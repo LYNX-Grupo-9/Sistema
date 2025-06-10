@@ -28,18 +28,22 @@ const endpoints = {
     getOrderByCases: (idAdvogado) => api.get("/clientes/ordenado-processos", { params: { idAdvogado } }),
     getEventsByCustomerId: (idCliente) => api.get(`/eventos/cliente/${idCliente}`),
     getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clientes/buscar",{
-        params: {
-            termo: searchValue,
-            idAdvogado: idAdvogado
-        },
-      }),
-
+      params: {
+        termo: searchValue,
+        idAdvogado: idAdvogado
+      },
+    }),
+    
     getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
     newCase: (data) => api.post("/processos", data),
     getCaseById: (id) => api.get(`/processos/${id}`),
     getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
-    editCase: (idProcesso, data) => api.patch(`/processos/${idProcesso}`, data)
-
+    editCase: (idProcesso, data) => api.patch(`/processos/${idProcesso}`, data),
+    getOrderByNameCustomer: (idAdvogado) => api.get("/processos/ordenado-por-nome-cliente", { params: { idAdvogado } }),
+    getOrderByNationality: (idAdvogado) => api.get("/processos/ordenado-naturalidade", { params: { idAdvogado } }),
+    getOrderByBornDate: (idAdvogado) => api.get("/processos/ordenado-nascimento", { params: { idAdvogado } }),
+    getOrderByCases: (idAdvogado) => api.get("/processos/ordenado-processos", { params: { idAdvogado } }),
+    
 }
 
 export default endpoints
