@@ -86,7 +86,7 @@ export function CustomerDetails() {
             }
             {
                 modalOpen &&
-                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true}/>
+                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true} idCliente={id}/>
             }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">

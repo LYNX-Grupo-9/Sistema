@@ -9,7 +9,7 @@ import { CustomerStep3 } from "../Steps/CustomerStep3";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import { format } from 'date-fns';
 
-export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, CustomerData, editMode }) {
+export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, CustomerData, editMode, idCliente }) {
 
  const handleClose = () => {
     onClose();
@@ -93,10 +93,10 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
 
   const handleRegister = () => {
     if (editMode) {
-      api.updateCustomer(user)
+      api.updateCustomer(idCliente, user)
         .then((response) => {
           console.log("User updated successfully", response.data);
-          closeModal();
+          handleClose();
           if(!caseFlow) {
             location.reload();
           }

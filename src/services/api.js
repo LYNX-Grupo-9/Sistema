@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
 const endpoints = {
 
     newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
-    updateCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
+    updateCustomer: (id,data) => api.patch(`/clientes/${id}`, data),
     getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
     getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
     getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
