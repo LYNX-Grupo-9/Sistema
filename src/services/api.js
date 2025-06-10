@@ -40,9 +40,6 @@ const endpoints = {
     getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
     editCase: (idProcesso, data) => api.patch(`/processos/${idProcesso}`, data),
     getOrderByNameCustomer: (idAdvogado) => api.get("/processos/ordenado-por-nome-cliente", { params: { idAdvogado } }),
-    getOrderByNationality: (idAdvogado) => api.get("/processos/ordenado-naturalidade", { params: { idAdvogado } }),
-    getOrderByBornDate: (idAdvogado) => api.get("/processos/ordenado-nascimento", { params: { idAdvogado } }),
-    getOrderByCases: (idAdvogado) => api.get("/processos/ordenado-processos", { params: { idAdvogado } }),
     
 }
 
