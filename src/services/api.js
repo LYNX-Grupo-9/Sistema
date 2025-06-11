@@ -39,7 +39,10 @@ const endpoints = {
     getCaseById: (id) => api.get(`/processos/${id}`),
     getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
     editCase: (idProcesso, data) => api.patch(`/processos/${idProcesso}`, data),
-    getOrderByNameCustomer: (idAdvogado) => api.get("/processos/ordenado-por-nome-cliente", { params: { idAdvogado } }),
+    getOrderByNameCustomer: (idAdvogado) => api.get("/processos/processos/ordenado-por-nome-cliente", { params: { idAdvogado } }),
+    getOrderByStatus: (idAdvogado) => api.get("/processos/processos/ordenado-por-status", { params: { idAdvogado } }),
+    getOrderByValue: (idAdvogado) => api.get("/processos/processos/ordenado-por-valor", { params: { idAdvogado } }),
+    getOrderByNumber: (idAdvogado) => api.get("/processos/processos/ordenado-por-numero", { params: { idAdvogado } }),
     
 }
 

@@ -1,5 +1,5 @@
 import api from "../../services/api";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { MultiSelectComponent } from "../../components/MultiSelectComponent";
 import { SingleSelectComponent } from "../../components/SelectComponent";
 
@@ -28,6 +28,18 @@ export function CaseList() {
     const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
 
     const [customerNamesMap, setCustomerNamesMap] = useState({});
+
+useEffect(() => {  
+    const fetchData = async () => {
+        try {
+            const response = await api.getOrderByNameCustomer(7);
+            console.log(response.data, "Response Data");
+        } catch (error) {
+            console.error("Error:", error.response?.data || error.message);
+        }
+    };
+    fetchData();
+}, []);
 
     useEffect(() => {
         api.getAllCustomer(idAdvogado)
@@ -130,9 +142,10 @@ export function CaseList() {
                         });
                     break;
                 case 2:
-                    api.getOrderByCases(idAdvogado)
+                    api.getOrderByNumber(idAdvogado)
                         .then((response) => {
                             setCaseList(response.data);
+                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -141,9 +154,10 @@ export function CaseList() {
                         });
                     break;
                 case 3:
-                    api.getOrderByNationality(idAdvogado)
+                    api.getOrderByValue(idAdvogado)
                         .then((response) => {
                             setCaseList(response.data);
+                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -152,10 +166,11 @@ export function CaseList() {
                         });
                     break;
                 case 4:
-                    api.getOrderByBornDate(idAdvogado)
+                    api.getOrderByStatus(idAdvogado)
                         .then((response) => {
                             setCaseList(response.data);
                             setLoading(false);
+                            console.log(response.data)
                         })
                         .catch((error) => {
                             console.error("Erro ao ordenar por data de nascimento", error);
