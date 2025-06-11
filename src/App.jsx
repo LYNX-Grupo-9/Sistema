@@ -14,6 +14,7 @@ import { CaseList } from "./pages/CaseList/";
 import Agenda from "./pages/Agenda";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
+import { ButtonAnexo } from "./components/ButtonAnexo";
 
 
 export default function App() {
@@ -80,6 +81,10 @@ export default function App() {
           } />
 
         </Route>
+
+        <Route path="/CustomerDetails/:idCliente" element={<ButtonAnexo />} />
+        <Route path="/CaseDetails/:idProcesso" element={<ButtonAnexo />} />
+
         
       </Routes>
     </Router>

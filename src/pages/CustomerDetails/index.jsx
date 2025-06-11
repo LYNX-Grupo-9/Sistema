@@ -15,6 +15,8 @@ export function CustomerDetails() {
     const [customerData, setCustomerData] = useState([]);
     const [casesData, setCasesData] = useState([]);
     useEffect(() => {
+        console.log("ID do cliente:", id);
+
         api.getCustomerById(id)
             .then((response) => {
                 setCustomerData(response.data);
@@ -36,7 +38,7 @@ export function CustomerDetails() {
     }, []);
 
     return (
-        <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">   
+        <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
             <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
                 <div className="flex flex-col gap-6 w-1/2 h-full">
                     <div className="bgGlass w-full h-[10%] flex justify-center items-center">
@@ -60,7 +62,7 @@ export function CustomerDetails() {
                     <div className="bgGlass w-full h-[40%] flex flex-col">
                         <div className="flex w-full justify-between items-center">
                             <span className="typography-semibold text-3xl text-[var(--color-blueDark)]">Processos</span>
-                            <SingleSelectComponent/>
+                            <SingleSelectComponent />
                         </div>
                         <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[20px] mb-[16px]"></div>
 
@@ -75,24 +77,24 @@ export function CustomerDetails() {
                                 <div className="flex-1 h-[65%] overflow-y-auto">
                                     {
                                         casesData.map((caseItem) => (
-                                            <CustomerCase 
-                                                key={caseItem.idProcesso} 
-                                                idCase={caseItem.idProcesso} 
-                                                type={caseItem.titulo} 
-                                                initialDate={caseItem.classeProcessual} 
-                                                end={caseItem.status} 
+                                            <CustomerCase
+                                                key={caseItem.idProcesso}
+                                                idCase={caseItem.idProcesso}
+                                                type={caseItem.titulo}
+                                                initialDate={caseItem.classeProcessual}
+                                                end={caseItem.status}
                                                 customer={customerData.nome}
                                             />
                                         ))
                                     }
 
-                                 
+
                                 </div>
                             </>
                         ) : (
                             <div className="flex items-center justify-center h-[80%]">
-                            <span className="typography-bold text-[16px] text-[var(--grayText)] w-full text-center">Este cliente não possui nenhum processo vinculado a ele.</span>
-                        </div>
+                                <span className="typography-bold text-[16px] text-[var(--grayText)] w-full text-center">Este cliente não possui nenhum processo vinculado a ele.</span>
+                            </div>
                         )}
 
                     </div>
@@ -115,7 +117,7 @@ export function CustomerDetails() {
                                 </div>
                         }
                     </div>
-            <ButtonAnexo />
+                    {id && <ButtonAnexo idCliente={id} />}
                 </div>
             </div>
         </div>

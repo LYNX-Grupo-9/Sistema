@@ -55,7 +55,7 @@ export function CaseDetails() {
                     </div>
                     <div className=" flex flex-col gap-6 ">
                         <ExternalTJSP />
-                        <ButtonAnexo />
+                        <ButtonAnexo idProcesso={id}/>
                     </div>
                 </div>
             </div>
