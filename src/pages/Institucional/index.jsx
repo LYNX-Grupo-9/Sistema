@@ -5,6 +5,7 @@ import Carrossel from '../../components/Carrossel';
 import { Form } from '../../components/Form';
 import { Redes } from '../../components/Redes';
 import React, { useRef, useState } from 'react';
+import { VLibras } from '../../components/Acessibilidade';
 
 export function Institucional() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -40,6 +41,7 @@ export function Institucional() {
     return (
         <div>
             {/* DESKTOP */}
+            <VLibras />
             <div className="desktop">
                 <div className='header-desktop' ref={sectionsRefDesktop.inicio}>
                     <div className='containerLogo'>
