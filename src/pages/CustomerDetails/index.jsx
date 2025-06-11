@@ -86,7 +86,7 @@ export function CustomerDetails() {
             }
             {
                 modalOpen &&
-                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true} idCliente={id}/>
+                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true}/>
             }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
@@ -116,7 +116,7 @@ export function CustomerDetails() {
                         <div className="bgGlass w-full h-[40%] flex flex-col">
                             <div className="flex w-full justify-between items-center">
                                 <span className="typography-semibold text-3xl text-[var(--color-blueDark)]">Processos</span>
-                                 <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
+
                             </div>
                             <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[20px] mb-[16px]"></div>
 

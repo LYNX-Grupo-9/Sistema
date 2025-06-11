@@ -34,34 +34,6 @@ export function CustomerList() {
     }
 
     useEffect(() => {
-        setFilterOptions([
-            {
-                title: "Quantidade de processos em curso",
-                options: [
-                    { id: 1, label: "0" },
-                    { id: 2, label: "1-5" },
-                    { id: 3, label: "6+" }
-                ]
-            },
-            {
-                title: "Nacionalidade",
-                options: [
-                    { id: 4, label: "Brasileiro" },
-                    { id: 5, label: "Estrangeiro" }
-                ]
-            },
-            {
-                title: "Tipo de caso",
-                options: [
-                    { id: 6, label: "Cível" },
-                    { id: 7, label: "Trabalhista" },
-                    { id: 8, label: "Penal" },
-                    { id: 9, label: "Família" },
-                    { id: 10, label: "Tributário" }
-                ]
-            },
-        ]);
-
         setOrderOptions([
             { id: 1, label: "Nome" },
             { id: 2, label: "Número de processos " },
@@ -162,7 +134,6 @@ export function CustomerList() {
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search change={handleSearchChange} />
-                        <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                     </div>
                     <NewItemButton title="Adicionar Cliente" click={openModal} />

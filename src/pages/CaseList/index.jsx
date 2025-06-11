@@ -29,18 +29,6 @@ export function CaseList() {
 
     const [customerNamesMap, setCustomerNamesMap] = useState({});
 
-useEffect(() => {  
-    const fetchData = async () => {
-        try {
-            const response = await api.getOrderByNameCustomer(7);
-            console.log(response.data, "Response Data");
-        } catch (error) {
-            console.error("Error:", error.response?.data || error.message);
-        }
-    };
-    fetchData();
-}, []);
-
     useEffect(() => {
         api.getAllCustomer(idAdvogado)
             .then((response) => {
@@ -64,29 +52,6 @@ useEffect(() => {
     }
 
     useEffect(() => {
-        setFilterOptions([
-            {
-                title: "Nacionalidade",
-                options: [
-                    { id: 4, label: "Até R$ 5.000" },
-                    { id: 5, label: "R$ 5.001 a R$ 20.000" },
-                    { id: 6, label: "R$ 20.001 a R$ 100.000" },
-                    { id: 7, label: "Acima de R$ 100.000" },
-               
-                ]
-            },
-            {
-                title: "Status do Processo",
-                options: [
-                    { id: 8, label: "Protocolado" },
-                    { id: 9, label: "Sentenciado" },
-                    { id: 10, label: "Fase de recursão" },
-                    { id: 11, label: "Trânsito em julgado" },
-                    { id: 12, label: "Arquivado" }
-                ]
-            },
-        ]);
-
         setOrderOptions([
             { id: 1, label: "Cliente" },
             { id: 2, label: "Número de processos" },
@@ -191,7 +156,6 @@ useEffect(() => {
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search change={handleSearchChange} />
-                        <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                     </div>
                     <NewItemButton title="Adicionar Processo" click={openModal} />
@@ -212,7 +176,6 @@ useEffect(() => {
                             {
                             
                             caseList.map((item, index) => (
-                                
                                 <EntityItem
                                 key={index}
                                 id={item.idProcesso}
