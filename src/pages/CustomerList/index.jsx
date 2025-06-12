@@ -154,7 +154,7 @@ export function CustomerList() {
                         <div className=" h-full overflow-scroll">
                             {customerList.map((item, index) => (
                                 <EntityItem
-                                    key={item.idCliente}
+                                    key={index}
                                     id={item.idCliente}
                                     name={item.nome}
                                     email={item.email}
