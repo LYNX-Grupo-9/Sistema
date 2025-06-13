@@ -12,14 +12,7 @@ import { Calendar, Clock, FileText, TrendingUp, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Badge } from "../../components/Badge";
 
-const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
 
-const processosPorStatus = [
-    { status: "Em andamento", quantidade: 65, cor: "#3b82f6" },
-    { status: "Arquivados", quantidade: 38, cor: "#6b7280" },
-    { status: "Encerrados com êxito", quantidade: 28, cor: "#22c55e" },
-    { status: "Encerrados sem êxito", quantidade: 11, cor: "#ef4444" }
-];
 
 const processosPorTipo = [
     { tipo: "Aposentadoria", quantidade: 45 },
@@ -39,6 +32,11 @@ export function Home() {
     const [idSolicitacao, setIdSolicitacao] = useState(null);
     const [eventosPorCategoria, setEventosPorCategoria] = useState([]);
     const [eventosPorDia, setEventosPorDia] = useState([]);
+    const [processosPorStatus, setProcessosPorStatus] = useState([])
+    const [totalProcessos, setTotalProcessos] = useState(0);
+    const [totalEventos, setTotalEventos] = useState(0);
+    const [totalClientes, setTotalClientes] = useState(0);
+
     const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
@@ -55,6 +53,10 @@ export function Home() {
         getSolicitacoeByAdvId(idAdvogado);
         getQtdEventosPorCategoriaByIdAdv(idAdvogado);
         getEventosProx7dias(idAdvogado);
+        getContagemPorStatus(idAdvogado);
+        getTotalProcessosAtivos(idAdvogado);
+        getTotalEventosMes(idAdvogado);
+        getTotalClietesAtivos(idAdvogado);
     }
 
     function capitalizeFirstLetter(string) {
@@ -134,7 +136,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/{idAdvogado}?idAdvogado=${idAdvogado}`, {
+        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -143,6 +145,29 @@ export function Home() {
             .then(response => {
                 console.log("Eventos por categoria recebidos:", response.data);
                 setEventosPorCategoria(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos por categoria:', error);
+            })
+
+    }
+
+    function getContagemPorStatus(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/contagem-por-status/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Processos por status:", response.data);
+                setProcessosPorStatus(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
@@ -158,16 +183,17 @@ export function Home() {
             );
         }
 
-        return Object.entries(eventos).map(([categoria, quantidade], index) => {
+        return Object.entries(eventos).map(([categoria, dados], index) => {
+            // console.log(`Categoria: ${categoria}, Quantidade: ${dados.quantidade}, Cor: ${dados.cor}`);
             return (
                 <div key={index} className="flex items-center justify-between">
                     <span className="text-sm font-medium">{categoria}</span>
                     <div className="flex items-center gap-3">
                         <div
                             className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: '#f1f1f1' }}
+                            style={{ backgroundColor: dados.cor }}
                         ></div>
-                        <Badge variant="outline">{quantidade}</Badge>
+                        <Badge variant="outline">{dados.quantidade}</Badge>
                     </div>
                 </div>
             );
@@ -194,6 +220,72 @@ export function Home() {
                 setEventosPorDia(eventosChartData);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos:', error);
+            })
+    }
+
+    function getTotalProcessosAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Total de processos ativos:", response.data);
+                setTotalProcessos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
+    }
+
+    function getTotalEventosMes(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Total de eventos ativos:", response.data);
+                setTotalEventos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
+    }
+
+    function getTotalClietesAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Total de clientes ativos:", response.data);
+                setTotalClientes(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de clientes ativos:', error);
             })
     }
 
@@ -234,6 +326,74 @@ export function Home() {
         }));
     }
 
+
+    function showNextDayCharts(eventosPorDia) {
+
+        if (eventosPorDia.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Não há dados disponíveis.
+                </span>
+            );
+        }
+
+        return (
+            <ResponsiveContainer width="90%" height='85%'>
+                <BarChart data={eventosPorDia}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="dia" />
+                    <YAxis />
+                    <Tooltip
+                        formatter={(value, name) => [value, 'Eventos']}
+                        labelFormatter={(label, payload) => {
+                            const item = payload?.[0]?.payload;
+                            return item ? `${label} - ${item.data}` : label;
+                        }}
+                    />
+                    <Bar dataKey="eventos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+        )
+    }
+
+    function showEventsByStatus(processosPorStatus) {
+
+        if (processosPorStatus.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Não há dados disponíveis.
+                </span>
+            );
+        }
+
+        const cores = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#34495e', '#1abc9c'];
+        const dadosFormatados = Object.entries(processosPorStatus).map(([status, quantidade], index) => ({
+            status,
+            quantidade,
+            cor: cores[index],
+        }));
+
+        return (
+            <ResponsiveContainer width="90%" height="85%">
+                <PieChart>
+                    <Pie
+                        data={dadosFormatados}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        dataKey="quantidade"
+                        label={({ status, quantidade }) => `${status}: ${quantidade}`}
+                    >
+                        {dadosFormatados.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.cor} />
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                </PieChart>
+            </ResponsiveContainer>
+        );
+    }
+
     return (
         <>
             {isModalOpen && (
@@ -253,7 +413,7 @@ export function Home() {
                                         <FileText className="h-5 w-5 opacity-90" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-3xl font-bold">50</div>
+                                        <div className="text-3xl font-bold">{totalProcessos}</div>
                                         <p className="text-xs opacity-80 mt-1">Processos ativos</p>
                                     </CardContent>
                                 </Card>
@@ -265,7 +425,7 @@ export function Home() {
                                         <Users className="h-5 w-5 opacity-90" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-3xl font-bold">50</div>
+                                        <div className="text-3xl font-bold">{totalClientes}</div>
                                         <p className="text-xs opacity-80 mt-1">Clientes em acompanhamento</p>
                                     </CardContent>
                                 </Card>
@@ -276,7 +436,7 @@ export function Home() {
                                         <Calendar className="h-5 w-5 opacity-90" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-3xl font-bold">50</div>
+                                        <div className="text-3xl font-bold">{totalEventos}</div>
                                         <p className="text-xs opacity-80 mt-1">Compromissos agendados</p>
                                     </CardContent>
                                 </Card>
@@ -342,26 +502,13 @@ export function Home() {
                                         Eventos Por categoria
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
-                                        {/* {eventosPorCategoria.map((item, index) => (
-                                            <>
-                                                <div key={index} className="flex items-center justify-between">
-                                                    <span className="text-sm font-medium">{item.categoria}</span>
-                                                    <div className="flex items-center gap-3">
-                                                        <div
-                                                            className="w-4 h-4 rounded-full"
-                                                            style={{ backgroundColor: item.cor }}
-                                                        ></div>
-                                                        <Badge variant="outline">{item.quantidade}</Badge>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        ))} */}
                                         {eventosPorCategoria && showEventosPorCategoria(eventosPorCategoria)}
                                     </div>
                                 </div>
                                 <div className="bgGlassNoPadding py-5 px-6 h-[100%] w-[33%]">
                                     <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl ">
                                         Processos por Tipo de Ação
+
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
                                         {processosPorTipo.map((item, index) => (
@@ -379,43 +526,12 @@ export function Home() {
                             <div className="h-3/5 flex gap-4 mb-[4%]">
                                 <div className="bgGlassNoPadding h-[100%] w-[50%] p-6 flex flex-col gap-4">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Eventos nos próximos 7 dias </span>
-                                    <ResponsiveContainer width="90%" height='85%'>
-                                        <BarChart data={eventosPorDia}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="dia" />
-                                            <YAxis />
-                                            <Tooltip
-                                                formatter={(value, name) => [value, 'Eventos']}
-                                                labelFormatter={(label, payload) => {
-                                                    const item = payload?.[0]?.payload;
-                                                    return item ? `${label} - ${item.data}` : label;
-                                                }}
-                                            />
-                                            <Bar dataKey="eventos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                                        </BarChart>
-                                    </ResponsiveContainer>
+                                    {eventosPorDia && showNextDayCharts(eventosPorDia)}
                                 </div>
 
                                 <div className="bgGlassNoPadding h-[100%] w-[50%] p-6 flex flex-col gap-4">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Processos Por Status</span>
-                                    <ResponsiveContainer width="90%" height="85%">
-                                        <PieChart>
-                                            <Pie
-                                                data={processosPorStatus}
-                                                cx="50%"
-                                                cy="50%"
-                                                outerRadius={80}
-                                                fill="#8884d8"
-                                                dataKey="quantidade"
-                                                label={({ status, quantidade }) => `${status}: ${quantidade}`}
-                                            >
-                                                {processosPorStatus.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.cor} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
+                                    {processosPorStatus && showEventsByStatus(processosPorStatus)}
                                 </div>
                             </div>
 
