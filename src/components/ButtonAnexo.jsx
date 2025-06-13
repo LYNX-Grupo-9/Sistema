@@ -14,10 +14,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export function ButtonAnexo({idCliente, idProcesso}) {
   const location = useLocation();
-  //  const { idCliente, idProcesso } = useParams(); // depende da sua configuração de rota
-
-
-
 
   useEffect(() => {
     console.log(idCliente);
@@ -341,14 +337,25 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                               <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[350px] truncate">{f.name}</td>
                               <td className="text-[16px] text-[var(--color-light)] typography-regular min-w-[150px] max-w-[250px]">{formatFileSize(f.size)}</td>
                               <td className="flex gap-4 justify-end min-w-[80px]">
-                                <a
+                                <button
                                   className="cursor-pointer"
-                                  href={`https://${supabaseUrl.split('//')[1]}/storage/v1/object/public/${bucketName}/${folderPath}/${f.name}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
+                                  onClick={async () => {
+                                    const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
+                                    const filePath = `${normalizedFolderPath}${f.name}`;
+                                    const { data, error } = await supabase
+                                      .storage
+                                      .from(bucketName)
+                                      .createSignedUrl(filePath, 60); // 60 segundos de validade
+                                    if (data?.signedUrl) {
+                                      window.open(data.signedUrl, "_blank");
+                                    } else {
+                                      alert("Erro ao gerar link para visualização.");
+                                    }
+                                  }}
+                                  title="Visualizar"
                                 >
                                   <img src={viewIcon} alt="Visualizar arquivo" />
-                                </a>
+                                </button>
                                 <button
                                   className="cursor-pointer"
                                   onClick={() => handleDelete(f.name, f.id)}
