@@ -19,20 +19,25 @@ export function Login() {
     async function loginAdvogados () {
         let hasError = false;
         
-        if (email.trim() === "") {
+        if (email.trim() === "" || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
             document.getElementById("email").classList.add("border-red-500");
             hasError = true;
-            toast.error('Email não pode estar em branco', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            toast.error(
+                email.trim() === ""
+                    ? 'Email não pode estar em branco'
+                    : 'Email inválido.',
+                {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                }
+            );
         } else {
             document.getElementById("email").classList.remove("border-red-500"); 
         }
@@ -171,4 +176,4 @@ export function Login() {
 
     }
 
-    
+
