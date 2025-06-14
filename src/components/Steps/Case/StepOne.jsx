@@ -1,6 +1,7 @@
 import { MainInput } from "../../inputs/MainInput"
 import { useState, useEffect } from "react";
 import { SelectInput } from "../../inputs/SelectInput"
+import { CaseNumberInput } from "../../inputs/CaseNumberInput"
 
 export function StepOne({ caseData, setCaseData }) {
 
@@ -29,7 +30,7 @@ export function StepOne({ caseData, setCaseData }) {
     return (
         <div className="h-full flex flex-col gap-6 pt-10">
             <MainInput label="Titulo processo" placeholder="Insira o titulo do processo" value={caseData.titulo || ""} onChange={(e) => setCaseData({ ...caseData, titulo: e.target.value })} />
-            <MainInput label="Número do processo" placeholder="Insira o número do processo" value={caseData.numeroProcesso || ""} onChange={(e) => setCaseData({ ...caseData, numeroProcesso: e.target.value })} />
+            <CaseNumberInput label="Número do processo" placeholder="Insira o número do processo" value={caseData.numeroProcesso || ""} onChange={(e) => setCaseData({ ...caseData, numeroProcesso: e.target.value })} />
             <SelectInput
                 label="Status do processo"
                 options={status}
