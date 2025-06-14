@@ -1,18 +1,23 @@
 import React from 'react';
 
 export function MainInputMoney({ label, value, onChange, placeholder }) {
-  const formatarParaReais = (valor) => {
-    const numero = valor.replace(/\D/g, '');
-    const valorFloat = (Number(numero) / 100).toFixed(2);
-    return valorFloat
-      .replace('.', ',')
-      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  };
-
   const handleInputChange = (e) => {
-    const entrada = e.target.value;
-    const valorFormatado = 'R$ ' + formatarParaReais(entrada);
-    onChange(valorFormatado);
+    if (!e?.target?.value) return;
+
+    const rawValue = e.target.value.replace(/\D/g, '');
+    const valorFloat = (Number(rawValue) / 100).toFixed(2);
+
+    const partes = valorFloat.split('.');
+    const parteInteira = partes[0];
+    const parteDecimal = partes[1];
+
+    const comSeparador = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const valorFormatado = `R$ ${comSeparador},${parteDecimal}`;
+
+    // Só chama onChange se for uma função
+    if (typeof onChange === 'function') {
+      onChange(valorFormatado);
+    }
   };
 
   return (
@@ -22,6 +27,7 @@ export function MainInputMoney({ label, value, onChange, placeholder }) {
       </span>
       <input
         type="text"
+        inputMode="numeric"
         placeholder={placeholder || "R$ 0,00"}
         onChange={handleInputChange}
         value={value}
