@@ -302,15 +302,16 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                   </div>
 
                   <div className="mt-4 flex gap-4 justify-end">
+                    <input placeholder="Nome do arquivo" className="w-full border-white border-2 rounded outline-none text-white px-4"/>
                     <button
-                      className="bg-[var(--color-blueDark)] text-white px-4 py-2 rounded disabled:opacity-50"
+                      className="bg-[var(--color-blueDark)] text-white px-4 py-2 rounded disabled:opacity-50 min-w-[200px]"
                       onClick={handleUpload}
                       disabled={!file || uploading}
                     >
                       {uploading ? "Enviando..." : "Adicionar Anexo"}
                     </button>
                     <button
-                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded min-w-[150px]"
                       onClick={listFiles}
                     >
                       Ver Anexos
