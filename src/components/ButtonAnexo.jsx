@@ -33,6 +33,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
   const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState([]);
   const [status, setStatus] = useState("");
+  const [nomeAnexo, setNomeAnexo] = useState("");
   const fileInputRef = useRef(null);
   const [newAttachment, setNewAttachment] = useState(false);
   const [anexosCliente, setAnexosCliente] = useState([]);
@@ -124,7 +125,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  function postAnexo(idCliente, idItem, idProcesso, nomeAnexo) {
+  function postAnexo(idCliente, idItem, idProcesso, nomeAnexo, fileName) {
     const token = localStorage.getItem("token");
     if (!token) {
       return false;
@@ -135,7 +136,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
       idCliente: null,
       idItem: idItem ?? null,
       idProcesso: null,
-      nomeAnexo: nomeAnexo ?? null
+      nomeAnexo: nomeAnexo ?? fileName
     };
 
     // Ajusta o payload dependendo da rota atual
@@ -174,7 +175,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
 
     if (data) {
       console.log("Arquivo enviado:", data);
-      postAnexo(idCliente, data.id, idProcesso, file.name);
+      postAnexo(idCliente, data.id, idProcesso, nomeAnexo, file.name);
       fetchData()
     }
 
@@ -302,7 +303,13 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                   </div>
 
                   <div className="mt-4 flex gap-4 justify-end">
-                    <input placeholder="Nome do arquivo" className="w-full border-white border-2 rounded outline-none text-white px-4"/>
+
+                    <input 
+                    placeholder="Nome do arquivo" 
+                    className="w-full border-white border-2 rounded outline-none text-white px-4"
+                    value={nomeAnexo}
+                    onChange={(e) => setNomeAnexo(e.target.value)}
+                    />
                     <button
                       className="bg-[var(--color-blueDark)] text-white px-4 py-2 rounded disabled:opacity-50 min-w-[200px]"
                       onClick={handleUpload}
