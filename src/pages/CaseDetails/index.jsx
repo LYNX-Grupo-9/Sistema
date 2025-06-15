@@ -8,9 +8,7 @@ import { ButtonAnexo } from "../../components/ButtonAnexo";
 
 export function CaseDetails() {
     const location = useLocation();
-    const { id, customer } = location.state || {};
-
-
+    const { id, customer, idCustomer } = location.state || {};
     const [caseData, setcaseData] = useState([]);
     useEffect(() => {
         api.getCaseById(id)
@@ -55,7 +53,7 @@ export function CaseDetails() {
                     </div>
                     <div className=" flex flex-col gap-6 ">
                         <ExternalTJSP />
-                        <ButtonAnexo idProcesso={id}/>
+                        <ButtonAnexo idCliente={idCustomer} idProcesso={id}/>
                     </div>
                 </div>
             </div>

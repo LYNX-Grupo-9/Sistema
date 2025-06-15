@@ -9,10 +9,11 @@ import Plus from "../assets/icons/plusWhite.svg";
 import { createClient } from "@supabase/supabase-js";
 import iconAttachment from '../assets/icons/attachment.svg';
 import axios from "axios";
+import { set } from "date-fns";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export function ButtonAnexo({idCliente, idProcesso}) {
+export function ButtonAnexo({ idCliente, idProcesso }) {
   const location = useLocation();
 
   useEffect(() => {
@@ -20,10 +21,10 @@ export function ButtonAnexo({idCliente, idProcesso}) {
     fetchData()
   }, [location.pathname, idCliente, idProcesso]);
 
-  function fetchData () {
+  function fetchData() {
     if (location.pathname.includes("/CustomerDetails") && idCliente) {
       fetchAnexosDoCliente(idCliente);
-    } else if (location.pathname.includes("/CaseDetais") && idProcesso) {
+    } else if (location.pathname.includes("/CaseDetails") && idProcesso) {
       fetchAnexosDoProcesso(idProcesso);
     }
   }
@@ -43,8 +44,6 @@ export function ButtonAnexo({idCliente, idProcesso}) {
   const folderPath = 'lynx-folder';
 
   async function listFiles() {
-
-
     try {
       setNewAttachment(false);
       setStatus('Buscando arquivos...');
@@ -52,9 +51,9 @@ export function ButtonAnexo({idCliente, idProcesso}) {
       let anexos = [];
 
       if (location.pathname.includes('/CustomerDetails') && idCliente) {
-        anexos = await fetchAnexosDoCliente(idCliente);
+        anexos = await fetchAnexosDoCliente(idCliente);  // Agora espera
       } else if (location.pathname.includes('/CaseDetails') && idProcesso) {
-        anexos = await fetchAnexosDoProcesso(idProcesso);
+        anexos = await fetchAnexosDoProcesso(idProcesso);  // Agora espera
       }
 
       const { data: storageFiles, error } = await supabase.storage
@@ -72,8 +71,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
             id: anexo?.id
           };
         });
-
-      setFiles(arquivosFiltrados);
+        console.log(arquivosFiltrados, "arqivosFiltrados");
       setStatus(`Encontrados ${arquivosFiltrados.length} anexos`, 'success');
 
     } catch (error) {
@@ -82,6 +80,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
       setFiles([]);
     }
   }
+
 
   async function fetchAnexosDoCliente(idCliente) {
     try {
@@ -92,6 +91,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
         }
       });
       setAnexosCliente(response.data);
+      setFiles(response.data);  // <-- Aqui! Usa o que acabou de chegar, sem depender do state
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar anexos do cliente:", error);
@@ -108,12 +108,14 @@ export function ButtonAnexo({idCliente, idProcesso}) {
         }
       });
       setAnexosProcesso(response.data);
+      setFiles(response.data);  // <-- Aqui! Usa o que acabou de chegar, sem depender do state
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar anexos dos processos:", error);
       return [];
     }
   }
+  
 
   function formatFileSize(bytes) {
     if (bytes === 0 || !bytes) return '0 Bytes';
@@ -126,16 +128,23 @@ export function ButtonAnexo({idCliente, idProcesso}) {
   }
 
   function postAnexo(idCliente, idItem, idProcesso, nomeAnexo, fileName) {
+
     const token = localStorage.getItem("token");
     if (!token) {
       return false;
     }
-
+    console.log("Postando anexo com os seguintes dados:", {
+      idCliente,
+      idItem,
+      idProcesso,
+      nomeAnexo,
+      fileName
+    });
     // Inicializa o payload com nulls
     let payload = {
-      idCliente: null,
+      idCliente: idCliente ?? null,
       idItem: idItem ?? null,
-      idProcesso: null,
+      idProcesso: idProcesso ?? null,
       nomeAnexo: nomeAnexo ?? fileName
     };
 
@@ -304,11 +313,11 @@ export function ButtonAnexo({idCliente, idProcesso}) {
 
                   <div className="mt-4 flex gap-4 justify-end">
 
-                    <input 
-                    placeholder="Nome do arquivo" 
-                    className="w-full border-white border-2 rounded outline-none text-white px-4"
-                    value={nomeAnexo}
-                    onChange={(e) => setNomeAnexo(e.target.value)}
+                    <input
+                      placeholder="Nome do arquivo"
+                      className="w-full border-white border-2 rounded outline-none text-white px-4"
+                      value={nomeAnexo}
+                      onChange={(e) => setNomeAnexo(e.target.value)}
                     />
                     <button
                       className="bg-[var(--color-blueDark)] text-white px-4 py-2 rounded disabled:opacity-50 min-w-[200px]"
@@ -326,7 +335,9 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                   </div>
                 </>
               ) : (
+
                 <>
+                  {console.log("Files:", files)}
                   <div className="flex items-center bg-[var(--bgMedium)] p-4 px-8 rounded-lg">
                     <div className="w-full flex items-center gap-4 ">
                       <img src={icon} alt="Ícone de Anexo" className="w-[5%]" />
@@ -340,20 +351,22 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                     {files.length > 0 ? (
                       <table className="w-full ">
                         <tbody>
-                          {files.filter(f => !f.name.endsWith('/')).map(f => (
-                            <tr key={f.name} className="flex justify-between items-center bg-[var(--bgMedium)] rounded-[20px] mb-4 p-2 px-8 ">
-                              <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[350px] truncate">{f.name}</td>
-                              <td className="text-[16px] text-[var(--color-light)] typography-regular min-w-[150px] max-w-[250px]">{formatFileSize(f.size)}</td>
+                          {files.map(f => (
+                            <tr key={f.idAnexo} className="flex justify-between items-center bg-[var(--bgMedium)] rounded-[20px] mb-4 p-2 px-8 ">
+                              <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[350px] truncate">
+                                {f.nomeAnexo}
+                              </td>
+                             
                               <td className="flex gap-4 justify-end min-w-[80px]">
                                 <button
                                   className="cursor-pointer"
                                   onClick={async () => {
                                     const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-                                    const filePath = `${normalizedFolderPath}${f.name}`;
+                                    const filePath = `${normalizedFolderPath}${f.nomeAnexo}`;  // Nome real no bucket
                                     const { data, error } = await supabase
                                       .storage
                                       .from(bucketName)
-                                      .createSignedUrl(filePath, 60); // 60 segundos de validade
+                                      .createSignedUrl(filePath, 60);
                                     if (data?.signedUrl) {
                                       window.open(data.signedUrl, "_blank");
                                     } else {
@@ -366,7 +379,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                                 </button>
                                 <button
                                   className="cursor-pointer"
-                                  onClick={() => handleDelete(f.name, f.id)}
+                                  onClick={() => handleDelete(f.nomeAnexo, f.idAnexo)}
                                 >
                                   <img src={trashIcon} alt="Excluir arquivo" />
                                 </button>
@@ -374,6 +387,7 @@ export function ButtonAnexo({idCliente, idProcesso}) {
                             </tr>
                           ))}
                         </tbody>
+
                       </table>
                     ) : (
                       <p className="text-center text-gray-400">Nenhum anexo encontrado.</p>

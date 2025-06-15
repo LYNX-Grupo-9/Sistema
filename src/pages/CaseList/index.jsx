@@ -24,7 +24,7 @@ export function CaseList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
-    const [nameCustomer, setNameCustomer] = useState("");
+
     const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
 
     const [customerNamesMap, setCustomerNamesMap] = useState({});
@@ -204,6 +204,7 @@ export function CaseList() {
                                 caseNumber={item.numeroProcesso}
                                 title={item.titulo}
                                 customer={customerNamesMap[String(item.idCliente)] || "Carregando..."} 
+                                idCustomer={item.idCliente} 
                                 classe={item.classeProcessual}
                                 status={item.status}
                                 type="case"
