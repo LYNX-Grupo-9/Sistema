@@ -10,6 +10,7 @@ import { EditCase } from "../../components/modals/EditCase";
 export function CaseDetails() {
     const location = useLocation();
     const { id, customer, idCustomer } = location.state || {};
+    console.log("ID do caso:", customer);
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);

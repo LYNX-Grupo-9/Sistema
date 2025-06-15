@@ -19,7 +19,6 @@ export function CaseList() {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const [filterOptions, setFilterOptions] = useState([]);
     const [orderOptions, setOrderOptions] = useState([]);
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
@@ -110,7 +109,6 @@ export function CaseList() {
                     api.getOrderByNumber(idAdvogado)
                         .then((response) => {
                             setCaseList(response.data);
-                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -122,7 +120,6 @@ export function CaseList() {
                     api.getOrderByValue(idAdvogado)
                         .then((response) => {
                             setCaseList(response.data);
-                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -135,7 +132,7 @@ export function CaseList() {
                         .then((response) => {
                             setCaseList(response.data);
                             setLoading(false);
-                            console.log(response.data)
+
                         })
                         .catch((error) => {
                             console.error("Erro ao ordenar por data de nascimento", error);
@@ -147,6 +144,7 @@ export function CaseList() {
             }
         }
     }, [debouncedSearchValue, selectedOrderOptions]);
+
 
 
     return (
