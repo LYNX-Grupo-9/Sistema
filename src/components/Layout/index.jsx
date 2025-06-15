@@ -26,7 +26,7 @@ export function Layout() {
     const pageMapping = {
         '/home': 'home',
         '/customerlist': 'custumerlist',
-        '/custumerdetails': 'custumerlist',
+        '/CustomerDetails': 'custumerlist',
         '/caselist': 'caselist',
         '/agenda': 'agenda',
         '/temisai': 'temisai',
