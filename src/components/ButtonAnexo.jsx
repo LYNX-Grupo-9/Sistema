@@ -72,7 +72,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
             id: anexo?.id
           };
         });
-        console.log(arquivosFiltrados, "arqivosFiltrados");
+      console.log(arquivosFiltrados, "arqivosFiltrados");
       setStatus(`Encontrados ${arquivosFiltrados.length} anexos`, 'success');
 
     } catch (error) {
@@ -116,7 +116,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       return [];
     }
   }
-  
+
 
   function formatFileSize(bytes) {
     if (bytes === 0 || !bytes) return '0 Bytes';
@@ -179,17 +179,17 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     setUploading(true);
     setStatus("Enviando anexo...");
 
-    const uniqueFileId = uuidv4(); 
+    const uniqueFileId = uuidv4();
 
     const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-   const filePath = `${normalizedFolderPath}${uniqueFileId}`;
+    const filePath = `${normalizedFolderPath}${uniqueFileId}`;
 
     const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
 
 
     if (data) {
       console.log("Arquivo enviado:", data);
-      postAnexo(idCliente, filePath, idProcesso, nomeAnexo, file.name);
+      postAnexo(idCliente, uniqueFileId, idProcesso, nomeAnexo, file.name);
       fetchData()
     }
 
@@ -203,13 +203,13 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     setUploading(false);
   }
 
-  function deleteAnexo(idAnexo) {
+  function deleteAnexo(idItem) {
     const token = localStorage.getItem("token");
     if (!token) {
       return false;
     }
 
-    return axios.delete(`http://localhost:8080/api/anexos/${idAnexo}`, {
+    return axios.delete(`http://localhost:8080/api/anexos/${idItem}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -226,16 +226,16 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
   }
 
   async function handleDelete(fileName, idItem, idAnexo) {
-    console.log(idAnexo, idItem, fileName)
     if (!window.confirm(`Deseja realmente excluir o arquivo "${fileName}"?`)) return;
     setStatus("Excluindo arquivo...");
 
-    const filePath = idItem;
+    const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
+    const filePath = `${normalizedFolderPath}${idItem}`;
     const { error } = await supabase.storage.from(bucketName).remove([filePath]);
     if (error) {
       setStatus("Erro ao excluir arquivo");
     } else {
-      deleteAnexo(idAnexo);
+      deleteAnexo(idItem);
       setStatus("Arquivo excluído com sucesso!");
       await listFiles();
     }
@@ -361,13 +361,13 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
                               <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[350px] truncate">
                                 {f.nomeAnexo}
                               </td>
-                             
+
                               <td className="flex gap-4 justify-end min-w-[80px]">
                                 <button
                                   className="cursor-pointer"
                                   onClick={async () => {
                                     const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-                                    const filePath = `${f.idItem}`;  
+                                    const filePath = `${normalizedFolderPath}${f.idItem}`;
                                     const { data, error } = await supabase
                                       .storage
                                       .from(bucketName)
