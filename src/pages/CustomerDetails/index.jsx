@@ -180,9 +180,9 @@ export function CustomerDetails() {
                                     </div>
                             }
                         </div>
-                        <ButtonAnexo />
-                    </div>
+
                     {id && <ButtonAnexo idCliente={id} />}
+                    </div>
                 </div>
             </div>
         </>
