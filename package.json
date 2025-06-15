@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@google-cloud/vertexai": "^1.10.0",
@@ -21,6 +22,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.8.4",
     "cleave.js": "^1.6.0",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
@@ -36,8 +38,10 @@
     "react-router-dom": "^7.4.1",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
+    "recharts": "^2.15.3",
     "swiper": "^11.2.8",
     "rehype-highlight": "^7.0.2",
+    "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.1"
   },
   "devDependencies": {

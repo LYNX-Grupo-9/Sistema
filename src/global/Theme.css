@@ -31,6 +31,15 @@
     border: 2px solid rgba(255, 255, 255, 1);
     padding: 5%;
   }
+
+    .bgGlassNoPadding {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(80px);
+    -webkit-backdrop-filter: blur(80px);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 1);
+  }
+
   .bgDarkGlass {
     background: rgba(68, 68, 68, 0.7);
     backdrop-filter: blur(80px);
