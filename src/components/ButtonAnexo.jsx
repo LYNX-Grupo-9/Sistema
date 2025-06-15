@@ -10,6 +10,7 @@ import { createClient } from "@supabase/supabase-js";
 import iconAttachment from '../assets/icons/attachment.svg';
 import axios from "axios";
 import { set } from "date-fns";
+import { v4 as uuidv4 } from 'uuid';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -178,13 +179,17 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     setUploading(true);
     setStatus("Enviando anexo...");
 
+    const uniqueFileId = uuidv4(); 
+
     const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-    const filePath = `${normalizedFolderPath}${file.name}`;
+   const filePath = `${normalizedFolderPath}${uniqueFileId}`;
+
     const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file, { upsert: true });
+
 
     if (data) {
       console.log("Arquivo enviado:", data);
-      postAnexo(idCliente, data.id, idProcesso, nomeAnexo, file.name);
+      postAnexo(idCliente, filePath, idProcesso, nomeAnexo, file.name);
       fetchData()
     }
 
@@ -220,12 +225,12 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       });
   }
 
-  async function handleDelete(fileName, idAnexo) {
+  async function handleDelete(fileName, idItem, idAnexo) {
+    console.log(idAnexo, idItem, fileName)
     if (!window.confirm(`Deseja realmente excluir o arquivo "${fileName}"?`)) return;
     setStatus("Excluindo arquivo...");
 
-    const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-    const filePath = `${normalizedFolderPath}${fileName}`;
+    const filePath = idItem;
     const { error } = await supabase.storage.from(bucketName).remove([filePath]);
     if (error) {
       setStatus("Erro ao excluir arquivo");
@@ -362,7 +367,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
                                   className="cursor-pointer"
                                   onClick={async () => {
                                     const normalizedFolderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-                                    const filePath = `${normalizedFolderPath}${f.nomeAnexo}`;  // Nome real no bucket
+                                    const filePath = `${f.idItem}`;  
                                     const { data, error } = await supabase
                                       .storage
                                       .from(bucketName)
@@ -379,7 +384,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
                                 </button>
                                 <button
                                   className="cursor-pointer"
-                                  onClick={() => handleDelete(f.nomeAnexo, f.idAnexo)}
+                                  onClick={() => handleDelete(f.nomeAnexo, f.idItem, f.idAnexo)}
                                 >
                                   <img src={trashIcon} alt="Excluir arquivo" />
                                 </button>
