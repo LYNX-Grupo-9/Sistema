@@ -14,7 +14,7 @@ export function CaseDetails() {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const [caseData, setCaseData] = useState([]);
-    
+
     useEffect(() => {
         api.getCaseById(id)
             .then((response) => {
@@ -35,7 +35,7 @@ export function CaseDetails() {
                         <img src={edit} className="w-[5%] ml-4 cursor-pointer" alt="Editar" onClick={openModal} />
                     </div>
                     <div className="bgGlass w-full h-[70%] flex flex-col items-center gap-5 overflow-y-auto">
-                        <EntityInfo title="Titulo do processo" value={caseData.titulo} />
+                        <EntityInfo title="Titulo do processo" value={caseData.titulo}/>
                         <EntityInfo title="Número do processo" value={caseData.numeroProcesso} />
                         <EntityInfo title="Cliente" value={customer}/>
                         <EntityInfo title="Status do processo" value={caseData.status} />
