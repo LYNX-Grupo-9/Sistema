@@ -25,21 +25,21 @@ export function Layout() {
 
     const pageMapping = {
         '/home': 'home',
-        '/costumerlist': 'costumerlist',
-        '/costumerdetails': 'costumerlist',
+        '/customerlist': 'custumerlist',
+        '/custumerdetails': 'custumerlist',
         '/caselist': 'caselist',
         '/agenda': 'agenda',
         '/temisai': 'temisai',
     };
 
-    const currentPage = pageMapping[location.pathname] || 'home';
+    const currentPage = pageMapping[location.pathname];
 
     const whiteBarMapping = {
-        home: "416px",
-        clientes: "312px",
-        caselist: "208px",
-        agenda: "104px",
-        temisai: "0px"
+        'home': "416px",
+        'custumerlist': "312px",
+        'caselist': "208px",
+        'agenda': "104px",
+        'temisai': "0px"
     }
 
     const whiteBarStyle = {
@@ -51,7 +51,11 @@ export function Layout() {
         right: '0',
         bottom: whiteBarMapping[currentPage],
         transition: 'all 0.2s ease-in-out',
-    }
+    }   
+
+
+    console.log("Current Path:", location.pathname);
+    console.log("Current Page:", currentPage);
 
     return (
         <>
@@ -73,7 +77,7 @@ export function Layout() {
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/customerlist')}>
-                            <IconProfile actualcolor={currentPage == "costumerlist" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                            <IconProfile actualcolor={currentPage == "custumerlist" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/caselist')}>
