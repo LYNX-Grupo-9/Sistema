@@ -38,6 +38,8 @@ export function CustomerDetails() {
     }, []);
 
     useEffect(() => {
+        console.log("ID do cliente:", id);
+
         api.getCustomerById(id)
             .then((response) => {
                 setCustomerData(response.data);
@@ -180,6 +182,7 @@ export function CustomerDetails() {
                         </div>
                         <ButtonAnexo />
                     </div>
+                    {id && <ButtonAnexo idCliente={id} />}
                 </div>
             </div>
         </>

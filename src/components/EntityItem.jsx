@@ -9,9 +9,9 @@ export function EntityItem(props) {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    function handleNavigation(path, id, customer) {
+    function handleNavigation(path, id, customer, idCustomer) {
         setIsLoading(true);
-        navigate(path, { state: { id, customer} });
+        navigate(path, { state: { id, customer, idCustomer} });
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -35,7 +35,7 @@ export function EntityItem(props) {
 
                     <MidButton
                         title="Detalhes"
-                        click={() => handleNavigation("/CaseDetails", props.id, props.customer)}
+                        click={() => handleNavigation("/CaseDetails", props.id, props.customer, props.idCustomer)}
                     />
                 </div>
             ) : (

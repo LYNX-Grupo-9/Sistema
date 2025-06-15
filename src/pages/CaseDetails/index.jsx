@@ -9,12 +9,12 @@ import { EditCase } from "../../components/modals/EditCase";
 
 export function CaseDetails() {
     const location = useLocation();
-    const { id, customer } = location.state || {};
+    const { id, customer, idCustomer } = location.state || {};
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const [caseData, setCaseData] = useState([]);
-
+    
     useEffect(() => {
         api.getCaseById(id)
             .then((response) => {
@@ -59,7 +59,7 @@ export function CaseDetails() {
                     </div>
                     <div className=" flex flex-col gap-6 ">
                         <ExternalTJSP />
-                        <ButtonAnexo />
+                        <ButtonAnexo idCliente={idCustomer} idProcesso={id}/>
                     </div>
                 </div>
             </div>
