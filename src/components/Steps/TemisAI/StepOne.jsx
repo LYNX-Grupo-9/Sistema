@@ -1,4 +1,7 @@
+
 export function StepOne() {
+    const nome = localStorage.getItem("nomeAdvogado");
+
     return(
         <>
         <span className="text-6xl typography-semibold"
@@ -6,7 +9,7 @@ export function StepOne() {
                 background: "var(--gradientHorizontal)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-              }}>Olá, Alvany,
+              }}>Olá, {nome}!
             </span>
 
             <span className="text-5xl typography-regular mb-[4%] leading-16"

@@ -71,10 +71,12 @@ export function Login() {
             if (response.ok) {
                 const data = await response.json();
                 const lawyerId = data.idAdvogado;
+                const lawyerName = data.nome;
                 const token = data.token;
     
                 localStorage.setItem("token", token);
                 localStorage.setItem("idAdvogado", lawyerId);
+                localStorage.setItem("nomeAdvogado", lawyerName);
     
                 toast.success('Login realizado', {
                     position: "top-right",

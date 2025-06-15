@@ -2,11 +2,12 @@ import { InputDuplo } from "../../components/InputDuplo";
 import { InputForm } from "../../components/InputForm";
 import { PossuiConta } from '../../components/PossuiConta';
 import { BtnForm } from '../../components/BtnForm';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-
+import { useNavigate } from 'react-router-dom';
 
 export function Cadastro() {
+    const navigate = useNavigate();
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
     const [registroOab, setRegistroOab] = useState("");
@@ -177,6 +178,9 @@ export function Cadastro() {
                 theme: "colored",
                 transition: Bounce,
                 });
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
         } else {
             const erro = await response.json();
             toast.error('Erro ao cadastrar', {

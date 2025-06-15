@@ -2,7 +2,7 @@ import api from "../../services/api";
 import { useEffect, useState } from "react";
 import { MultiSelectComponent } from "../../components/MultiSelectComponent";
 import { SingleSelectComponent } from "../../components/SelectComponent";
-
+import { format } from 'date-fns';
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
@@ -189,7 +189,7 @@ export function CustomerList() {
                                     email={item.email}
                                     phone={item.telefone}
                                     country={item.naturalidade}
-                                    dtNasc={item.dataNascimento}
+                                    dtNasc={format(new Date(item.dataNascimento), 'dd/MM/yyyy')}
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
                                 />
                             ))}

@@ -121,9 +121,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
     function declineScheduling() {
         changeStatusSolicitacao(idSolicitacao);
-
+        
         toast.success("Você Recusou a solicitação de agendamento com sucesso! O cliente será notificado por email.");
-
         onSuccess && onSuccess();
     }
 

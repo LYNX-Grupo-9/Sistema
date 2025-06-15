@@ -6,6 +6,7 @@ import trashIcon from "../assets/icons/trash.svg";
 import Plus from "../assets/icons/plusWhite.svg";
 // Importa o supabase-js
 import { createClient } from "@supabase/supabase-js";
+import iconAttachment from '../assets/icons/attachment.svg';
 
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -38,7 +39,7 @@ export function ButtonAnexo() {
         } catch (error) {
             console.error('Error listing files:', error);
             setStatus(`Erro ao listar arquivos: ${error.message}`, 'error');
-            setFiles([]); // Limpa a lista em caso de erro
+            setFiles([]);
         }
     }
 
@@ -142,11 +143,13 @@ export function ButtonAnexo() {
 
     return (
         <>
-            <button
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-                onClick={handleOpen}
+            <button className="h-[90px] text-[var(--bgLight)] px-4 py-2 rounded-[10px] cursor-pointer text-[28px] typography-semibold flex items-center justify-center gap-2  " style={{
+                background: 'var(--gradientHorizontal)',
+            }}
+            onClick={handleOpen}
             >
-                Anexos
+                Ver anexos
+                <img src={iconAttachment} alt="Attachment Icon" className="w-[50px]  ml-2 inline-block" />
             </button>
 
             {open && (
@@ -175,28 +178,28 @@ export function ButtonAnexo() {
                                             onDragOver={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
-                                                e.currentTarget.classList.add("border-blue-500");
+                                                e.currentTarget.classList.add("border-[var(--color-blueLight)]");
                                             }}
                                             onDragLeave={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
-                                                e.currentTarget.classList.remove("border-blue-500");
+                                                e.currentTarget.classList.remove("border-[var(--color-blueLight)]");
                                             }}
                                             onDrop={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
-                                                e.currentTarget.classList.remove("border-blue-500");
+                                                e.currentTarget.classList.remove("border-[var(--color-blueLight)]");
                                                 const droppedFiles = e.dataTransfer.files;
                                                 if (droppedFiles && droppedFiles.length > 0) {
                                                     setFile(droppedFiles[0]);
                                                 }
                                             }}
-                                            className="w-full p-8 border-2 border-dashed border-gray-300 rounded-lg text-center text-white hover:border-blue-500 transition-all duration-200"
+                                            className="w-full p-8 border-2 border-dashed border-gray-300 rounded-lg text-center text-white hover:border-[var(--color-blueLight)] transition-all duration-200"
                                         >
                                             <img src={icon} alt="Ícone de Anexo" className="mx-auto w-12 mb-4" />
                                             <p className="text-lg">Arraste e solte o arquivo aqui ou</p>
                                             <button
-                                                className="mt-2 bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                                className="mt-2 bg-[var(--color-blueLight)] text-white px-4 py-2 rounded disabled:opacity-50"
                                                 onClick={() => fileInputRef.current && fileInputRef.current.click()}
                                                 disabled={uploading}
                                             >
@@ -211,7 +214,7 @@ export function ButtonAnexo() {
 
                                         <div className="mt-4 flex gap-4 justify-end">
                                             <button
-                                                className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                                className="bg-[var(--color-blueDark)] text-white px-4 py-2 rounded disabled:opacity-50"
                                                 onClick={handleUpload}
                                                 disabled={!file || uploading}
                                             >
@@ -239,7 +242,7 @@ export function ButtonAnexo() {
                                         <div className="flex flex-col gap-4 bg-[var(--bgDark)] p-8 rounded-lg w-full ">
                                             {files.length > 0 ? (
                                                 <table className="w-full ">
-                                                    <tbody className="flex flex-col h-[300px] overflow-y-auto"> 
+                                                    <tbody className="flex flex-col h-[300px] overflow-y-auto">
                                                         {files.filter(f => !f.name.endsWith('/')).map(f => (
                                                             <tr key={f.name} className="flex justify-between items-center bg-[var(--bgMedium)] rounded-[20px] mb-4 p-2 px-8 ">
                                                                 <td className="text-[20px] text-[var(--color-light)] typography-medium min-w-[150px] max-w-[300px] truncate">{f.name}</td>

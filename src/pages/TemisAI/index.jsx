@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { ChatAIInput } from "../../components/inputs/ChatIAInput";
 import { GoogleGenAI } from "@google/genai";
 import { StepOne } from "../../components/Steps/TemisAI/StepOne";
 import { StepTwo } from "../../components/Steps/TemisAI/StepTwo";
 import LoadingSVG from "../../assets/loading.svg";
 import { apikey } from "../../config/gemini";
+
 export function TemisAI() {
+  const idAdvogado = localStorage.getItem("idAdvogado");
   const [prompt, setPrompt] = useState("");
   const [promptResponse, setPromptResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const [chatHistory, setChatHistory] = useState([]);
-
+  
   function handlePromptChange(newPrompt) {
     setPrompt(newPrompt);
     setChatHistory((prev) => [
@@ -19,6 +21,8 @@ export function TemisAI() {
       { role: "user", parts: [{ text: newPrompt }] }
     ]);
   }
+  
+
 
   useEffect(() => {
     const fetchData = async () => {
