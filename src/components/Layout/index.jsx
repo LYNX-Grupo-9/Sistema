@@ -28,6 +28,7 @@ export function Layout() {
         '/customerlist': 'custumerlist',
         '/CustomerDetails': 'custumerlist',
         '/caselist': 'caselist',
+        '/CaseDetails': 'caselist',
         '/agenda': 'agenda',
         '/temisai': 'temisai',
     };
