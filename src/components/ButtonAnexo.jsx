@@ -203,7 +203,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     setUploading(false);
   }
 
-  function deleteAnexo(idItem) {
+  async function deleteAnexo(idItem) {
     const token = localStorage.getItem("token");
     if (!token) {
       return false;
@@ -215,9 +215,10 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
         "Content-Type": "application/json"
       }
     })
-      .then(response => {
+      .then(async response => {
         console.log(response);
-        return true;
+        await listFiles();
+        return true;  
       })
       .catch(error => {
         console.error(error);
