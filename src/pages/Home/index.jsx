@@ -13,17 +13,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Badge } from "../../components/Badge";
 
 
-
-const processosPorTipo = [
-    { tipo: "Aposentadoria", quantidade: 45 },
-    { tipo: "Revisão", quantidade: 32 },
-    { tipo: "Pensão", quantidade: 28 },
-    { tipo: "Auxílio-doença", quantidade: 21 },
-    { tipo: "LOAS", quantidade: 16 }
-];
-
-
-
 export function Home() {
 
     const [today, setToday] = useState("")
@@ -36,6 +25,9 @@ export function Home() {
     const [totalProcessos, setTotalProcessos] = useState(0);
     const [totalEventos, setTotalEventos] = useState(0);
     const [totalClientes, setTotalClientes] = useState(0);
+    const [processosPorTipo, setProcessosPorTipo] = useState();
+    const [qtdEventoDia, setQtdEventoDia] = useState(0);
+    const [nextEvent, setNextEvent] = useState(null);
 
     const idAdvogado = localStorage.getItem('idAdvogado');
 
@@ -57,12 +49,86 @@ export function Home() {
         getTotalProcessosAtivos(idAdvogado);
         getTotalEventosMes(idAdvogado);
         getTotalClietesAtivos(idAdvogado);
+        getProcessosPorTipoDeAcao(idAdvogado);
+        getQtdEventosDia(idAdvogado);
+        getNextEventByIdAdv(idAdvogado);
+    }
+
+    function getNextEventByIdAdv(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/proximo/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Próximo evento recebido:", response);
+
+                if (response.status === 204) {
+                    return false;
+                }
+
+                setNextEvent(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar próximo evento:', error);
+            })
     }
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    function getQtdEventosDia(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/contar-eventos-dia/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Processos por tipo recebidos:", response.data);
+                setQtdEventoDia(response.data.quantidadeEvento);
+            }).catch(error => {
+                toast.error('Erro ao buscar processos por tipo:', error);
+            })
+    }
+
+
+    function getProcessosPorTipoDeAcao(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/quantidade-por-classe/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Processos por tipo recebidos:", response.data);
+                setProcessosPorTipo(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar processos por tipo:', error);
+            })
+    }
 
     function getSolicitacoeByAdvId(idAdvogado) {
         const token = localStorage.getItem('token');
@@ -394,6 +460,49 @@ export function Home() {
         );
     }
 
+    function showProcessosPorTipo(processosPorTipo) {
+        console.log("Processos por tipo:", processosPorTipo);
+        if (!processosPorTipo || processosPorTipo.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhum evento
+                </span>
+            );
+        }
+
+        return Object.entries(processosPorTipo).map(([tipo, quantidade], index) => (
+            <div key={index} className="flex items-center justify-between">
+                <span className="text-sm font-medium">{tipo}</span>
+                <div className="flex items-center gap-3">
+                    <Badge variant="outline">{quantidade}</Badge>
+                </div>
+            </div>
+        ));
+    }
+
+    function showNextEvent(nextEvent) {
+        console.log("Próximo evento:", nextEvent);
+
+        if (!nextEvent) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhum evento agendado.
+                </span>
+            );
+        }
+        const formattedDate = nextEvent.dataReuniao ?
+            new Date(nextEvent.dataReuniao).toLocaleDateString('pt-BR', {
+                day: 'numeric',
+                month: 'long'
+            }) : '';
+
+        return (
+            <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                {nextEvent.nome || "Atendimento"} - {formattedDate} ({nextEvent.horaInicio?.substring(0, 5)} às {nextEvent.horaFim?.substring(0, 5)})
+            </span>
+        );
+    }
+
     return (
         <>
             {isModalOpen && (
@@ -461,24 +570,6 @@ export function Home() {
                                     </div>
                                 </div>
                             </div>
-
-
-                            {/* 
-                            <div className="bgGlass h-[30%] mb-[4%] flex flex-col justify-around">
-                                <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl">
-                                    {today}
-                                </span>
-                                <span className="typography-semibold text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                                    Sem eventos hoje
-                                </span>
-                                <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
-                                <span className="typography-semibold text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl">
-                                    Próximo evento
-                                </span>
-                                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl truncate">
-                                    Atendimento Walace - 10 de março 2025
-                                </span>
-                            </div> */}
                         </div>
                         <div className="w-[70%]">
                             <div className="h-2/5 flex gap-4 mb-4">
@@ -487,14 +578,14 @@ export function Home() {
                                         {today}
                                     </span>
                                     <span className="typography-semibold text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                                        Sem eventos hoje
+                                        {qtdEventoDia === 0 ? 'Sem eventos hoje.' : `Você tem ${qtdEventoDia} evento hoje.`}
                                     </span>
                                     <div className="h-[1px] w-full bg-[var(--lineSeparator)] rounded-2xl mt-[16px] mb-[16px]"></div>
                                     <span className="typography-semibold text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl">
                                         Próximo evento
                                     </span>
                                     <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                                        Atendimento Walace - 10 de março 2025
+                                        {showNextEvent(nextEvent)}
                                     </span>
                                 </div>
                                 <div className="bgGlassNoPadding py-5 px-6 h-[100%] w-[33%]">
@@ -511,14 +602,7 @@ export function Home() {
 
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
-                                        {processosPorTipo.map((item, index) => (
-                                            <div key={index} className="flex items-center justify-between">
-                                                <span className="text-sm font-medium">{item.tipo}</span>
-                                                <div className="flex items-center gap-3">
-                                                    <Badge variant="outline">{item.quantidade}</Badge>
-                                                </div>
-                                            </div>
-                                        ))}
+                                        {processosPorTipo && showProcessosPorTipo(processosPorTipo)}
                                     </div>
                                 </div>
 
