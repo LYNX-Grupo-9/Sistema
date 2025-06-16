@@ -28,6 +28,7 @@ export function Home() {
     const [processosPorTipo, setProcessosPorTipo] = useState();
     const [qtdEventoDia, setQtdEventoDia] = useState(0);
     const [nextEvent, setNextEvent] = useState(null);
+    const [valorMedio, setValorMedio] = useState(0);
 
     const idAdvogado = localStorage.getItem('idAdvogado');
 
@@ -52,6 +53,7 @@ export function Home() {
         getProcessosPorTipoDeAcao(idAdvogado);
         getQtdEventosDia(idAdvogado);
         getNextEventByIdAdv(idAdvogado);
+        getValorMedioProcessos(idAdvogado);
     }
 
     function getNextEventByIdAdv(idAdvogado) {
@@ -215,6 +217,28 @@ export function Home() {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
 
+    }
+
+    function getValorMedioProcessos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/media-valor/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Valor médio recebido:", response.data);
+                setValorMedio(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar valor médio dos processos:', error);
+            })
     }
 
     function getContagemPorStatus(idAdvogado) {
@@ -514,8 +538,8 @@ export function Home() {
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                     </div>
                     <div className="flex w-full h-[90%]">
-                        <div className="mr-[2%] w-[30%]">
-                            <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="mr-[2%] w-[30%]  h-full ">
+                            <div className="grid grid-cols-2 gap-4 mb-4 ">
                                 <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-sm font-medium opacity-90">Total de Processos</CardTitle>
@@ -552,12 +576,17 @@ export function Home() {
 
                                 <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium opacity-90">Tempo Médio</CardTitle>
+                                        <CardTitle className="text-sm font-medium opacity-90">Valor Médio</CardTitle>
                                         <Clock className="h-5 w-5 opacity-90" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-3xl font-bold">50</div>
-                                        <p className="text-xs opacity-80 mt-1">Duração dos processos</p>
+                                        <div className="text-3xl font-bold">
+                                            {new Intl.NumberFormat('pt-BR', {
+                                                style: 'currency',
+                                                currency: 'BRL'
+                                            }).format(valorMedio)}
+                                        </div>
+                                        <p className="text-xs opacity-80 mt-1">Média das ações</p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -571,8 +600,8 @@ export function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-[70%]">
-                            <div className="h-2/5 flex gap-4 mb-4">
+                        <div className="w-[70%] h-full  ">
+                            <div className="h-2/6 flex gap-4 mb-4">
                                 <div className="bgGlassNoPadding px-5 py-7 h-[100%] w-[33%] flex flex-col justify-around">
                                     <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl">
                                         {today}
@@ -607,7 +636,7 @@ export function Home() {
                                 </div>
 
                             </div>
-                            <div className="h-3/5 flex gap-4 mb-[4%]">
+                            <div className="h-4/6 flex gap-4">
                                 <div className="bgGlassNoPadding h-[100%] w-[50%] p-6 flex flex-col gap-4">
                                     <span className="typography-black text-[var(--color-blueDark)] text-[28px]">Eventos nos próximos 7 dias </span>
                                     {eventosPorDia && showNextDayCharts(eventosPorDia)}

@@ -2,7 +2,8 @@ import axios from "axios";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import email, { sendEmail } from "../../utils/email";
+import { sendEmail } from "../../utils/email";
+import emailjs from '@emailjs/browser';
 
 export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
@@ -121,7 +122,18 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
     function declineScheduling() {
         changeStatusSolicitacao(idSolicitacao);
-        
+        emailjs.send(
+            'service_2qh5flb',         // ID do serviço
+            'template_rzc92e7',        // ID do template
+            {
+                nome: solicitacao.nome,
+                data: formatDateBR(solicitacao.dataSolicitacao),
+                hora: formatTimeBR(solicitacao.horaSolicitacao),
+                local: 'Remoto',
+                email: solicitacao.email,
+            },
+            'BK1LR4npXZmiC_qlm'        // Public key
+        );
         toast.success("Você Recusou a solicitação de agendamento com sucesso! O cliente será notificado por email.");
         onSuccess && onSuccess();
     }
