@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@google-cloud/vertexai": "^1.10.0",
@@ -36,8 +37,8 @@
     "react-router-dom": "^7.4.1",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
-    "swiper": "^11.2.8",
     "rehype-highlight": "^7.0.2",
+    "swiper": "^11.2.8",
     "tailwindcss": "^4.1.1"
   },
   "devDependencies": {
