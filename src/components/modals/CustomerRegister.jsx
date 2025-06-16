@@ -1,5 +1,5 @@
 import api from "../../services/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "../../assets/icons/close.svg";
 import { Stepper } from "../Stepper";
 import { LgButton } from "../Buttons/LgButton";
@@ -7,31 +7,37 @@ import { CustomerStep1 } from "../Steps/CustomerStep1";
 import { CustomerStep2 } from "../Steps/CustomerStep2";
 import { CustomerStep3 } from "../Steps/CustomerStep3";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { format } from 'date-fns';
 
-export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal}) {
+export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, CustomerData, editMode, idCliente }) {
 
  const handleClose = () => {
     onClose();
   }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [step, setStep] = useState(1);
   const idAdvogado = localStorage.getItem("idAdvogado");
-  const [user, setUser] = useState({
-    nome: "",
-    documento: "",
-    tipoDocumento: "",
-    email: "",
-    telefone: "",
-    endereco: "",
-    genero: "",
-    dataNascimento: "",
-    estadoCivil: "",
-    profissao: "",
-    passaporte: "",
-    cnh: "",
-    naturalidade: "",
-    idAdvogado: Number(idAdvogado),
-  });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    if (CustomerData) {
+      setUser({
+        nome: CustomerData.nome || "",
+        documento: CustomerData.documento || "",
+        tipoDocumento: CustomerData.tipoDocumento || "",
+        email: CustomerData.email || "",
+        telefone: CustomerData.telefone || "",
+        endereco: CustomerData.endereco || "",
+        genero: CustomerData.genero || "",
+        dataNascimento: CustomerData.dataNascimento ? format(new Date(CustomerData.dataNascimento), 'dd-MM-yyyy') : "",
+        estadoCivil: CustomerData.estadoCivil || "",
+        profissao: CustomerData.profissao || "",
+        passaporte: CustomerData.passaporte || "",
+        cnh: CustomerData.cnh || "",
+        naturalidade: CustomerData.naturalidade || "",
+        idAdvogado: Number(idAdvogado),
+      });
+    }
+  }, [CustomerData]);
 
  const errorMessage = (message) => toast.error(message, {
     position: "top-right",
@@ -86,6 +92,20 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal}) {
   };
 
   const handleRegister = () => {
+    if (editMode) {
+      api.updateCustomer(idCliente, user)
+        .then((response) => {
+          console.log("User updated successfully", response.data);
+          handleClose();
+          if(!caseFlow) {
+            location.reload();
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating user", error);
+        });
+      return;
+    }
     api.newCustomer(user)
       .then((response) => {
         console.log("User registered successfully", response.data);

@@ -85,6 +85,8 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             horaFim: `${horaFim}:00`,
         };
 
+        console.log("Payload do evento:", eventoPayload);
+
         const token = localStorage.getItem("token");
 
         if (!token) {

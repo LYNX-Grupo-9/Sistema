@@ -2,7 +2,7 @@ import api from "../../services/api";
 import { useEffect, useState } from "react";
 import { MultiSelectComponent } from "../../components/MultiSelectComponent";
 import { SingleSelectComponent } from "../../components/SelectComponent";
-
+import { format } from 'date-fns';
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
@@ -34,34 +34,6 @@ export function CustomerList() {
     }
 
     useEffect(() => {
-        setFilterOptions([
-            {
-                title: "Quantidade de processos em curso",
-                options: [
-                    { id: 1, label: "0" },
-                    { id: 2, label: "1-5" },
-                    { id: 3, label: "6+" }
-                ]
-            },
-            {
-                title: "Nacionalidade",
-                options: [
-                    { id: 4, label: "Brasileiro" },
-                    { id: 5, label: "Estrangeiro" }
-                ]
-            },
-            {
-                title: "Tipo de caso",
-                options: [
-                    { id: 6, label: "Cível" },
-                    { id: 7, label: "Trabalhista" },
-                    { id: 8, label: "Penal" },
-                    { id: 9, label: "Família" },
-                    { id: 10, label: "Tributário" }
-                ]
-            },
-        ]);
-
         setOrderOptions([
             { id: 1, label: "Nome" },
             { id: 2, label: "Número de processos " },
@@ -162,7 +134,6 @@ export function CustomerList() {
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search change={handleSearchChange} />
-                        <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                     </div>
                     <NewItemButton title="Adicionar Cliente" click={openModal} />
@@ -183,13 +154,13 @@ export function CustomerList() {
                         <div className=" h-full overflow-scroll">
                             {customerList.map((item, index) => (
                                 <EntityItem
-                                    key={item.idCliente}
+                                    key={index}
                                     id={item.idCliente}
                                     name={item.nome}
                                     email={item.email}
                                     phone={item.telefone}
                                     country={item.naturalidade}
-                                    dtNasc={item.dataNascimento}
+                                    dtNasc={format(new Date(item.dataNascimento), 'dd/MM/yyyy')}
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
                                 />
                             ))}

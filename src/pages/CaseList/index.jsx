@@ -1,5 +1,5 @@
 import api from "../../services/api";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { MultiSelectComponent } from "../../components/MultiSelectComponent";
 import { SingleSelectComponent } from "../../components/SelectComponent";
 
@@ -11,7 +11,7 @@ import { CaseRegister } from "../../components/modals/CaseRegister";
 
 export function CaseList() {
     const idAdvogado = localStorage.getItem("idAdvogado");
-    const [customerList, setCustomerList] = useState([]);
+    const [caseList, setCaseList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -24,7 +24,7 @@ export function CaseList() {
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
     const [searchValue, setSearchValue] = useState("");
-    const [nameCustomer, setNameCustomer] = useState("");
+
     const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
 
     const [customerNamesMap, setCustomerNamesMap] = useState({});
@@ -52,29 +52,6 @@ export function CaseList() {
     }
 
     useEffect(() => {
-        setFilterOptions([
-            {
-                title: "Nacionalidade",
-                options: [
-                    { id: 4, label: "Até R$ 5.000" },
-                    { id: 5, label: "R$ 5.001 a R$ 20.000" },
-                    { id: 6, label: "R$ 20.001 a R$ 100.000" },
-                    { id: 7, label: "Acima de R$ 100.000" },
-               
-                ]
-            },
-            {
-                title: "Status do Processo",
-                options: [
-                    { id: 8, label: "Protocolado" },
-                    { id: 9, label: "Sentenciado" },
-                    { id: 10, label: "Fase de recursão" },
-                    { id: 11, label: "Trânsito em julgado" },
-                    { id: 12, label: "Arquivado" }
-                ]
-            },
-        ]);
-
         setOrderOptions([
             { id: 1, label: "Cliente" },
             { id: 2, label: "Número de processos" },
@@ -98,7 +75,7 @@ export function CaseList() {
         if (debouncedSearchValue.length > 0) {
             api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
-                    setCustomerList(response.data);
+                    setCaseList(response.data);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -110,7 +87,7 @@ export function CaseList() {
                 case 0:
                     api.getAllCases(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -119,9 +96,9 @@ export function CaseList() {
                         });
                     break;
                 case 1:
-                    api.getOrderByName(idAdvogado)
+                    api.getOrderByNameCustomer(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -130,9 +107,10 @@ export function CaseList() {
                         });
                     break;
                 case 2:
-                    api.getOrderByCases(idAdvogado)
+                    api.getOrderByNumber(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
+                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -141,9 +119,10 @@ export function CaseList() {
                         });
                     break;
                 case 3:
-                    api.getOrderByNationality(idAdvogado)
+                    api.getOrderByValue(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
+                            console.log(response.data);
                             setLoading(false);
                         })
                         .catch((error) => {
@@ -152,10 +131,11 @@ export function CaseList() {
                         });
                     break;
                 case 4:
-                    api.getOrderByBornDate(idAdvogado)
+                    api.getOrderByStatus(idAdvogado)
                         .then((response) => {
-                            setCustomerList(response.data);
+                            setCaseList(response.data);
                             setLoading(false);
+                            console.log(response.data)
                         })
                         .catch((error) => {
                             console.error("Erro ao ordenar por data de nascimento", error);
@@ -176,7 +156,6 @@ export function CaseList() {
                 <div className="flex mt-[3%] mb-[30px] w-full justify-between">
                     <div className="flex gap-4">
                         <Search change={handleSearchChange} />
-                        <MultiSelectComponent options={filterOptions} />
                         <SingleSelectComponent options={orderOptions} select={handleOrderChange} />
                     </div>
                     <NewItemButton title="Adicionar Processo" click={openModal} />
@@ -196,14 +175,14 @@ export function CaseList() {
                         <div className=" h-full overflow-scroll">
                             {
                             
-                            customerList.map((item, index) => (
-                                
+                            caseList.map((item, index) => (
                                 <EntityItem
                                 key={index}
                                 id={item.idProcesso}
                                 caseNumber={item.numeroProcesso}
                                 title={item.titulo}
                                 customer={customerNamesMap[String(item.idCliente)] || "Carregando..."} 
+                                idCustomer={item.idCliente} 
                                 classe={item.classeProcessual}
                                 status={item.status}
                                 type="case"

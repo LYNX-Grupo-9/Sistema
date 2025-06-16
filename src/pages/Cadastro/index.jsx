@@ -2,11 +2,12 @@ import { InputDuplo } from "../../components/InputDuplo";
 import { InputForm } from "../../components/InputForm";
 import { PossuiConta } from '../../components/PossuiConta';
 import { BtnForm } from '../../components/BtnForm';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-
+import { useNavigate } from 'react-router-dom';
 
 export function Cadastro() {
+    const navigate = useNavigate();
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
     const [registroOab, setRegistroOab] = useState("");
@@ -26,94 +27,122 @@ export function Cadastro() {
     async function cadastrar () {
         let hasError = false;
         
-    if (nome.trim() === "") {
+    if (nome.trim() === "" || !/^[A-Za-zÀ-ÿ\s]{3,}$/.test(nome.trim())) {
         document.getElementById("nome").classList.add("border-red-500");
         hasError = true;
-        toast.error('Nome não pode estar em branco', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        toast.error(
+            nome.trim() === ""
+                ? 'Nome não pode estar em branco'
+                : 'Nome deve ter pelo menos 3 letras e conter apenas letras.',
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            }
+        );
     } else {
-        document.getElementById("nome").classList.remove("border-red-500"); 
+        document.getElementById("nome").classList.remove("border-red-500");
     }
 
-    if (cpf.trim() === "") {
+    if (cpf.trim() === "" || !/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/.test(cpf.trim())) {
         document.getElementById("cpf").classList.add("border-red-500");
         hasError = true;
-        toast.error('CPF não pode estar em branco', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        toast.error(
+            cpf.trim() === ""
+                ? 'CPF não pode estar em branco'
+                : 'CPF inválido. Exemplo: 123.456.789-00',
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            }
+        );
     } else {
-        document.getElementById("cpf").classList.remove("border-red-500"); 
+        document.getElementById("cpf").classList.remove("border-red-500");
     }
   
-    if (registroOab.trim() === "") {
+    if (registroOab.trim() === "" || !/^\d{1,6}[A-Za-z]{2,3}$/.test(registroOab.trim())) {
         document.getElementById("registroOab").classList.add("border-red-500");
         hasError = true;
-        toast.error('OAB não pode estar em branco', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        toast.error(
+            registroOab.trim() === ""
+                ? 'OAB não pode estar em branco'
+                : 'OAB inválido. Exemplo: 123456SP',
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            }
+        );
     } else {
-        document.getElementById("registroOab").classList.remove("border-red-500"); 
+        document.getElementById("registroOab").classList.remove("border-red-500");
     }
    
-    if (email.trim() === "") {
+    if (email.trim() === "" || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
         document.getElementById("email").classList.add("border-red-500");
         hasError = true;
-        toast.error('Email não pode estar em branco', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        toast.error(
+            email.trim() === ""
+                ? 'Email não pode estar em branco'
+                : 'Email inválido.',
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            }
+        );
     } else {
-        document.getElementById("email").classList.remove("border-red-500"); 
+        document.getElementById("email").classList.remove("border-red-500");
     }
     
-    if (senha.trim() === "") {
+    if (
+        senha.trim() === "" ||
+        !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(senha.trim())
+    ) {
         document.getElementById("senha").classList.add("border-red-500");
         hasError = true;
-        toast.error('Senha não pode estar em branco', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-            });
+        toast.error(
+            senha.trim() === ""
+                ? 'Senha não pode estar em branco'
+                : 'Senha deve ter pelo menos 8 caracteres, incluindo letra, número e caractere especial.',
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            }
+        );
     } else {
-        document.getElementById("senha").classList.remove("border-red-500"); 
+        document.getElementById("senha").classList.remove("border-red-500");
     }
 
     if (confirmarSenha.trim() === "") {
@@ -129,7 +158,7 @@ export function Cadastro() {
             progress: undefined,
             theme: "colored",
             transition: Bounce,
-            });
+        });
     } else if (senha !== confirmarSenha) {
         document.getElementById("confirmarSenha").classList.add("border-red-500");
         hasError = true;
@@ -143,7 +172,7 @@ export function Cadastro() {
             progress: undefined,
             theme: "colored",
             transition: Bounce,
-            });
+        });
     } else {
         document.getElementById("confirmarSenha").classList.remove("border-red-500"); 
     }
@@ -177,6 +206,9 @@ export function Cadastro() {
                 theme: "colored",
                 transition: Bounce,
                 });
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
         } else {
             const erro = await response.json();
             toast.error('Erro ao cadastrar', {
@@ -265,9 +297,9 @@ export function Cadastro() {
             
             </>
         );       
-    }  
-        
+    }
 
-    
-   
+
+
+
 
