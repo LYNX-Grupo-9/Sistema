@@ -56,6 +56,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             }).catch(error => {
                 toast.error('Erro ao atualizar status:', error);
             })
+
+        return true;
     }
 
     function createEvent() {
@@ -111,8 +113,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
                 local: "Remoto",
                 email: solicitacao.email,
             }, "template_rphntnv")
-            onSuccess && onSuccess();
-            onClose && onClose();
+            onClose();
+            setTimeout(onSuccess, 1500); // Delay para garantir que o modal seja fechado antes de chamar onSuccess
         }).catch(error => {
             console.error("Erro ao criar" + error)
             toast.error("Erro ao criar evento, tente novamente mais tarde.");
@@ -135,7 +137,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             'BK1LR4npXZmiC_qlm'        // Public key
         );
         toast.success("Você Recusou a solicitação de agendamento com sucesso! O cliente será notificado por email.");
-        onSuccess && onSuccess();
+        setTimeout(onSuccess, 1500);
+        onClose()
     }
 
     function formatDateBR(dateString) {
