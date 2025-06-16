@@ -33,7 +33,7 @@ const endpoints = {
         idAdvogado: idAdvogado
       },
     }),
-    getCustomerBySearch: (searchValue, idAdvogado) => api.get("/processos/buscarPorTexto",{
+    getCaseBySearch: (searchValue, idAdvogado) => api.get("/processos/buscarPorTexto",{
       params: {
         termo: searchValue,
         idAdvogado: idAdvogado

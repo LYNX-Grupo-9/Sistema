@@ -109,7 +109,7 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     api.newCustomer(user)
       .then((response) => {
         console.log("User registered successfully", response.data);
-        closeModal();
+        handleClose();
         if(!caseFlow) {
           location.reload();
         }

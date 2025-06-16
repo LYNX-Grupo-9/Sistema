@@ -72,7 +72,7 @@ export function CaseList() {
         setLoading(true);
 
         if (debouncedSearchValue.length > 0) {
-            api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
+            api.getCaseBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
                     setCaseList(response.data);
                     setLoading(false);
