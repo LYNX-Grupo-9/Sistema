@@ -129,11 +129,11 @@ export function Institucional() {
                     </div>
                     <div className="infoDesktop">
                         <h1>Endereço</h1>
-                        <p>Rua XPTO, 660</p>
+                        <p>Rua Haddock Lobo, 595</p>
                     </div>
                     <div className="infoDesktop">
                         <h1>Informações Legais</h1>
-                        <p>CNPJ: XXXXXXXXXXX OAB: XXXXXXXXXXXXXX</p>
+                        <p>CNPJ: 1234567891011</p>
                     </div>
                 </div>
 
@@ -322,7 +322,7 @@ export function Institucional() {
                                 Endereço
                             </h1>
                             <p>
-                                Rua XPTO, 660
+                                Rua Haddock Lobo, 595
                             </p>
                         </div>
                         <div className='containerInfo'>
@@ -330,8 +330,7 @@ export function Institucional() {
                                 Informações Legais
                             </h1>
                             <p>
-                                CNPJ: XXXXXXXXXXX
-                                OAB: XXXXXXXXXXXXXX
+                                CNPJ: 1234567891011
                             </p>
                         </div>
                     </div>
