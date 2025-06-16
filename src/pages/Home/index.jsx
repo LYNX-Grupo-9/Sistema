@@ -514,11 +514,15 @@ export function Home() {
                 </span>
             );
         }
+        // Add timezone adjustment to avoid date shifting due to timezone differences
         const formattedDate = nextEvent.dataReuniao ?
-            new Date(nextEvent.dataReuniao).toLocaleDateString('pt-BR', {
-                day: 'numeric',
-                month: 'long'
-            }) : '';
+            (() => {
+            // Parse the date and add a day to compensate for timezone issues
+            const date = new Date(nextEvent.dataReuniao);
+            // Ensure we're working with the date as specified, not as adjusted by timezone
+            const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+            return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
+            })() : '';
 
         return (
             <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
