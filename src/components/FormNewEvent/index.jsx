@@ -20,7 +20,7 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
     const [horaInicio, setHoraInicio] = useState("");
     const [horaFim, setHoraFim] = useState("");
     const [convidado, setConvidado] = useState("0");
-    const [categoria, setCategoria] = useState("");
+    const [categoria, setCategoria] = useState("0");
     const [processo, setProcesso] = useState("0");
     const [descricao, setDescricao] = useState("");
     const [linkReuniao, setLinkReuniao] = useState("");
@@ -241,6 +241,8 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             }
         }).then(response => {
             const evento = response.data;
+
+            console.log('idCategoria', evento);
 
             setNomeEvento(evento.nome);
             setDataSelecionada(evento.dataReuniao + 'T00:00:00');

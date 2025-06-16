@@ -6,7 +6,7 @@ import { FormNewEvent } from "../FormNewEvent";
 
 const apiBaseURL = 'http://localhost:8080/api/';
 
-export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }) {
+export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess, isVisualize = false }) {
 
     const [event, setEvent] = useState(null);
     const [client, setClient] = useState(null);
@@ -156,7 +156,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                 <>
                     <div className="fixed inset-0 bg-black opacity-40 z-[998]" onClick={closeModalEdit}></div>
                     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-center z-[999]">
-                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEvento} onEditSuccess={() => { fetchData(idEvento) }} onSuccess={onDeleteSuccess}/>
+                        <FormNewEvent onClose={closeModalEdit} isEdit={true} idEvento={idEvento} onEditSuccess={() => { fetchData(idEvento) }} onSuccess={onDeleteSuccess} />
                     </div>
                 </>
             }
@@ -203,13 +203,15 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess }
                                 <span className="font-semibold text-[var(--color-grayLight)] text-lg">{process && process.assunto ? process.assunto : "Processo indisponível"}</span>
                             </div>
                             <div className="self-end flex gap-4 mt-4">
-                                <button
+                                {isVisualize ? '' : <> <button
                                     className="cursor-pointer px-8 py-2 bg-red-500 text-white rounded-[10px]"
                                     onClick={handleDelete}
                                 >
                                     Excluir
                                 </button>
-                                <button onClick={openModalEdit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
+                                    <button onClick={openModalEdit} className="cursor-pointer px-8 py-2 bg-[color:var(--color-blueLight)] text-white rounded-[10px]">Editar</button>
+                                </>
+                                }
                                 <button className="cursor-pointer px-8 py-2 text-[var(--color-blueLight)] border-2 border-[var(--color-blueLight)] rounded-[10px]" onClick={onClose}>Ok</button>
                             </div>
                         </div>
