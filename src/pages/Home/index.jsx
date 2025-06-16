@@ -538,8 +538,8 @@ export function Home() {
                         <span className="typography-black text-[var(--color-blueDark)] text-[40px]">Visão geral</span>
                     </div>
                     <div className="flex w-full h-[90%]">
-                        <div className="mr-[2%] w-[30%]  h-full ">
-                            <div className="grid grid-cols-2 gap-4 mb-4 ">
+                        <div className="mr-[2%] w-[30%] flex flex-col gap-4 h-full ">
+                            <div className="grid grid-cols-2 gap-4 mb-4 h-[35%]">
                                 <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-sm font-medium opacity-90">Total de Processos</CardTitle>
@@ -591,7 +591,7 @@ export function Home() {
                                 </Card>
                             </div>
 
-                            <div className="bgGlass h-[65%] mb-4">
+                            <div className="bgGlass h-[65%]">
                                 <span className="typography-black text-[var(--color-blueDark)] text-[28px] ">Solicitações de agendamento</span>
                                 <div className=" w-full mr-[12px] h-4/5 overflow-y-auto ">
                                     <div className="h-full py-2.5">
@@ -600,7 +600,7 @@ export function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-[70%] h-full  ">
+                        <div className="w-[70%] h-full">
                             <div className="h-2/6 flex gap-4 mb-4">
                                 <div className="bgGlassNoPadding px-5 py-7 h-[100%] w-[33%] flex flex-col justify-around">
                                     <span className="typography-black text-[var(--color-blueDark)] text-lg sm:text-md md:text-xl lg:text-2xl">
