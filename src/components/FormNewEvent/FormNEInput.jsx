@@ -16,7 +16,7 @@ export function FormNEInput({ icon, type = "text", options = [], optionLabel, va
         <div className="relative w-full flex items-center">
             {icon && type !== "date" && (
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                    {icon}  
+                    {icon}
                 </div>
             )}
 

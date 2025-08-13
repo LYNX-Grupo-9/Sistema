@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { FormNEInput } from "./FormNEInput.jsx";
-import { Calendar, ChevronDown, Clock10, MoveRight, UsersRound, X } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { Calendar, ChevronDown, Clock10, MoveRight, UsersRound } from "lucide-react";
+import { toast } from "react-toastify";
 import axios from "axios";
+import api from "../../services/api.js";
 
 
 const hourlyOptions = Array.from({ length: 24 }, (_, i) => {
@@ -29,16 +30,11 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
     const [clientesOptions, setClientesOptions] = useState([]);
     const [processosOptions, setProcessosOptions] = useState([]);
 
-    const idAdvogado = localStorage.getItem('idAdvogado') || 1;
+    const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
         if (idAdvogado) {
-            getCategorias(idAdvogado);
-            getClientsByIdAdvogado(idAdvogado);
-        }
-
-        if (isEdit && idEvento) {
-            getEventById(idEvento);
+            fetchData();
         }
     }, [])
 
@@ -47,6 +43,60 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             getProcessosByIdCliente(convidado);
         }
     }, [convidado]);
+
+
+    function fetchData() {
+        api.getCategorias(idAdvogado)
+            .then(response => {
+
+                const categoriesMap = response.data.map((categoria, index) => ({
+                    label: categoria.nomeEvento,
+                    value: categoria.idCategoriaEvento,
+                }));
+
+                // console.log('Categorias Options:', categoriesMap);
+                setCategoriaOptions(categoriesMap);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar categorias:', error);
+            });
+
+        api.getClientsByIdAdvogado(idAdvogado)
+            .then(response => {
+                const clientsMap = response.data.map((cliente, index) => ({
+                    label: cliente.nome,
+                    value: cliente.idCliente,
+                }));
+                setClientesOptions(clientsMap);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar clientes:', error);
+            });
+
+
+        if (isEdit && idEvento) {
+            api.getEventById(idEvento)
+            .then(response => {
+                const evento = response.data;
+
+                console.log('idCategoria', evento);
+
+                setNomeEvento(evento.nome);
+                setDataSelecionada(evento.dataReuniao + 'T00:00:00');
+                setHoraInicio(evento.horaInicio.slice(0, -3));
+                setHoraFim(evento.horaFim.slice(0, -3));
+                setConvidado(evento.idCliente);
+                setCategoria(evento.idCategoria);
+                setProcesso(evento.idProcesso);
+                setDescricao(evento.descricao);
+                setLinkReuniao(evento.linkReuniao || "");
+                setLocal(evento.local || "");
+
+            }).catch(error => {
+                console.error('Erro ao buscar evento:', error);
+            });
+        }
+    }
 
 
     function clearInputs() {
@@ -117,7 +167,7 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         axios.post(`http://localhost:8080/api/eventos`,
             eventoPayload,
             {
-                headers: {  
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 }
@@ -137,65 +187,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         console.log(JSON.stringify({ eventoPayload }));
     }
 
-    function getCategorias(idAdvogado) {
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            toast.error("Erro ao criar evento, tente novamente.");
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/categorias/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-
-                const categoriesMap = response.data.map((categoria, index) => ({
-                    label: categoria.nomeEvento,
-                    value: categoria.idCategoriaEvento,
-                }));
-
-                // console.log('Categorias Options:', categoriesMap);
-                setCategoriaOptions(categoriesMap);
-            })
-            .catch(error => {
-                console.error('Erro ao buscar categorias:', error);
-            });
-
-    }
-
-    function getClientsByIdAdvogado(idAdvogado) {
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            toast.error("Erro ao criar evento, tente novamente.");
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/clientes/listarPorAdvogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                const clientsMap = response.data.map((cliente, index) => ({
-                    label: cliente.nome,
-                    value: cliente.idCliente,
-                }));
-                setClientesOptions(clientsMap);
-            })
-            .catch(error => {
-                console.error('Erro ao buscar clientes:', error);
-            });
-    }
 
     function getProcessosByIdCliente(idCliente) {
 
@@ -223,41 +214,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         }).catch(error => {
             console.error('Erro ao buscar processos:', error);
         })
-    }
-
-    function getEventById(idEvento) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            toast.error("Erro ao buscar evento, tente novamente.");
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/eventos/${idEvento}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        }).then(response => {
-            const evento = response.data;
-
-            console.log('idCategoria', evento);
-
-            setNomeEvento(evento.nome);
-            setDataSelecionada(evento.dataReuniao + 'T00:00:00');
-            setHoraInicio(evento.horaInicio.slice(0, -3));
-            setHoraFim(evento.horaFim.slice(0, -3));
-            setConvidado(evento.idCliente);
-            setCategoria(evento.idCategoria);
-            setProcesso(evento.idProcesso);
-            setDescricao(evento.descricao);
-            setLinkReuniao(evento.linkReuniao || "");
-            setLocal(evento.local || "");
-
-        }).catch(error => {
-            console.error('Erro ao buscar evento:', error);
-        });
     }
 
     return (

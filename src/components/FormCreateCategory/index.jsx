@@ -1,8 +1,9 @@
 import { X } from "lucide-react";
 import { FormNEInput } from "../FormNewEvent/FormNEInput";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import api from "../../services/api.js";
 
 export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuccess }) {
 
@@ -16,38 +17,21 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
 
     useEffect(() => {
         if (isEdit) {
-            getCategoriaById(idCategoria);
+            fetchData()
         }
     }, [isEdit, idCategoria]);
 
     function clearInputs() {
         setNome("");
-        setColor("#000000"); // Reset to default color
+        setColor("#000000");
     }
 
-    function getCategoriaById(idCategoria) {
-        console.log("Buscando categoria com ID:", idCategoria);
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            toast.error("Sessão expirada. Faça login novamente.", {
-                theme: "colored",
-            });
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/categorias/${idCategoria}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
+    function fetchData() {
+        api.getCategoriaById(idCategoria).then((response) => {
+            console.log(response.data);
+            setNome(response.data.nomeEvento);
+            setColor(response.data.cor.replace("BF", ""));
         })
-            .then((response) => {
-                console.log(response.data);
-                setNome(response.data.nomeEvento);
-                setColor(response.data.cor.replace("BF", ""));
-            })
             .catch((error) => {
                 console.error(error);
                 toast.error("Erro ao buscar categoria.", {
@@ -74,29 +58,7 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     }
 
     function postNewCategory(nomeEvento, color, idAdvogado) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            toast.error("Sessão expirada. Faça login novamente.", {
-                theme: "colored",
-            });
-            return;
-        }
-
-        axios.post(
-            'http://localhost:8080/api/categorias',
-            {
-                nomeEvento,
-                cor: color + "BF",
-                idAdvogado
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-        )
+        api.newCategory({ nomeEvento, cor: color + "BF", idAdvogado })
             .then((response) => {
                 console.log(response.data);
                 toast.success("Categoria criada com sucesso!", {
@@ -116,39 +78,20 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     }
 
     function updateCategory(nomeEvento, color, idAdvogado, idCategoria) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            toast.error("Sessão expirada. Faça login novamente.", {
-                theme: "colored",
-            });
-            return;
-        }
-
-        axios.patch(
-            `http://localhost:8080/api/categorias/${idCategoria}`,
-            {
-                nomeEvento,
-                cor: color + "BF",
-                idAdvogado
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-        )
+        api.updateCategory(idCategoria, { nomeEvento, cor: color + "BF", idAdvogado })
             .then((response) => {
                 console.log(response.data);
-                toast.success("Categoria criada com sucesso!", {
+                toast.success("Categoria atualizada com sucesso!", {
                     theme: "colored",
                 });
                 onClose();
+                if (onSuccess) {
+                    onSuccess();
+                }
             })
             .catch((error) => {
                 console.error(error);
-                toast.error("Erro ao criar categoria.", {
+                toast.error("Erro ao atualizar categoria.", {
                     theme: "colored",
                 });
             });
@@ -157,7 +100,7 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     return (
         <>
             <div className="bg-white px-12 pt-11 pb-8 border-2 border-gray-300  flex flex-col gap-4 rounded-lg min-w-72 shadow-lgs">
-                <X onClick={onClose} className="self-end" />
+                <X onClick={onClose} className="self-end cursor-pointer" />
                 <h1 className="font-semibold text-xl text-[var(--color-blueDark)] whitespace-nowrap">{isEdit ? "Editar" : "Adicionar "} categoria</h1>
                 <label className="block text-sm font-medium text-gray-700">Nome: </label>
                 <FormNEInput value={nome} placeholder="Nome categoria" onChange={e => { setNome(e.target.value) }} />

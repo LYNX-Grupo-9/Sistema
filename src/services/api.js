@@ -18,8 +18,19 @@ api.interceptors.request.use((config) => {
 
 const endpoints = {
 
+    // POST 
     newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
+    newCase: (data) => api.post("/processos", data),
+    newCategory: (data) => api.post("/categorias", data),
+
+    //PATCH
     updateCustomer: (id,data) => api.patch(`/clientes/${id}`, data),
+
+
+    //UPDATE
+    updateCategory: (idCategoria, data) => api.patch(`/categorias/${idCategoria}`, data),
+
+    //GET
     getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
     getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
     getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
@@ -41,7 +52,6 @@ const endpoints = {
     }),
     
     getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
-    newCase: (data) => api.post("/processos", data),
     getCaseById: (id) => api.get(`/processos/${id}`),
     getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
     editCase: (idProcesso, data) => api.patch(`/processos/${idProcesso}`, data),
@@ -49,7 +59,12 @@ const endpoints = {
     getOrderByStatus: (idAdvogado) => api.get("/processos/processos/ordenado-por-status", { params: { idAdvogado } }),
     getOrderByValue: (idAdvogado) => api.get("/processos/processos/ordenado-por-valor", { params: { idAdvogado } }),
     getOrderByNumber: (idAdvogado) => api.get("/processos/processos/ordenado-por-numero", { params: { idAdvogado } }),
-    
+    getCategorias: (idAdvogado) => api.get(`/categorias/advogado/${idAdvogado}`),
+    getCategoriaById: (idCategoria) => api.get(`/categorias/${idCategoria}`),
+    getEvents: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}`),
+    getEventById: (idEvento) => api.get(`/eventos/${idEvento}`),
+    getEventsNext7days: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/7dias`),
+    getClientsByIdAdvogado: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
 }
 
 export default endpoints

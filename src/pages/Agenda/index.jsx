@@ -19,6 +19,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import ModalEventDetails from '../../components/ModalEventDetails';
 import FormCreateCategory from '../../components/FormCreateCategory';
 import ModalDelete from '../../components/ModalDelete';
+import api from "../../services/api";
 
 // Configurações de localização (pt-BR)
 const locales = {
@@ -58,10 +59,7 @@ export default function Agenda() {
     const [showEditForm, setShowEditForm] = useState(false);
     const [idEventoEdit, setIdEventoEdit] = useState(null);
 
-    const idAdvogado = localStorage.getItem('idAdvogado');
-
-
-
+    const idAdvogado = parseFloat(localStorage.getItem('idAdvogado'));
 
     useEffect(() => {
         if (idAdvogado) {
@@ -71,9 +69,33 @@ export default function Agenda() {
 
     function fetchData() {
         if (idAdvogado) {
-            getCategorias(idAdvogado);
-            getEvents(idAdvogado);
-            getEventsNext7days(idAdvogado);
+            api.getCategorias(idAdvogado)
+                .then((response) => {
+                    setCategorias(response.data);
+                })
+                .catch((error) => {
+                    toast.error("Erro ao buscar categorias:", error);
+                });
+
+
+            api.getEvents(idAdvogado)
+                .then((response) => {
+                    const eventsData = adapterEventRequisitionToValidEvent(response.data);
+                    setEvents(eventsData);
+                })
+                .catch((error) => {
+                    toast.error("Erro ao buscar eventos:", error);
+                });
+
+            api.getEventsNext7days(idAdvogado)
+                .then((response) => {
+                    console.log('Eventos próximos:', response.data);
+                    setNextEvents(response.data);
+                })
+                .catch((error) => {
+                    toast.error("Erro ao buscar eventos próximos:", error);
+                });
+
         } else {
             toast.error('ID do advogado não encontrado. Por favor, faça login novamente.');
         }
@@ -85,33 +107,6 @@ export default function Agenda() {
 
     function openEventForm() {
         setShowEventForm(true);
-    }
-
-
-
-    function getCategorias(idAdvogado) {
-
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(apiBaseURL + `categorias/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log('Categorias:', response.data);
-                setCategorias(response.data);
-            })
-            .catch(error => {
-                console.error('Erro ao buscar categorias:', error);
-            });
-
     }
 
     function showCategorias(categorias) {
@@ -137,28 +132,6 @@ export default function Agenda() {
 
         return <></>;
     }
-    function getEvents(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log('Eventos:', response.data);
-                const eventsData = adapterEventRequisitionToValidEvent(response.data);
-                setEvents(eventsData);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos:', error);
-            })
-    }
 
     function adapterEventRequisitionToValidEvent(events) {
         try {
@@ -180,27 +153,6 @@ export default function Agenda() {
         }
     }
 
-    function getEventsNext7days(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(apiBaseURL + `eventos/advogado/${idAdvogado}/7dias`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log('Eventos próximos:', response.data);
-                setNextEvents(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos próximos:', error);
-            })
-    }
 
     function formatarLegenda(dataStr) {
         const hoje = new Date();
@@ -281,8 +233,6 @@ export default function Agenda() {
     function closeModalEdit() {
         setShowEditForm(false)
     }
-
-
 
 
     return (
