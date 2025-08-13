@@ -43,9 +43,11 @@ export function Home() {
 
     function fetchData(idAdvogado) {
         console.log("Fetching data for advogado ID:", idAdvogado);
+
+        getEventosProx7dias(idAdvogado);
+        
         getSolicitacoeByAdvId(idAdvogado);
         getQtdEventosPorCategoriaByIdAdv(idAdvogado);
-        getEventosProx7dias(idAdvogado);
         getContagemPorStatus(idAdvogado);
         getTotalProcessosAtivos(idAdvogado);
         getTotalEventosMes(idAdvogado);

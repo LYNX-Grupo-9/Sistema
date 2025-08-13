@@ -40,7 +40,17 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
 
     useEffect(() => {
         if (convidado != '0') {
-            getProcessosByIdCliente(convidado);
+            api.getProcessosByIdCliente(convidado)
+                .then(response => {
+                    console.log('Processos:', response.data);
+                    const processosMap = response.data.map((processo, index) => ({
+                        label: processo.titulo,
+                        value: processo.idProcesso,
+                    }));
+                    setProcessosOptions(processosMap);
+                }).catch(error => {
+                    console.error('Erro ao buscar processos:', error);
+                })
         }
     }, [convidado]);
 
@@ -76,25 +86,25 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
 
         if (isEdit && idEvento) {
             api.getEventById(idEvento)
-            .then(response => {
-                const evento = response.data;
+                .then(response => {
+                    const evento = response.data;
 
-                console.log('idCategoria', evento);
+                    console.log('idCategoria', evento);
 
-                setNomeEvento(evento.nome);
-                setDataSelecionada(evento.dataReuniao + 'T00:00:00');
-                setHoraInicio(evento.horaInicio.slice(0, -3));
-                setHoraFim(evento.horaFim.slice(0, -3));
-                setConvidado(evento.idCliente);
-                setCategoria(evento.idCategoria);
-                setProcesso(evento.idProcesso);
-                setDescricao(evento.descricao);
-                setLinkReuniao(evento.linkReuniao || "");
-                setLocal(evento.local || "");
+                    setNomeEvento(evento.nome);
+                    setDataSelecionada(evento.dataReuniao + 'T00:00:00');
+                    setHoraInicio(evento.horaInicio.slice(0, -3));
+                    setHoraFim(evento.horaFim.slice(0, -3));
+                    setConvidado(evento.idCliente);
+                    setCategoria(evento.idCategoria);
+                    setProcesso(evento.idProcesso);
+                    setDescricao(evento.descricao);
+                    setLinkReuniao(evento.linkReuniao || "");
+                    setLocal(evento.local || "");
 
-            }).catch(error => {
-                console.error('Erro ao buscar evento:', error);
-            });
+                }).catch(error => {
+                    console.error('Erro ao buscar evento:', error);
+                });
         }
     }
 
@@ -135,85 +145,32 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             horaFim: `${horaFim}:00`,
         };
 
-        console.log("Payload do evento:", eventoPayload);
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            toast.error("Erro ao criar evento, tente novamente.");
-            return;
-        }
-
         if (isEdit) {
-            axios.patch(`http://localhost:8080/api/eventos/${idEvento}`, eventoPayload, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            }).then(response => {
-                console.log(response.data)
-                toast.success("Evento editado com sucesso!")
-                onEditSuccess && onEditSuccess()
-                onSuccess()
-                onClose()
+            api.patchEvent(idEvento, eventoPayload)
+                .then(response => {
+                    console.log(response.data)
+                    toast.success("Evento editado com sucesso!")
+                    onEditSuccess && onEditSuccess()
+                    onSuccess()
+                    onClose()
+                }).catch(error => {
+                    console.error("Erro ao alterar" + error)
+                })
+            return;
+        }
+
+
+        api.newEvent(eventoPayload)
+            .then(response => {
+                console.log('Evento criado com sucesso:', response.data);
+                toast.success("Evento criado com sucesso!")
+                onClose();
+                clearInputs();
+                onSuccess && onSuccess();
             }).catch(error => {
-                console.error("Erro ao alterar" + error)
+                console.error('Erro ao criar evento:', error);
+                toast.error("Erro ao criar evento, tente novamente.")
             })
-            return;
-        }
-
-
-        axios.post(`http://localhost:8080/api/eventos`,
-            eventoPayload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-        ).then(response => {
-            console.log('Evento criado com sucesso:', response.data);
-            toast.success("Evento criado com sucesso!")
-            onClose();
-            clearInputs();
-            onSuccess && onSuccess();
-        }).catch(error => {
-            console.error('Erro ao criar evento:', error);
-            toast.error("Erro ao criar evento, tente novamente.")
-        })
-
-
-        console.log(JSON.stringify({ eventoPayload }));
-    }
-
-
-    function getProcessosByIdCliente(idCliente) {
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            toast.error("Erro ao criar evento, tente novamente.");
-            return;
-        }
-
-
-        axios.get(`http://localhost:8080/api/processos/cliente/${idCliente}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        }).then(response => {
-            console.log('Processos:', response.data);
-            const processosMap = response.data.map((processo, index) => ({
-                label: processo.titulo,
-                value: processo.idProcesso,
-            }));
-            setProcessosOptions(processosMap);
-        }).catch(error => {
-            console.error('Erro ao buscar processos:', error);
-        })
     }
 
     return (

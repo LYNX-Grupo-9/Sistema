@@ -1,155 +1,56 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import api from '../../services/api';
 
 export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuccess, notify }) {
 
     const [nameItem, setNameItem] = useState(null);
 
     useEffect(() => {
-
-        if (itemType === "categoria") {
-            getCategoriaById(idToDelete).then(categoria => {
-                if (categoria) {
-                    console.log("Categoria encontrada:", categoria);
-                    setNameItem(categoria.nomeEvento);
-                } else {
-                    console.error("Categoria não encontrada.");
-                }
-            });
-        } else if (itemType === "evento") {
-            getEventoById(idToDelete).then(evento => {
-                if (evento) {
-                    console.log("Evento encontrado:", evento);
-                    setNameItem(evento.nome);
-                } else {
-                    console.error("Evento não encontrado.");
-                }
-            });
-        }
-
+        fetchData();
     }, [itemType, idToDelete]);
 
-    function getCategoriaById(idCategoria) {
-        const token = localStorage.getItem("token");
 
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            return false;
+    function fetchData() {
+        if (itemType === "categoria") {
+            api.getCategoriaById(idToDelete).then(categoria => {
+                setNameItem(categoria.data.nomeEvento);
+            }).catch(error => {
+                console.error("Categoria não encontrada.", error);
+            });
+        } else if (itemType === "evento") {
+            api.getEventById(idToDelete).then(evento => {
+                setNameItem(evento.data.nome);
+            }).catch(error => {
+                console.error("Evento não encontrado.", error);
+
+            })
         }
 
-        return axios.get(`http://localhost:8080/api/categorias/${idCategoria}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                console.error("Erro ao buscar categoria:", error);
-                return false;
-            });
     }
-
-    function getEventoById(idEvento) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            return false;
-        }
-
-        return axios.get(`http://localhost:8080/api/eventos/${idEvento}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                console.error("Erro ao buscar evento:", error);
-                return false;
-            });
-    }
-
 
     function handleDelete(itemType, id) {
         if (itemType === "categoria") {
-            deleteCategoria(id).then(response => {
-                if (response) {
+            api.deleteCategoria(id)
+                .then(_ => {
                     toast.success("Categoria excluída com sucesso.", "success");
                     if (onDeleteSuccess) {
                         onDeleteSuccess();
                     }
-                } else {
-                    toast.error("Erro ao excluir categoria.");
-                }
-
-            })
+                }).catch(error => {
+                    console.error("Erro ao excluir categoria:", error);
+                });
         } else if (itemType === "evento") {
-            deleteEvento(id).then(response => {
-                if (response) {
-                    toast.success("Evento excluído com sucesso.");
-                    if (onDeleteSuccess) {
-                        onDeleteSuccess();
-                    }
-                } else {
-                    toast.error("Erro ao excluir evento.");
+            api.deleteEvento(id).then(_ => {
+                toast.success("Evento excluído com sucesso.");
+                if (onDeleteSuccess) {
+                    onDeleteSuccess();
                 }
-            });
-        }
-    }
-
-    function deleteEvento(idEvento) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            return;
-        }
-
-        return axios.delete(`http://localhost:8080/api/eventos/${idEvento}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Evento excluído com sucesso:", response.data);
-                return true;
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.error("Erro ao excluir evento:", error);
-                return false;
             });
-    }
-
-    function deleteCategoria(idCategoria) {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            console.error('Token de autenticação não encontrado.');
-            return;
         }
-
-        return axios.delete(`http://localhost:8080/api/categorias/${idCategoria}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Categoria excluída com sucesso:", response.data);
-                return true;
-            })
-            .catch(error => {
-                console.error("Erro ao excluir categoria:", error);
-                return false;
-            });
     }
 
     return (
