@@ -172,7 +172,6 @@ export function CaseList() {
 
                         <div className=" h-full overflow-scroll">
                             {
-                            
                             caseList.map((item, index) => (
                                 <EntityItem
                                 key={index}

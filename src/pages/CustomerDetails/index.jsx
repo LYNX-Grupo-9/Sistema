@@ -84,7 +84,7 @@ export function CustomerDetails() {
         <>
             {
                 isModalDetailsOpen &&
-                <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} />
+                <ModalEventDetails onClose={closeModalDetails} idEvento={idEventDetails} isVisualize/>
             }
             {
                 modalOpen &&

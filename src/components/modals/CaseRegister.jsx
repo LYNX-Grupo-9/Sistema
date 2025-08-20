@@ -13,12 +13,10 @@ import { CustomerRegister } from "./CustomerRegister";
 
 export function CaseRegister({ isOpen, onClose }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [caseModalOpen, setCaseModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const [clientSelectStep, setClientSelectStep] = useState(1);
   const [step, setStep] = useState(1);
   const idAdvogado = localStorage.getItem("idAdvogado");
-  const [newCustomer, setNewCustomer] = useState(false);
   const [caseData, setCaseData] = useState({
     titulo: "",
     numeroProcesso: "",
@@ -57,10 +55,8 @@ export function CaseRegister({ isOpen, onClose }) {
 
   const handleClientSelectionType = (selection) => {
     if (selection === "existing") {
-      setNewCustomer(false);
       setClientSelectStep(2);
     } else if (selection === "new") {
-      setNewCustomer(true);
       openModal();
       setClientSelectStep(3);
     } else if (selection === "selected") {
@@ -110,7 +106,7 @@ export function CaseRegister({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
       <div className="bg-[var(--color-light)] p-4 md:p-10 shadow-xl w-full md:w-[45%] h-full md:h-[80%] flex flex-col rounded-none md:rounded-[40px]">
         <div className="w-full flex justify-end ">
-          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={onClose} />
+          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={onClose}/>
         </div>
 
         {
@@ -162,6 +158,7 @@ export function CaseRegister({ isOpen, onClose }) {
         onClose={closeBothModals}
         caseFlow={true}
         closeModal={closeOnlyCustomerModal}
+        closeCustomerModal={setClientSelectStep}
       />
 
     </div>

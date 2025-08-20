@@ -18,7 +18,6 @@ export function CustomerList() {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const [filterOptions, setFilterOptions] = useState([]);
     const [orderOptions, setOrderOptions] = useState([]);
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 

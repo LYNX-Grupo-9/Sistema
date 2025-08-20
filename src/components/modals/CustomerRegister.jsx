@@ -9,7 +9,7 @@ import { CustomerStep3 } from "../Steps/CustomerStep3";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import { format } from 'date-fns';
 
-export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, CustomerData, editMode, idCliente }) {
+export function CustomerRegister({ isOpen, onClose, caseFlow, CustomerData, editMode, idCliente, closeCustomerModal}) {
 
  const handleClose = () => {
     onClose();
@@ -124,7 +124,10 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bgTransparentDark)] bg-opacity-50">
       <div className="bg-[var(--color-light)] p-4 md:p-10 shadow-xl w-full md:w-[45%] h-full md:h-[80%] flex flex-col rounded-none md:rounded-[40px]">
         <div className="w-full flex justify-end ">
-          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={handleClose} />
+          <img src={CloseIcon} className="w-[5%] mb-6 cursor-pointer" onClick={() => {
+            onClose();
+            closeCustomerModal(1)
+          }} />
         </div>
 
         <Stepper currentStep={step} />

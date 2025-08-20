@@ -22,7 +22,7 @@ export function CustomerItemSM({id, name, email, phone, country, caseData, setCa
                     <img src={LoadingSVG} alt="Carregando" className="w-16" />
                 </div>
             )}
-            <div className="flex w-[100%] justify-between items-center mt-[20px] p-[2%] rounded-[10px] bg-[var(--bgLight)] active:scale-95 transition-all" onClick={handleCustomerSelected}>
+            <div className="flex w-[100%] justify-between items-center mt-[20px] p-[2%] rounded-[10px] bg-[var(--bgLight)] active:scale-95 transition-all cursor-pointer" onClick={handleCustomerSelected}>
                 <span className="typography-bold text-[14px] text-[var(--color-blueLight)] w-[10%] mr-[2%] pr-4 truncate">{id}</span>
                 <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] mr-[2%] pr-4 truncate">{name}</span>
                 <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] mr-[2%] pr-4 truncate">{email}</span>

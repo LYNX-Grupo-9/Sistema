@@ -168,6 +168,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     })
       .then(response => {
         console.log(response);
+        
       })
       .catch(error => {
         console.error(error);
@@ -399,7 +400,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
                       <p className="text-center text-gray-400">Nenhum anexo encontrado.</p>
                     )}
                   </div>
-                  <p className="mt-4 text-white">{status}</p>
+                  {/* <p className="mt-4 text-white">{status}</p> */}
                 </>
               )}
             </div>
