@@ -199,6 +199,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     } else {
       setStatus("Anexo enviado com sucesso!");
       setFile(null);
+      await new Promise(resolve => setTimeout(resolve, 500));
       await listFiles();
     }
     setUploading(false);
