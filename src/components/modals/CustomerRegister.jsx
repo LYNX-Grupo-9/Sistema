@@ -53,11 +53,11 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, CustomerData, edit
 
     const handleNextStep = () => {
       if (step === 1) {
-        if (!user.nome.trim()) return errorMessage("Preencha o nome do cliente");
+        if (!user.nome) return errorMessage("Preencha o nome do cliente");
         if (!user.dataNascimento) return errorMessage("Preencha a data de nascimento");
         if (!user.genero) return errorMessage("Selecione o gênero");
         if (!user.estadoCivil) return errorMessage("Selecione o estado civil");
-        if (!user.naturalidade.trim()) return errorMessage("Preencha a naturalidade");
+        if (!user.naturalidade) return errorMessage("Preencha a naturalidade");
     
         converterParaISO(user.dataNascimento);
         setStep(2);

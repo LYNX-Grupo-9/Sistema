@@ -25,20 +25,47 @@ export function CustomerStep1({ user, setUser }) {
         setGender(selectedOption);
         setUser({ ...user, genero: selectedOption });
     }
+
+    function limparPaisesRepetidos(paises) {
+        const mapa = new Map();
+      
+        paises.forEach(pais => {
+          const chave = pais.id["ISO-ALPHA-3"] || pais.nome.abreviado;
+          if (!mapa.has(chave)) {
+            mapa.set(chave, pais);
+          }
+        });
+        return Array.from(mapa.values());
+      }
+      
+
+      async function buscarPaises() {
+        try {
+          const resposta = await axios.get("https://servicodados.ibge.gov.br/api/v1/paises/{paises}");
+          console.log("Dados brutos recebidos:", resposta.data);
+          const dados = resposta.data;
+      
+          const paisesLimpos = limparPaisesRepetidos(dados);
+      
+          return paisesLimpos;
+        } catch (erro) {
+          console.error("Erro ao buscar países:", erro.message);
+        }
+      }
+
     useEffect(() => {
-        axios
-            .get("https://servicodados.ibge.gov.br/api/v1/paises/{paises}")
-            .then((response) => {
-                const formatted = response.data.map((item) => ({
+        buscarPaises().then(paises => {
+            if (paises) {
+                const formatted = paises.map((item) => ({
                     id: item.id["ISO-ALPHA-3"],
                     label: item.nome.abreviado,
-                }),);
+                }));
                 setCountries(formatted);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar países:", error);
-            });
+            }
+        });
+        }, []);
 
+    useEffect(() => {
         setMaritalStatus([
             { id: 1, label: "Casado" },
             { id: 2, label: "Solteiro" },
