@@ -9,7 +9,9 @@ import { ButtonAnexo } from "../../components/ButtonAnexo";
 import ModalEventDetails from "../../components/ModalEventDetails";
 import { format } from 'date-fns';
 import edit from "../../assets/icons/edit.svg";
+import CoinImg from "../../assets/icons/coin.png";
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
+import FinancialOverlay from "../../components/FinancialOverlay";
 
 
 
@@ -27,6 +29,8 @@ export function CustomerDetails() {
     const [idEventDetails, setIdEventDetails] = useState(Number)
     const [orderOptions, setOrderOptions] = useState([]);
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
+
+    const [isFinancialOverlayOpen, setIsFinancialOverlayOpen] = useState(false);
 
     useEffect(() => {
         setOrderOptions([
@@ -75,9 +79,17 @@ export function CustomerDetails() {
         setIdEventDetails(id)
         setIsModalDetailsOpen(true);
     }
-    
+
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
+    }
+
+    function openFinancialOverlay() {
+        setIsFinancialOverlayOpen(true);
+    }
+
+    function closeFinancialOverlay() {
+        setIsFinancialOverlayOpen(false);
     }
 
     return (
@@ -88,14 +100,18 @@ export function CustomerDetails() {
             }
             {
                 modalOpen &&
-                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true}/>
+                <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true} />
             }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
+                <FinancialOverlay isOpen={isFinancialOverlayOpen} onClose={closeFinancialOverlay}/>
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
                     <div className="flex flex-col gap-6 w-1/2 h-full">
                         <div className="bgGlass w-full h-[10%] flex justify-between items-center">
                             <span className="typography-semibold text-lg sm:text-md md:text-xl lg:text-3xl text-[var(--color-blueDark)]">{customerData.nome}</span>
-                            <img src={edit} className="w-[5%] ml-4 cursor-pointer" alt="Editar" onClick={openModal} />
+                            <div className="flex gap-2">
+                                <img src={edit} className="w-7 ml-4 cursor-pointer" alt="Editar" onClick={openModal} />
+                                <img src={CoinImg} className="w-7 ml-4 cursor-pointer" alt="Financeiro" onClick={openFinancialOverlay} />
+                            </div>
                         </div>
                         <div className="bgGlass w-full h-[83%] flex flex-col items-center gap-5 overflow-y-auto">
 
@@ -181,7 +197,7 @@ export function CustomerDetails() {
                             }
                         </div>
 
-                    {id && <ButtonAnexo idCliente={id} />}
+                        {id && <ButtonAnexo idCliente={id} />}
                     </div>
                 </div>
             </div>

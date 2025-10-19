@@ -1,6 +1,5 @@
 import axios from "axios";
 import { API_URL } from "../config/config.js";
-import { patch } from "@mui/material";
 
 const api = axios.create({
   baseURL: API_URL,
