@@ -134,6 +134,7 @@ export default function FinancialOverlay({ isOpen, onClose }) {
     const [valorTotal, setValorTotal] = useState('')
     const [numeroParcelas, setNumeroParcelas] = useState('')
     const [dataVencimentoInicial, setDataVencimentoInicial] = useState(null)
+    const [titulo, setTitulo] = useState('')
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id)
@@ -361,7 +362,7 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                             ) : (
                                 <>
                                     <div className="flex justify-between items-center mb-6">
-                                        <h2 className="text-2xl font-bold text-[#013451]">Financeiro:</h2>
+                                        <h2 className="text-2xl font-bold text-[#013451]">Adicionar Lançamentos:</h2>
                                         <button
                                             onClick={handleCloseModal}
                                             className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
@@ -371,6 +372,18 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                                     </div>
 
                                     <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-[#013451] font-semibold mb-2">
+                                                Titulo
+                                            </label>
+                                            <FormNEInput
+                                                type="text"
+                                                placeholder="Ex: Pagamento de Honorários - Caso Almeida"
+                                                value={titulo}
+                                                onChange={(e) => setTitulo(e.target.value)}
+                                            />
+                                        </div>
+
                                         <div>
                                             <label className="block text-[#013451] font-semibold mb-2">
                                                 Processo
@@ -389,6 +402,7 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                                             />
                                         </div>
 
+
                                         <div>
                                             <label className="block text-[#013451] font-semibold mb-2">
                                                 Valor Total (em €)
@@ -406,10 +420,16 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                                                 Parcelas:
                                             </label>
                                             <FormNEInput
-                                                type="text"
+                                                type="select"   
                                                 placeholder="Ex.: À VISTA"
                                                 value={numeroParcelas}
                                                 onChange={(e) => setNumeroParcelas(e.target.value)}
+                                                options={[
+                                                    { value: '1', label: 'À VISTA' },
+                                                    { value: '2', label: '2x' },
+                                                    { value: '3', label: '3x' },
+                                                    { value: '4', label: '4x' }
+                                                ]}
                                             />
                                         </div>
 
