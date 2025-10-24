@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import DownIcon from './icons/chevron-baixo.png'
+import { FormNEInput } from '../FormNewEvent/FormNEInput'
 
 const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, '0')
@@ -126,9 +127,46 @@ const FinancialIndicatorCard = ({ title, value, gradientFrom, gradientTo }) => {
 
 export default function FinancialOverlay({ isOpen, onClose }) {
     const [expandedId, setExpandedId] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [selectedProcesso, setSelectedProcesso] = useState('0')
+    const [valorTotal, setValorTotal] = useState('')
+    const [numeroParcelas, setNumeroParcelas] = useState('')
+    const [dataVencimentoInicial, setDataVencimentoInicial] = useState(null)
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id)
+    }
+
+    const handleAddClick = () => {
+        setShowModal(true)
+        setIsLoading(true)
+
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 1000)
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false)
+        setIsLoading(false)
+
+
+        setSelectedProcesso('0')
+        setValorTotal('')
+        setNumeroParcelas('')
+        setDataVencimentoInicial(null)
+    }
+
+    const handleSave = () => {
+        console.log({
+            selectedProcesso,
+            valorTotal,
+            numeroParcelas,
+            dataVencimentoInicial
+        })
+        handleCloseModal()
     }
 
 
@@ -270,16 +308,142 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                     />
                 </div>
                 <h1 className="font-extrabold text-3xl text-[#013451]">Lançamentos:</h1>
+                <div style={{ flex: 1 }} className="overflow-y-auto flex flex-col gap-4">
+                    {lancamento.map((item) => (
+                        <LancamentoCard
+                            key={item.idLancamentos}
+                            item={item}
+                            isExpanded={expandedId === item.idLancamentos}
+                            onToggle={() => toggleExpand(item.idLancamentos)}
+                        />
+                    ))}
+                </div>
 
-                {lancamento.map((item) => (
-                    <LancamentoCard
-                        key={item.idLancamentos}
-                        item={item}
-                        isExpanded={expandedId === item.idLancamentos}
-                        onToggle={() => toggleExpand(item.idLancamentos)}
-                    />
-                ))}
+                <div className='flex gap-4 align-center justify-around'>
+                    <button
+                        onClick={handleAddClick}
+                        className='px-12 py-4 border-2 w-full text-[#013451] border-[#013451] rounded-lg cursor-pointer hover:bg-gray-10 transition-colors'
+                    >
+                        <p className="text-2xl font-extrabold">Adicionar</p>
+                    </button>
+                    <button onClick={onClose} className='px-12 py-4 w-full bg-[#013451] text-white rounded-lg cursor-pointer hover:bg-[#024566] transition-colors'>
+                        <p className="text-2xl font-extrabold">Fechar</p>
+                    </button>
+                </div>
 
+                {/* Modal de Adicionar Lançamento */}
+                {showModal && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 10000
+                    }}>
+                        <div style={{
+                            backgroundColor: 'white',
+                            borderRadius: '10px',
+                            padding: '30px',
+                            width: '500px',
+                            maxHeight: '80vh',
+                            overflow: 'auto'
+                        }}>
+                            {isLoading ? (
+                                <div className="flex flex-col items-center justify-center py-20">
+                                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#013451]"></div>
+                                    <p className="mt-4 text-[#013451] font-semibold text-lg">Carregando...</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="flex justify-between items-center mb-6">
+                                        <h2 className="text-2xl font-bold text-[#013451]">Financeiro:</h2>
+                                        <button
+                                            onClick={handleCloseModal}
+                                            className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-[#013451] font-semibold mb-2">
+                                                Processo
+                                            </label>
+                                            <FormNEInput
+                                                type="select"
+                                                value={selectedProcesso}
+                                                onChange={(e) => setSelectedProcesso(e.target.value)}
+                                                optionLabel="Selecionar Processo"
+                                                options={[
+                                                    { value: '1', label: 'Processo 012345' },
+                                                    { value: '2', label: 'Processo 012346' },
+                                                    { value: '3', label: 'Processo 012347' },
+                                                    { value: '4', label: 'Processo 012348' }
+                                                ]}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-[#013451] font-semibold mb-2">
+                                                Valor Total (em €)
+                                            </label>
+                                            <FormNEInput
+                                                type="text"
+                                                placeholder="Informe o valor"
+                                                value={valorTotal}
+                                                onChange={(e) => setValorTotal(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-[#013451] font-semibold mb-2">
+                                                Parcelas:
+                                            </label>
+                                            <FormNEInput
+                                                type="text"
+                                                placeholder="Ex.: À VISTA"
+                                                value={numeroParcelas}
+                                                onChange={(e) => setNumeroParcelas(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-[#013451] font-semibold mb-2">
+                                                Vencimento Inicial:
+                                            </label>
+                                            <FormNEInput
+                                                type="date"
+                                                value={dataVencimentoInicial}
+                                                onChange={(date) => setDataVencimentoInicial(date)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-4 mt-6">
+                                        <button
+                                            onClick={handleCloseModal}
+                                            className="flex-1 py-3 border-2 border-[#013451] text-[#013451] rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            onClick={handleSave}
+                                            className="flex-1 py-3 bg-[#013451] text-white rounded-lg font-bold hover:bg-[#024566] transition-colors"
+                                        >
+                                            Salvar
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
