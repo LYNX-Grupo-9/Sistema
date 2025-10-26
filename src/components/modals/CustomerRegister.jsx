@@ -34,7 +34,7 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
         passaporte: CustomerData.passaporte || "",
         cnh: CustomerData.cnh || "",
         naturalidade: CustomerData.naturalidade || "",
-        idAdvogado: Number(idAdvogado),
+        idAdvogado,
       });
     }
   }, [CustomerData]);
@@ -106,7 +106,9 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
         });
       return;
     }
-    api.newCustomer(user)
+
+    const payload = { ...user, idAdvogado };
+    api.newCustomer(payload)
       .then((response) => {
         console.log("User registered successfully", response.data);
         handleClose();

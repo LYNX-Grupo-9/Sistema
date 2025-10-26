@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
 const endpoints = {
 
   // POST 
-  newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
+  newCustomer: (data) => api.post("/clientes/cadastrar", data),
   newCase: (data) => api.post("/processos", data),
   newCategory: (data) => api.post("/categorias", data),
   newEvent: (data) => api.post("/eventos", data),

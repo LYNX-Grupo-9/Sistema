@@ -15,7 +15,7 @@ export default function ModalDelete({ onClose, itemType, idToDelete, onDeleteSuc
     function fetchData() {
         if (itemType === "categoria") {
             api.getCategoriaById(idToDelete).then(categoria => {
-                setNameItem(categoria.data.nomeEvento);
+                setNameItem(categoria.data.nome);
             }).catch(error => {
                 console.error("Categoria não encontrada.", error);
             });

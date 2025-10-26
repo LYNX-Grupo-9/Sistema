@@ -59,7 +59,7 @@ export default function Agenda() {
     const [showEditForm, setShowEditForm] = useState(false);
     const [idEventoEdit, setIdEventoEdit] = useState(null);
 
-    const idAdvogado = parseFloat(localStorage.getItem('idAdvogado'));
+    const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
         if (idAdvogado) {
@@ -110,19 +110,18 @@ export default function Agenda() {
     }
 
     function showCategorias(categorias) {
-
         if (categorias.length > 0) {
             const categoriesMap = categorias.map((categoria, index) => (
                 <Category
                     editarCategoria={() => {
-                        openEditCategoryForm(categoria.idCategoriaEvento)
+                        openEditCategoryForm(categoria.idCategoria)
                     }}
                     key={index}
                     corCategoria={categoria.cor}
-                    nomeCategoria={categoria.nomeEvento}
+                    nomeCategoria={categoria.nome}
                     qtdEventos={0}
                     excluirCategoria={() => {
-                        openModalDelete(categoria.idCategoriaEvento, "categoria");
+                        openModalDelete(categoria.idCategoria, "categoria");
                     }}
                 />
             ));
@@ -234,7 +233,6 @@ export default function Agenda() {
         setShowEditForm(false)
     }
 
-
     return (
         <>
             {isModalDeleteOpen && <ModalDelete onClose={closeModalDelete} idToDelete={idToDelete} itemType={deleteItemType} onDeleteSuccess={fetchData} />}
@@ -293,7 +291,7 @@ export default function Agenda() {
                         </div>
                         <div className="mt-4 flex flex-col gap-4 overflow-y-scroll h-[85%]  scrollbar-thin-gray pr-4">
                             {/* <Category corCategoria="#0093A6" nomeCategoria="Categoria XPTO" qtdEventos='12' /> */}
-                            {categorias.length > 0 && showCategorias(categorias)}
+                            {categorias && categorias.length > 0 && showCategorias(categorias)}
                         </div>
                     </div>
                 </div>
