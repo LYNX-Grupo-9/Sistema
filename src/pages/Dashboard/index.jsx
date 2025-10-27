@@ -333,29 +333,6 @@ export default function Dashboard() {
 
 
 
-
-
-
-    // function showProcessosPorTipo(processosPorTipo) {
-    //     console.log("Processos por tipo:", processosPorTipo);
-    //     if (!processosPorTipo || processosPorTipo.length === 0) {
-    //         return (
-    //             <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-    //                 Nenhum evento
-    //             </span>
-    //         );
-    //     }
-
-    //     return Object.entries(processosPorTipo).map(([tipo, quantidade], index) => (
-    //         <div key={index} className="flex items-center justify-between">
-    //             <span className="text-sm font-medium">{tipo}</span>
-    //             <div className="flex items-center gap-3">
-    //                 <Badge variant="outline">{quantidade}</Badge>
-    //             </div>
-    //         </div>
-    //     ));
-    // }
-
     function showNextEvent(nextEvent) {
         console.log("Próximo evento:", nextEvent);
 
@@ -366,12 +343,10 @@ export default function Dashboard() {
                 </span>
             );
         }
-        // Add timezone adjustment to avoid date shifting due to timezone differences
+
         const formattedDate = nextEvent.dataReuniao ?
             (() => {
-                // Parse the date and add a day to compensate for timezone issues
                 const date = new Date(nextEvent.dataReuniao);
-                // Ensure we're working with the date as specified, not as adjusted by timezone
                 const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
                 return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
             })() : '';
@@ -480,7 +455,7 @@ export default function Dashboard() {
                             </div>
 
                           
-                    <div className="bgGlassNoPadding flex justify-around  w-[38%] h-[140px]">
+                    <div className="bgGlassNoPadding flex justify-around  w-[38%] h-[80%]">
                         <div className="flex flex-col items-start justify-center">
                             <p className="text-[var(--grayText)] typography-regular">Previsão de caixa (prox. 30 dias)</p>
                             <span className="text-[32px] typography-black text-[var(--success)] ">R$ 15.000,53</span>
