@@ -6,14 +6,20 @@ import { format } from 'date-fns';
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
+import axios from "axios";
 
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
+import { LgButton } from "../../components/Buttons/LgButton";
 
 export function CustomerList() {
     const idAdvogado = localStorage.getItem("idAdvogado");
     const [customerList, setCustomerList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    
+    const [pagina, setPagina] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(0);
+    const tamanhoPagina = 4; 
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -33,99 +39,133 @@ export function CustomerList() {
         setSearchValue(event.target.value);
     }
 
+    function handlePrevPage() {
+        if (pagina > 0) {
+            setPagina(pagina - 1);
+        }
+    }
+
+    function handleNextPage() {
+        if (pagina < totalPaginas - 1) {
+            setPagina(pagina + 1);
+        }
+    }
+
     useEffect(() => {
+        
+    }, []);
+
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            setDebouncedSearchValue(searchValue);
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchValue]);
+
+
+
+    useEffect(() => {
+
         setOrderOptions([
             { id: 1, label: "Nome" },
             { id: 2, label: "Número de processos " },
             { id: 3, label: "Nacionalidade" },
             { id: 4, label: "Data de nascimento" },
         ]);
-    }, []);
 
+            setLoading(true);
+            try {
+                axios
+                    .get(`http://localhost:8080/api/clientes/paginado?page=${pagina}&size=${tamanhoPagina}&sort=email`, {
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                    })
+                    .then((res) => {
+                        setCustomerList(res.data.content);
+                        setTotalPaginas(res.data.totalPages);
+                    });
 
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            setDebouncedSearchValue(searchValue); 
-        }, 300); 
-
-        return () => clearTimeout(delayDebounceFn); 
-    }, [searchValue]);
-
-    useEffect(() => {
-        setLoading(true);
-
-        if (debouncedSearchValue.length > 0) {
-            api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
-                .then((response) => {
-                    setCustomerList(response.data);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.error("Erro ao buscar usuário via busca", error);
-                    setLoading(false);
-                });
-        } else {
-            switch (selectedOrderOptions) {
-                case 0:
-                    api.getAllCustomer(idAdvogado)
-                        .then((response) => {
-                            setCustomerList(response.data);
-                            setLoading(false);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao obter todos os clientes", error);
-                            setLoading(false);
-                        });
-                    break;
-                case 1:
-                    api.getOrderByName(idAdvogado)
-                        .then((response) => {
-                            setCustomerList(response.data);
-                            setLoading(false);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao ordenar por nome", error);
-                            setLoading(false);
-                        });
-                    break;
-                case 2:
-                    api.getOrderByCases(idAdvogado)
-                        .then((response) => {
-                            setCustomerList(response.data);
-                            setLoading(false);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao ordenar por casos", error);
-                            setLoading(false);
-                        });
-                    break;
-                case 3:
-                    api.getOrderByNationality(idAdvogado)
-                        .then((response) => {
-                            setCustomerList(response.data);
-                            setLoading(false);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao ordenar por nacionalidade", error);
-                            setLoading(false);
-                        });
-                    break;
-                case 4:
-                    api.getOrderByBornDate(idAdvogado)
-                        .then((response) => {
-                            setCustomerList(response.data);
-                            setLoading(false);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao ordenar por data de nascimento", error);
-                            setLoading(false);
-                        });
-                    break;
-                default:
-                    break;
+            } catch (error) {
+                console.error("Erro ao buscar clientes:", error);
+            } finally {
+                setLoading(false);
             }
-        }
-    }, [debouncedSearchValue, selectedOrderOptions]); 
+
+
+
+        // if (debouncedSearchValue.length > 0) {
+        //     api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
+        //         .then((response) => {
+        //             setCustomerList(response.data);
+        //             setLoading(false);
+        //         })
+        //         .catch((error) => {
+        //             console.error("Erro ao buscar usuário via busca", error);
+        //             setLoading(false);
+        //         });
+        // } else {
+        //     switch (selectedOrderOptions) {
+        //         case 0:
+        //             api.getAllCustomer(idAdvogado)
+        //                 .then((response) => {
+        //                     setCustomerList(response.data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch((error) => {
+        //                     console.error("Erro ao obter todos os clientes", error);
+        //                     setLoading(false);
+        //                 });
+        //             break;
+        //         case 1:
+        //             api.getOrderByName(idAdvogado)
+        //                 .then((response) => {
+        //                     setCustomerList(response.data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch((error) => {
+        //                     console.error("Erro ao ordenar por nome", error);
+        //                     setLoading(false);
+        //                 });
+        //             break;
+        //         case 2:
+        //             api.getOrderByCases(idAdvogado)
+        //                 .then((response) => {
+        //                     setCustomerList(response.data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch((error) => {
+        //                     console.error("Erro ao ordenar por casos", error);
+        //                     setLoading(false);
+        //                 });
+        //             break;
+        //         case 3:
+        //             api.getOrderByNationality(idAdvogado)
+        //                 .then((response) => {
+        //                     setCustomerList(response.data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch((error) => {
+        //                     console.error("Erro ao ordenar por nacionalidade", error);
+        //                     setLoading(false);
+        //                 });
+        //             break;
+        //         case 4:
+        //             api.getOrderByBornDate(idAdvogado)
+        //                 .then((response) => {
+        //                     setCustomerList(response.data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch((error) => {
+        //                     console.error("Erro ao ordenar por data de nascimento", error);
+        //                     setLoading(false);
+        //                 });
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // }
+    }, [debouncedSearchValue, selectedOrderOptions, pagina]);
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
@@ -151,7 +191,7 @@ export function CustomerList() {
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">PROCESSOS EM CURSO</span>
                         </div>
 
-                        <div className=" h-full overflow-scroll">
+                        <div className=" h-full ">
                             {customerList.map((item, index) => (
                                 <EntityItem
                                     key={index}
@@ -164,12 +204,19 @@ export function CustomerList() {
                                     qtCases={item.qtdProcessos ? item.qtdProcessos : 0}
                                 />
                             ))}
-                            
+
+                            <div className="w-full mt-4 flex justify-center gap-4 absolute bottom-5 right-5">
+                                <LgButton title="Pagina anterior" click={handlePrevPage}/>
+                                <span className="typography-medium text-[var(--grayText)] text-sm flex items-center">Página {pagina + 1} de {totalPaginas}</span>
+                                <LgButton title="Proxima pagina" click={handleNextPage}/>
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <CustomerRegister isOpen={modalOpen} onClose={closeModal} caseFlow={false}/>
+            <CustomerRegister isOpen={modalOpen} onClose={closeModal} caseFlow={false} />
         </div>
     );
 }
