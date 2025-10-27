@@ -34,13 +34,13 @@ const endpoints = {
 
   //GET
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
-  getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
+  getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
   getOrderByNationality: (idAdvogado) => api.get("/clientes/ordenado-naturalidade", { params: { idAdvogado } }),
   getOrderByBornDate: (idAdvogado) => api.get("/clientes/ordenado-nascimento", { params: { idAdvogado } }),
   getOrderByCases: (idAdvogado) => api.get("/clientes/ordenado-processos", { params: { idAdvogado } }),
   getEventsByCustomerId: (idCliente) => api.get(`/eventos/cliente/${idCliente}`),
-  getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clientes/buscar", {
+  getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clie'ntes/buscar", {
     params: {
       termo: searchValue,
       idAdvogado: idAdvogado

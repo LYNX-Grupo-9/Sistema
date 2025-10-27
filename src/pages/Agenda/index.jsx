@@ -134,14 +134,19 @@ export default function Agenda() {
 
     function adapterEventRequisitionToValidEvent(events) {
         try {
-            const eventsData = events.map(event => ({
-                id: event.idEvento,
-                title: event.nome,
-                start: new Date(`${event.dataReuniao}T${event.horaInicio}`),
-                end: new Date(`${event.dataReuniao}T${event.horaFim}`),
-                allDay: false,
-                color: event.cor,
-            }));
+            const eventsData = events.map(event => {
+                
+                const dataReuniao = event.dataReuniao.split('T')[0];
+                
+                return {
+                    id: event.idEvento,
+                    title: event.nome,
+                    start: new Date(`${dataReuniao}T${event.horaInicio}`),
+                    end: new Date(`${dataReuniao}T${event.horaFim}`),
+                    allDay: false,
+                    color: event.cor ? event.cor : '#c9c9c9BF',
+                };
+            });
 
             console.log('Eventos adaptados:', eventsData);
 

@@ -103,7 +103,7 @@ export function CustomerDetails() {
                 <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true} />
             }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
-                <FinancialOverlay isOpen={isFinancialOverlayOpen} onClose={closeFinancialOverlay}/>
+                <FinancialOverlay isOpen={isFinancialOverlayOpen} onClose={closeFinancialOverlay} />
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
                     <div className="flex flex-col gap-6 w-1/2 h-full">
                         <div className="bgGlass w-full h-[10%] flex justify-between items-center">
@@ -122,12 +122,12 @@ export function CustomerDetails() {
                             />
                             <EntityInfo title="Naturalidade" value={customerData.naturalidade} />
                             <EntityInfo title="Endereço" value={customerData.endereco} />
-                            <EntityInfo title="Gênero" value={customerData.genero} />
-                            <EntityInfo title="Email" value={customerData.email} />
+                            <EntityInfo title="Gênero" value={customerData.genero?.valor || 'Não informado'} />
+                            <EntityInfo title="Email" value={customerData.email?.enderacoEmail || 'Não informado'} />
                             <EntityInfo title="Telefone" value={customerData.telefone} />
                             <EntityInfo title="Profissão" value={customerData.profissao} />
-                            <EntityInfo title="Habilitação" value={customerData.cnh} />
-                            <EntityInfo title="Passaporte" value={customerData.passaporte} />
+                            <EntityInfo title="Habilitação" value={customerData.cnh ? customerData.cnh : 'Não possui'} />
+                            <EntityInfo title="Passaporte" value={customerData.passaporte ? customerData.passaporte : 'Não possui'} />
                         </div>
                     </div>
                     <div className="flex flex-col gap-6 w-1/2">
