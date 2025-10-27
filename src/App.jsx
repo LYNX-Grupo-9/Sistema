@@ -15,6 +15,7 @@ import Agenda from "./pages/Agenda";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import { ButtonAnexo } from "./components/ButtonAnexo";
+import Dashboard from "./pages/Dashboard";
 
 
 export default function App() {
@@ -77,6 +78,11 @@ export default function App() {
           <Route path="agenda" element={
             <ProtectedRoute>
               <Agenda />
+            </ProtectedRoute>
+          } />
+          <Route path="dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
             </ProtectedRoute>
           } />
 
