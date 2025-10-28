@@ -93,12 +93,12 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                     console.log('idCategoria', evento);
 
                     setNomeEvento(evento.nome);
-                    setDataSelecionada(evento.dataReuniao + 'T00:00:00');
+                    setDataSelecionada(evento.dataReuniao);
                     setHoraInicio(evento.horaInicio.slice(0, -3));
                     setHoraFim(evento.horaFim.slice(0, -3));
-                    setConvidado(evento.idCliente);
-                    setCategoria(evento.idCategoria);
-                    setProcesso(evento.idProcesso);
+                    setConvidado(evento.cliente);
+                    setCategoria(evento.categoria);
+                    setProcesso(evento.processo);
                     setDescricao(evento.descricao);
                     setLinkReuniao(evento.linkReuniao || "");
                     setLocal(evento.local || "");
@@ -152,7 +152,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                     console.log(response.data)
                     toast.success("Evento editado com sucesso!")
                     onEditSuccess && onEditSuccess()
-                    onSuccess()
                     onClose()
                 }).catch(error => {
                     console.error("Erro ao alterar" + error)
