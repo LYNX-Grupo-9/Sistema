@@ -1,13 +1,10 @@
 import api from "../../services/api";
 import { useEffect, useState } from "react";
-import { MultiSelectComponent } from "../../components/MultiSelectComponent";
 import { SingleSelectComponent } from "../../components/SelectComponent";
 import { format, set } from 'date-fns';
 import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
-import axios from "axios";
-
 import { CustomerRegister } from "../../components/modals/CustomerRegister";
 import { LgButton } from "../../components/Buttons/LgButton";
 
@@ -26,7 +23,6 @@ export function CustomerList() {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const [filterOptions, setFilterOptions] = useState([]);
     const [orderOptions, setOrderOptions] = useState([]);
     const [selectedOrderOptions, setSelectedOrderOptions] = useState(0);
 
@@ -62,7 +58,6 @@ export function CustomerList() {
         ]);
     }, []);
 
-
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             setDebouncedSearchValue(searchValue);
@@ -71,10 +66,25 @@ export function CustomerList() {
         return () => clearTimeout(delayDebounceFn);
     }, [searchValue]);
 
+    const handleGetCustomers = (ordem = ordenacao) => {
+        setOrdenacao(ordem);
+        setLoading(true);
 
+        api.getCustomerPagination(pagina, tamanhoPagina, ordem)
+            .then((res) => {
+                setCustomerList(res.data.content);
+                setTotalPaginas(res.data.totalPages);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar clientes:", error);
+                setLoading(false);
+            });
+    };
 
     useEffect(() => {
         setLoading(true);
+        handleGetCustomers("nome");
 
         if (debouncedSearchValue.length > 0) {
             api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
@@ -87,33 +97,30 @@ export function CustomerList() {
                     setLoading(false);
                 });
         } else {
-            switch (selectedOrderOptions) {
-                case 0:
-                api.getCustomerPagination(pagina, tamanhoPagina, ordenacao)
-                        .then((res) => {
-                            setCustomerList(res.data.content);
-                            setTotalPaginas(res.data.totalPages);
-                        });
+            let ordem = "nome";
 
-                    break;
+            switch (selectedOrderOptions) {
                 case 1:
-                    setOrdenacao("nome");
+                    ordem = "nome";
                     break;
                 case 2:
-                    setOrdenacao("qtdProcessos");
+                    ordem = "qtdProcessos";
                     break;
                 case 3:
-                    setOrdenacao("naturalidade");
+                    ordem = "naturalidade";
                     break;
                 case 4:
-                    setOrdenacao("dataNascimento");
+                    ordem = "dataNascimento";
                     break;
                 default:
-                    setOrdenacao("nome");
+                    ordem = "nome";
                     break;
             }
+
+            handleGetCustomers(ordem);
+
         }
-    }, [debouncedSearchValue, selectedOrderOptions, pagina, ordenacao]);
+    }, [debouncedSearchValue, selectedOrderOptions, pagina]);
 
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
@@ -127,7 +134,7 @@ export function CustomerList() {
                     <NewItemButton title="Adicionar Cliente" click={openModal} />
                 </div>
 
-                <div className="bgGlass w-full h-[70%]">
+                <div className="bgGlass w-full h-[85%]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">ID CLIENTE</span>
