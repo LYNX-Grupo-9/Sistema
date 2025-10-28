@@ -33,6 +33,7 @@ const endpoints = {
   updateCategory: (idCategoria, data) => api.patch(`/categorias/${idCategoria}`, data),
 
   //GET
+  getCustomerPagination: (page, size, sort) => api.get(`http://localhost:8080/api/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
