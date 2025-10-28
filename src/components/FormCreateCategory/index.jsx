@@ -57,8 +57,8 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
         postNewCategory(nome, color, idAdvogado);
     }
 
-    function postNewCategory(nomeEvento, color, idAdvogado) {
-        api.newCategory({ nomeEvento, cor: color + "BF", idAdvogado })
+    function postNewCategory(nome, color, idAdvogado) {
+        api.newCategory({ nome, cor: color + "BF", idAdvogado })
             .then((response) => {
                 console.log(response.data);
                 toast.success("Categoria criada com sucesso!", {

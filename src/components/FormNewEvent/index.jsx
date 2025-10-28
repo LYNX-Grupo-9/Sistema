@@ -42,11 +42,11 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         if (convidado != '0') {
             api.getProcessosByIdCliente(convidado)
                 .then(response => {
-                    console.log('Processos:', response.data);
                     const processosMap = response.data.map((processo, index) => ({
                         label: processo.titulo,
                         value: processo.idProcesso,
                     }));
+                    console.log('Processos Options:', processosMap);
                     setProcessosOptions(processosMap);
                 }).catch(error => {
                     console.error('Erro ao buscar processos:', error);
@@ -60,11 +60,11 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             .then(response => {
 
                 const categoriesMap = response.data.map((categoria, index) => ({
-                    label: categoria.nomeEvento,
-                    value: categoria.idCategoriaEvento,
+                    label: categoria.nome,
+                    value: categoria.idCategoria,
                 }));
 
-                // console.log('Categorias Options:', categoriesMap);
+                console.log('Categorias Options:', categoriesMap);
                 setCategoriaOptions(categoriesMap);
             })
             .catch(error => {
@@ -77,6 +77,7 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                     label: cliente.nome,
                     value: cliente.idCliente,
                 }));
+                console.log('Clientes Options:', clientsMap);
                 setClientesOptions(clientsMap);
             })
             .catch(error => {
@@ -134,17 +135,17 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         const eventoPayload = {
             nome: nomeEvento,
             descricao,
-            local: "",
-            linkReuniao: "",
-            idAdvogado: Number(idAdvogado),
-            idCliente: Number(convidado),
+            local: local || "",
+            linkReuniao: linkReuniao || "",
+            idAdvogado,
+            idCliente: convidado,
             idCategoria: Number(categoria),
-            idProcesso: Number(processo),
+            idProcesso:processo ,
             dataReuniao: dataSelecionada ? new Date(dataSelecionada).toISOString() : null,
             horaInicio: `${horaInicio}:00`,
             horaFim: `${horaFim}:00`,
         };
-
+        
         if (isEdit) {
             api.patchEvent(idEvento, eventoPayload)
                 .then(response => {

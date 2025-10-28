@@ -637,7 +637,7 @@ export function Home() {
 
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
-                                        {processosPorTipo && showProcessosPorTipo(processosPorTipo)}
+                                        {/* {processosPorTipo && showProcessosPorTipo(processosPorTipo)} */}
                                     </div>
                                 </div>
 

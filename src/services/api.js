@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
 const endpoints = {
 
   // POST 
-  newCustomer: (data) => api.post("/advogados/cadastrar/clientes", data),
+  newCustomer: (data) => api.post("/clientes/cadastrar", data),
   newCase: (data) => api.post("/processos", data),
   newCategory: (data) => api.post("/categorias", data),
   newEvent: (data) => api.post("/eventos", data),
@@ -35,13 +35,13 @@ const endpoints = {
   //GET
   getCustomerPagination: (page, size, sort) => api.get(`http://localhost:8080/api/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
-  getCustomerById: (id) => api.get(`/clientes/${id}/dados-completo`),
+  getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
   getOrderByNationality: (idAdvogado) => api.get("/clientes/ordenado-naturalidade", { params: { idAdvogado } }),
   getOrderByBornDate: (idAdvogado) => api.get("/clientes/ordenado-nascimento", { params: { idAdvogado } }),
   getOrderByCases: (idAdvogado) => api.get("/clientes/ordenado-processos", { params: { idAdvogado } }),
   getEventsByCustomerId: (idCliente) => api.get(`/eventos/cliente/${idCliente}`),
-  getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clientes/buscar", {
+  getCustomerBySearch: (searchValue, idAdvogado) => api.get("/clie'ntes/buscar", {
     params: {
       termo: searchValue,
       idAdvogado: idAdvogado
