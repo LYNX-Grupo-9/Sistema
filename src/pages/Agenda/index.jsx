@@ -14,8 +14,7 @@ import { useEffect, useState } from 'react';
 import { NewItemButton } from '../../components/Buttons/NewItemButton';
 import { CirclePlus } from 'lucide-react';
 import { FormNewEvent } from '../../components/FormNewEvent';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import ModalEventDetails from '../../components/ModalEventDetails';
 import FormCreateCategory from '../../components/FormCreateCategory';
 import ModalDelete from '../../components/ModalDelete';
@@ -80,8 +79,7 @@ export default function Agenda() {
 
             api.getEvents(idAdvogado)
                 .then((response) => {
-                    const eventsData = adapterEventRequisitionToValidEvent(response.data);
-                    setEvents(eventsData);
+                    setEvents(response.data);
                 })
                 .catch((error) => {
                     toast.error("Erro ao buscar eventos:", error);
@@ -135,16 +133,16 @@ export default function Agenda() {
     function adapterEventRequisitionToValidEvent(events) {
         try {
             const eventsData = events.map(event => {
-                
+                const categoria = categorias.find(cat => cat.idCategoria === event.categoria);
                 const dataReuniao = event.dataReuniao.split('T')[0];
-                
+
                 return {
                     id: event.idEvento,
                     title: event.nome,
                     start: new Date(`${dataReuniao}T${event.horaInicio}`),
                     end: new Date(`${dataReuniao}T${event.horaFim}`),
                     allDay: false,
-                    color: event.cor ? event.cor : '#c9c9c9BF',
+                    color: categoria?.cor ? categoria.cor : '#c9c9c9BF',
                 };
             });
 
@@ -160,7 +158,7 @@ export default function Agenda() {
 
     function formatarLegenda(dataStr) {
         const hoje = new Date();
-        const [ano, mes, dia] = dataStr.split("-");
+        const [ano, mes, dia] = dataStr.split('T')[0].split("-");
         const data = new Date(Number(ano), Number(mes) - 1, Number(dia)); // Corrigido
 
         const ehHoje = data.toDateString() === hoje.toDateString();
@@ -316,7 +314,7 @@ export default function Agenda() {
                         </div>
                         <Calendar
                             localizer={localizer}
-                            events={events}
+                            events={adapterEventRequisitionToValidEvent(events)}
                             date={currentDate}
                             view={currentView}
                             onView={view => setCurrentView(view)}
