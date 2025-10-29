@@ -28,8 +28,8 @@ export function EntityItem(props) {
                     <span className="typography-bold text-[14px] text-[var(--color-blueLight)] w-[20%]">{props.caseNumber}</span>
                     <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] ml-[1%] pr-4 truncate">{props.title}</span>
                     <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] ml-[1%] pr-4 truncate">{props.customer}</span>
-                    <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] ml-[1%] pr-4 truncate">{props.classe}</span>
-                    <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%] ml-[1%] pr-4 truncate">{props.status}</span>
+                    <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%]  pr-4 truncate">{props.classe}</span>
+                    <span className="typography-bold text-[14px] text-[var(--color-blueDark)] w-[20%]  pr-4 truncate">{props.status}</span>
 
                     <MidButton
                         title="Detalhes"

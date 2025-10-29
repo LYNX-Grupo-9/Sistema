@@ -49,8 +49,7 @@ export function CustomerDetails() {
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
             });
-    }, []);
-    useEffect(() => {
+
         api.getCasesByCustomerId(id)
             .then((response) => {
                 setCasesData(response.data);
@@ -58,8 +57,6 @@ export function CustomerDetails() {
             .catch((error) => {
                 console.error("Erro ao buscar cliente:", error);
             });
-    }, []);
-    useEffect(() => {
         api.getEventsByCustomerId(id)
             .then((response) => {
                 setEvents(response.data);
@@ -194,7 +191,6 @@ export function CustomerDetails() {
                                     </div>
                             }
                         </div>
-
                         {id && <ButtonAnexo idCliente={id} />}
                     </div>
                 </div>

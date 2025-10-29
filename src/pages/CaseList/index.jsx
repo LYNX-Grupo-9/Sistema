@@ -5,7 +5,7 @@ import { Search } from "../../components/search";
 import { NewItemButton } from "../../components/Buttons/NewItemButton";
 import { EntityItem } from "../../components/EntityItem";
 import { CaseRegister } from "../../components/modals/CaseRegister";
-import { LgButton } from "../../components/Buttons/LgButton"; // Importar LgButton para os botões de paginação
+import { LgButton } from "../../components/Buttons/LgButton";
 
 export function CaseList() {
     const idAdvogado = localStorage.getItem("idAdvogado");
@@ -13,11 +13,10 @@ export function CaseList() {
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
-    // Estados de Paginação
     const [pagina, setPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
-    const [ordenacao, setOrdenacao] = useState("titulo"); // Ordenação padrão
-    const tamanhoPagina = 4; // Tamanho de página fixo
+    const [ordenacao, setOrdenacao] = useState("titulo");
+    const tamanhoPagina = 4;
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -30,7 +29,6 @@ export function CaseList() {
 
     const [customerNamesMap, setCustomerNamesMap] = useState({});
 
-    // Funções de manipulação de página
     function handlePrevPage() {
         if (pagina > 0) {
             setPagina(pagina - 1);
@@ -43,24 +41,22 @@ export function CaseList() {
         }
     }
 
-    // Função de mudança de ordenação
+
     function handleOrderChange(selectedOption) {
         setSelectedOrderOptions(selectedOption);
-        setPagina(0); // Volta para a primeira página ao mudar a ordenação
+        setPagina(0);
     }
 
-    // Função de mudança de pesquisa
+
     function handleSearchChange(event) {
         setSearchValue(event.target.value);
-        setPagina(0); // Volta para a primeira página ao iniciar a pesquisa
+        setPagina(0); 
     }
 
-    // Função para buscar processos com paginação e ordenação
     const handleGetCases = (ordem = ordenacao) => {
         setOrdenacao(ordem);
         setLoading(true);
 
-        // Assumindo que você terá um endpoint 'getCasePagination' similar ao 'getCustomerPagination'
         api.getCasePagination(pagina, tamanhoPagina, ordem)
             .then((res) => {
                 setCaseList(res.data.content);
@@ -73,17 +69,15 @@ export function CaseList() {
             });
     };
 
-    // 1. Carregar opções de ordenação
     useEffect(() => {
         setOrderOptions([
-            { id: 1, label: "Título" }, // Mudar para Título para ser ordenação padrão
+            { id: 1, label: "Título" }, 
             { id: 2, label: "Cliente" },
             { id: 3, label: "Valor da ação" },
             { id: 4, label: "Status do Processo" },
         ]);
     }, []);
 
-    // 2. Lógica do Debounce para a pesquisa
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             setDebouncedSearchValue(searchValue);
@@ -161,15 +155,15 @@ export function CaseList() {
                     <NewItemButton title="Adicionar Processo" click={openModal} />
                 </div>
 
-                <div className="bgGlass w-full h-[85%]"> {/* Aumentei a altura para melhor visualização da paginação */}
+                <div className="bgGlass w-full h-[85%]"> 
                     <div className="p-[2%] h-full flex flex-col justify-between">
                         <div className="flex-grow">
                             <div className="flex w-[90%] justify-between items-center ">
                                 <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Número do processo</span>
                                 <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%]">Titulo</span>
-                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Cliente</span>
-                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Classe</span>
-                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[20%] ">Status</span>
+                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[19%] ">Cliente</span>
+                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[19%] ">Classe</span>
+                                <span className="typography-medium text-[10px] text-[var(--grayText)] w-[19%] ">Status</span>
 
                             </div>
 
