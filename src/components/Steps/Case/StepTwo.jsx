@@ -2,7 +2,6 @@ import { MainInput } from "../../inputs/MainInput"
 import { MainInputMoney } from "../../inputs/MainInputMoney"
 
 export function StepTwo({ caseData, setCaseData }) {
-    console.log(caseData);
     return (
         <div className="h-full flex flex-col gap-6 pt-10">
             <MainInput label="Assunto" placeholder="Insira o assunto do processo" value={caseData.assunto} onChange={(e) => setCaseData({ ...caseData, assunto: e.target.value })} />

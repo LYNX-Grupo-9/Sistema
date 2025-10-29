@@ -92,17 +92,12 @@ export function CaseRegister({ isOpen, onClose }) {
 
 
   const handleRegister = () => {
-    console.log("Registering case with data:", caseData);
-
     const payload = { ...caseData, idAdvogado };
 
     api.newCase(payload)
       .then((response) => {
-        console.log("Case registered successfully", response.data);
         closeBothModals();
-
         location.reload();
-
       })
       .catch((error) => {
         console.error("Error registering user", error);

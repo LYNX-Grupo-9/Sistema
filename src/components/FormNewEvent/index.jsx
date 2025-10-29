@@ -46,7 +46,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                         label: processo.titulo,
                         value: processo.idProcesso,
                     }));
-                    console.log('Processos Options:', processosMap);
                     setProcessosOptions(processosMap);
                 }).catch(error => {
                     console.error('Erro ao buscar processos:', error);
@@ -64,7 +63,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                     value: categoria.idCategoria,
                 }));
 
-                console.log('Categorias Options:', categoriesMap);
                 setCategoriaOptions(categoriesMap);
             })
             .catch(error => {
@@ -77,7 +75,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
                     label: cliente.nome,
                     value: cliente.idCliente,
                 }));
-                console.log('Clientes Options:', clientsMap);
                 setClientesOptions(clientsMap);
             })
             .catch(error => {
@@ -89,9 +86,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             api.getEventById(idEvento)
                 .then(response => {
                     const evento = response.data;
-
-                    console.log('idCategoria', evento);
-
                     setNomeEvento(evento.nome);
                     setDataSelecionada(evento.dataReuniao);
                     setHoraInicio(evento.horaInicio.slice(0, -3));
@@ -149,7 +143,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
         if (isEdit) {
             api.patchEvent(idEvento, eventoPayload)
                 .then(response => {
-                    console.log(response.data)
                     toast.success("Evento editado com sucesso!")
                     onEditSuccess && onEditSuccess()
                     onClose()
@@ -162,7 +155,6 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
 
         api.newEvent(eventoPayload)
             .then(response => {
-                console.log('Evento criado com sucesso:', response.data);
                 toast.success("Evento criado com sucesso!")
                 onClose();
                 clearInputs();

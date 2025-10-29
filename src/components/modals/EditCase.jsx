@@ -18,7 +18,6 @@ export function EditCase({ isOpen, onClose, selectedCaseData, idProcesso }) {
     const [caseData, setCaseData] = useState({});
 
     useEffect(() => {
-        console.log(selectedCaseData)
         if (selectedCaseData) {
             setCaseData({
                 titulo: selectedCaseData.titulo || "",
@@ -84,10 +83,8 @@ export function EditCase({ isOpen, onClose, selectedCaseData, idProcesso }) {
 
 
     const handleRegister = () => {
-        console.log("Registering case with data:", caseData);
         api.editCase(idProcesso, caseData)
             .then((response) => {
-                console.log("Case registered successfully", response.data);
                 closeBothModals();
                 location.reload();
 

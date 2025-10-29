@@ -42,8 +42,6 @@ export function CustomerDetails() {
     }, []);
 
     useEffect(() => {
-        console.log("ID do cliente:", id);
-
         api.getCustomerById(id)
             .then((response) => {
                 setCustomerData(response.data);

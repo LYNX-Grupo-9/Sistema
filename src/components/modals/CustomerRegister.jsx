@@ -95,7 +95,6 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     if (editMode) {
       api.updateCustomer(idCliente, user)
         .then((response) => {
-          console.log("User updated successfully", response.data);
           handleClose();
           if(!caseFlow) {
             location.reload();
@@ -110,7 +109,6 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     const payload = { ...user, idAdvogado };
     api.newCustomer(payload)
       .then((response) => {
-        console.log("User registered successfully", response.data);
         handleClose();
         if(!caseFlow) {
           location.reload();

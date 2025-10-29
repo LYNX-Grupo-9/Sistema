@@ -18,7 +18,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(idCliente);
     fetchData()
   }, [location.pathname, idCliente, idProcesso]);
 
@@ -72,7 +71,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
             id: anexo?.id
           };
         });
-      console.log(arquivosFiltrados, "arqivosFiltrados");
       setStatus(`Encontrados ${arquivosFiltrados.length} anexos`, 'success');
 
     } catch (error) {
@@ -134,14 +132,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
     if (!token) {
       return false;
     }
-    console.log("Postando anexo com os seguintes dados:", {
-      idCliente,
-      idItem,
-      idProcesso,
-      nomeAnexo,
-      fileName
-    });
-    // Inicializa o payload com nulls
     let payload = {
       idCliente: idCliente ?? null,
       idItem: idItem ?? null,
@@ -158,8 +148,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       payload.idProcesso = idProcesso ?? null;
     }
 
-    console.log("Payload enviado:", payload);
-
     axios.post("http://localhost:8080/api/anexos", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -167,7 +155,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       }
     })
       .then(response => {
-        console.log(response);
       })
       .catch(error => {
         console.error(error);
@@ -188,7 +175,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
 
 
     if (data) {
-      console.log("Arquivo enviado:", data);
       postAnexo(idCliente, uniqueFileId, idProcesso, nomeAnexo, file.name);
       fetchData()
     }
@@ -216,7 +202,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       }
     })
       .then(async response => {
-        console.log(response);
         await listFiles();
         return true;  
       })
@@ -343,7 +328,6 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
               ) : (
 
                 <>
-                  {console.log("Files:", files)}
                   <div className="flex items-center bg-[var(--bgMedium)] p-4 px-8 rounded-lg">
                     <div className="w-full flex items-center gap-4 ">
                       <img src={icon} alt="Ícone de Anexo" className="w-[5%]" />

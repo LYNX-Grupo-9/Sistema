@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { MonthEvent } from "../../components/MonthEvent";
 import { OverviewNotification } from "../../components/OverviewNotification";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { SingleSelectComponent } from "../../components/SelectComponent";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ModalScheduling } from "../../components/ModalScheduling";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/Card";
-import { Calendar, Clock, FileText, TrendingUp, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/Card";
+import { Calendar, Clock, FileText, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Badge } from "../../components/Badge";
 
@@ -36,8 +34,6 @@ export function Home() {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
-
-
         fetchData(idAdvogado);
     }, [])
 

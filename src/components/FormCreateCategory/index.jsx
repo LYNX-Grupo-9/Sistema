@@ -28,7 +28,6 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
 
     function fetchData() {
         api.getCategoriaById(idCategoria).then((response) => {
-            console.log(response.data);
             setNome(response.data.nomeEvento);
             setColor(response.data.cor.replace("BF", ""));
         })
@@ -60,7 +59,6 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     function postNewCategory(nome, color, idAdvogado) {
         api.newCategory({ nome, cor: color + "BF", idAdvogado })
             .then((response) => {
-                console.log(response.data);
                 toast.success("Categoria criada com sucesso!", {
                     theme: "colored",
                 });
@@ -80,7 +78,6 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
     function updateCategory(nomeEvento, color, idAdvogado, idCategoria) {
         api.updateCategory(idCategoria, { nomeEvento, cor: color + "BF", idAdvogado })
             .then((response) => {
-                console.log(response.data);
                 toast.success("Categoria atualizada com sucesso!", {
                     theme: "colored",
                 });

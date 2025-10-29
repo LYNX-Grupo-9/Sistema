@@ -161,12 +161,6 @@ export default function FinancialOverlay({ isOpen, onClose }) {
     }
 
     const handleSave = () => {
-        console.log({
-            selectedProcesso,
-            valorTotal,
-            numeroParcelas,
-            dataVencimentoInicial
-        })
         handleCloseModal()
     }
 

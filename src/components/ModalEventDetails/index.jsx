@@ -33,7 +33,6 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess, 
                                     getProcessById(evento.processo).then(processo => {
                                         if (processo) {
                                             setProcess(processo);
-                                            console.log("Processo encontrado:", processo);
                                         } else {
                                             console.error("Processo não encontrado para o cliente:", evento.processo);
                                             setProcess(null);

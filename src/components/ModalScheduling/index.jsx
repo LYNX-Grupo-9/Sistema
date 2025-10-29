@@ -30,7 +30,6 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             }
         })
             .then(response => {
-                console.log(response.data);
                 setSolicitacao(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar solicitação:', error);
@@ -52,7 +51,6 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             }
         })
             .then(response => {
-                console.log(response.data);
             }).catch(error => {
                 toast.error('Erro ao atualizar status:', error);
             })
@@ -88,8 +86,6 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
         const token = localStorage.getItem("token");
 
-        console.log("Payload do evento:", eventoPayload);
-
         if (!token) {
             console.error('Token de autenticação não encontrado.');
             toast.error("Erro ao criar evento, tente novamente.");
@@ -103,7 +99,6 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
                 "Authorization": `Bearer ${token}`
             }
         }).then(response => {
-            console.log(response.data)
             toast.success("Agendamento aceito com sucesso! O cliente será notificado por email.");
             changeStatusSolicitacao(idSolicitacao);
             sendEmail({

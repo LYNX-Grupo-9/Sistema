@@ -87,7 +87,6 @@ export default function Agenda() {
 
             api.getEventsNext7days(idAdvogado)
                 .then((response) => {
-                    console.log('Eventos próximos:', response.data);
                     setNextEvents(response.data);
                 })
                 .catch((error) => {
@@ -146,8 +145,6 @@ export default function Agenda() {
                 };
             });
 
-            console.log('Eventos adaptados:', eventsData);
-
             return eventsData;
         } catch (error) {
             console.error('Erro ao adaptar eventos:', error);
@@ -191,7 +188,6 @@ export default function Agenda() {
     }
 
     function openEventoDetails(idEvento) {
-        console.log('Abrindo modal de detalhes do evento');
         setIdEventDetails(idEvento);
         openModalDetails();
     }
