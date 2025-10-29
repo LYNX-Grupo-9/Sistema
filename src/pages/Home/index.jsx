@@ -42,10 +42,7 @@ export function Home() {
     }, [])
 
     function fetchData(idAdvogado) {
-        console.log("Fetching data for advogado ID:", idAdvogado);
-
         getEventosProx7dias(idAdvogado);
-        
         getSolicitacoeByAdvId(idAdvogado);
         getQtdEventosPorCategoriaByIdAdv(idAdvogado);
         getContagemPorStatus(idAdvogado);
@@ -73,8 +70,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Próximo evento recebido:", response);
-
                 if (response.status === 204) {
                     return false;
                 }
@@ -104,7 +99,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
                 setQtdEventoDia(response.data.quantidadeEvento);
             }).catch(error => {
                 toast.error('Erro ao buscar processos por tipo:', error);
@@ -127,7 +121,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
                 setProcessosPorTipo(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar processos por tipo:', error);
@@ -142,6 +135,7 @@ export function Home() {
             return;
         }
 
+
         axios.get(`http://localhost:8080/api/solicitacao-agendamento/advogado/${idAdvogado}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +143,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Solicitações recebidas:", response.data);
                 setSolicitacoes(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar solicitacoes:', error);
@@ -171,7 +164,7 @@ export function Home() {
                 qtdNotVizualized++;
                 return (
                     <>
-                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacao) }} message={`Agendamento de ${notificacao.nome}`} />
                     </>
                 )
             }
@@ -213,7 +206,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Eventos por categoria recebidos:", response.data);
                 setEventosPorCategoria(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
@@ -236,8 +228,7 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Valor médio recebido:", response.data);
-                setValorMedio(response.data);
+                setValorMedio(response.data.valorMedio);
             }).catch(error => {
                 toast.error('Erro ao buscar valor médio dos processos:', error);
             })
@@ -258,7 +249,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Processos por status:", response.data);
                 setProcessosPorStatus(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
@@ -276,7 +266,6 @@ export function Home() {
         }
 
         return Object.entries(eventos).map(([categoria, dados], index) => {
-            // console.log(`Categoria: ${categoria}, Quantidade: ${dados.quantidade}, Cor: ${dados.cor}`);
             return (
                 <div key={index} className="flex items-center justify-between">
                     <span className="text-sm font-medium">{categoria}</span>
@@ -307,7 +296,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Eventos recebidos:", response.data);
                 const eventosChartData = transformEventosToChartData(response.data);
                 setEventosPorDia(eventosChartData);
             }).catch(error => {
@@ -330,7 +318,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Total de processos ativos:", response.data);
                 setTotalProcessos(response.data.length);
             }).catch(error => {
                 toast.error('Erro ao buscar total de processos ativos:', error);
@@ -352,7 +339,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Total de eventos ativos:", response.data);
                 setTotalEventos(response.data.length);
             }).catch(error => {
                 toast.error('Erro ao buscar total de processos ativos:', error);
@@ -374,7 +360,6 @@ export function Home() {
             }
         })
             .then(response => {
-                console.log("Total de clientes ativos:", response.data);
                 setTotalClientes(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar total de clientes ativos:', error);
@@ -382,7 +367,6 @@ export function Home() {
     }
 
     function transformEventosToChartData(eventos) {
-        // Obter os próximos 7 dias a partir de hoje
         const hoje = new Date();
         const proximosSeteDias = [];
 
@@ -397,12 +381,10 @@ export function Home() {
             });
         }
 
-        // Contar eventos por dia
         if (eventos && eventos.length > 0) {
             eventos.forEach(evento => {
                 const dataEvento = new Date(evento.dataReuniao);
 
-                // Verificar se o evento está nos próximos 7 dias
                 proximosSeteDias.forEach(dia => {
                     if (format(dia.data, 'yyyy-MM-dd') === evento.dataReuniao) {
                         dia.eventos++;
@@ -487,7 +469,6 @@ export function Home() {
     }
 
     function showProcessosPorTipo(processosPorTipo) {
-        console.log("Processos por tipo:", processosPorTipo);
         if (!processosPorTipo || processosPorTipo.length === 0) {
             return (
                 <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
@@ -507,8 +488,6 @@ export function Home() {
     }
 
     function showNextEvent(nextEvent) {
-        console.log("Próximo evento:", nextEvent);
-
         if (!nextEvent) {
             return (
                 <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
@@ -516,12 +495,10 @@ export function Home() {
                 </span>
             );
         }
-        // Add timezone adjustment to avoid date shifting due to timezone differences
+
         const formattedDate = nextEvent.dataReuniao ?
             (() => {
-            // Parse the date and add a day to compensate for timezone issues
             const date = new Date(nextEvent.dataReuniao);
-            // Ensure we're working with the date as specified, not as adjusted by timezone
             const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
             return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
             })() : '';
@@ -532,7 +509,7 @@ export function Home() {
             </span>
         );
     }
-
+    
     return (
         <>
             {isModalOpen && (
@@ -587,7 +564,8 @@ export function Home() {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-3xl font-bold">
-                                            {new Intl.NumberFormat('pt-BR', {
+                                            {
+                                            new Intl.NumberFormat('pt-BR', {
                                                 style: 'currency',
                                                 currency: 'BRL'
                                             }).format(valorMedio)}

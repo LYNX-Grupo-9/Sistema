@@ -54,10 +54,6 @@ export function Layout() {
         transition: 'all 0.2s ease-in-out',
     }   
 
-
-    console.log("Current Path:", location.pathname);
-    console.log("Current Page:", currentPage);
-
     return (
         <>
             {isLoading && (
