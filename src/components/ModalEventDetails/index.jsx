@@ -24,18 +24,18 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess, 
                 if (evento) {
                     setEvent(evento);
 
-                    if (evento.idCliente) {
-                        getClientById(evento.idCliente).then(cliente => {
+                    if (evento.cliente) {
+                        getClientById(evento.cliente).then(cliente => {
                             if (cliente) {
                                 setClient(cliente);
 
-                                if (evento.idProcesso) {
-                                    getProcessById(evento.idProcesso).then(processo => {
+                                if (evento.processo) {
+                                    getProcessById(evento.processo).then(processo => {
                                         if (processo) {
                                             setProcess(processo);
                                             console.log("Processo encontrado:", processo);
                                         } else {
-                                            console.error("Processo não encontrado para o cliente:", evento.idProcesso);
+                                            console.error("Processo não encontrado para o cliente:", evento.processo);
                                             setProcess(null);
                                         }
                                     });
@@ -116,7 +116,7 @@ export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess, 
 
     function formatDateBR(dateString) {
         if (!dateString) return "";
-        const date = new Date(dateString + 'T00:00:00');
+        const date = new Date(dateString);
         if (isNaN(date)) return dateString;
         return date.toLocaleDateString('pt-BR');
     }
