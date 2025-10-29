@@ -137,7 +137,6 @@ export function CustomerList() {
                 <div className="bgGlass w-full h-[85%]">
                     <div className="p-[2%] h-full">
                         <div className="flex w-[90%] justify-between items-center ">
-                            <span className="typography-medium text-[10px] text-[var(--grayText)] w-[10%]">ID CLIENTE</span>
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%]">NOME</span>
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">EMAIL</span>
                             <span className="typography-medium text-[10px] text-[var(--grayText)] w-[15%] ">TELEFONE</span>
@@ -150,7 +149,7 @@ export function CustomerList() {
                             {customerList.map((item, index) => (
                                 <EntityItem
                                     key={index}
-                                    id={item.idCliente}
+
                                     name={item.nome}
                                     email={item.email}
                                     phone={item.telefone}
