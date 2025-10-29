@@ -121,7 +121,7 @@ export function Home() {
             }
         })
             .then(response => {
-                setProcessosPorTipo(response.data);
+                setProcessosPorTipo(response.data.contagemPorClasseProcessual);
             }).catch(error => {
                 toast.error('Erro ao buscar processos por tipo:', error);
             })
@@ -206,7 +206,7 @@ export function Home() {
             }
         })
             .then(response => {
-                setEventosPorCategoria(response.data);
+                setEventosPorCategoria(response.data.categorias);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
@@ -249,7 +249,8 @@ export function Home() {
             }
         })
             .then(response => {
-                setProcessosPorStatus(response.data);
+                setProcessosPorStatus(response.data.contagemPorStatus
+                );
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
@@ -296,6 +297,7 @@ export function Home() {
             }
         })
             .then(response => {
+                console.log(response.data);
                 const eventosChartData = transformEventosToChartData(response.data);
                 setEventosPorDia(eventosChartData);
             }).catch(error => {
@@ -369,7 +371,7 @@ export function Home() {
     function transformEventosToChartData(eventos) {
         const hoje = new Date();
         const proximosSeteDias = [];
-
+    
         for (let i = 0; i < 7; i++) {
             const data = new Date(hoje);
             data.setDate(hoje.getDate() + i);
@@ -380,19 +382,21 @@ export function Home() {
                 eventos: 0
             });
         }
-
+    
         if (eventos && eventos.length > 0) {
             eventos.forEach(evento => {
-                const dataEvento = new Date(evento.dataReuniao);
-
+                const dataEventoFormatada = format(new Date(evento.dataReuniao), 'yyyy-MM-dd');
+    
                 proximosSeteDias.forEach(dia => {
-                    if (format(dia.data, 'yyyy-MM-dd') === evento.dataReuniao) {
+                    const diaDataFormatada = format(dia.data, 'yyyy-MM-dd');
+    
+                    if (diaDataFormatada === dataEventoFormatada) {
                         dia.eventos++;
                     }
                 });
             });
         }
-
+    
         return proximosSeteDias.map(dia => ({
             dia: dia.dia,
             data: dia.dataFormatada,
@@ -615,7 +619,7 @@ export function Home() {
 
                                     </span>
                                     <div className="space-y-4 max-h-[80%] overflow-y-auto mt-5 scrollbar-thin-gray px-4" >
-                                        {/* {processosPorTipo && showProcessosPorTipo(processosPorTipo)} */}
+                                        {processosPorTipo && showProcessosPorTipo(processosPorTipo)}
                                     </div>
                                 </div>
 
