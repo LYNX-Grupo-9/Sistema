@@ -189,7 +189,7 @@ export function Cadastro() {
     };
 
     try {
-        const response = await fetch(`${API_URL}/advogados/cadastrar`, {
+        const response = await fetch(`${API_URL}advogados/cadastrar`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados),

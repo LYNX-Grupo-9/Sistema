@@ -67,7 +67,7 @@ export function Login() {
         };
 
         try {
-            const response = await fetch(`${API_URL}/advogados/login`, {
+            const response = await fetch(`${API_URL}advogados/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dados),

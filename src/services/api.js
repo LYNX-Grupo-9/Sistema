@@ -1,5 +1,7 @@
 import axios from "axios";
-import { API_URL } from "../config/config.js";
+// import { API_URL } from "../config/config.js";
+import { API_URL } from "./configuracao.js";
+
 
 const api = axios.create({
   baseURL: API_URL,
@@ -23,7 +25,7 @@ const endpoints = {
   newCase: (data) => api.post("/processos", data),
   newCategory: (data) => api.post("/categorias", data),
   newEvent: (data) => api.post("/eventos", data),
-  newAnexo: (datpayloada) => api.post("/anexos", payload),
+  newAnexo: (payload) => api.post("/anexos", payload),
 
   //PATCH
   updateCustomer: (id, data) => api.patch(`/clientes/${id}`, data),
@@ -35,8 +37,13 @@ const endpoints = {
   changeStatusSolicitacao: (idSolicitacao) => api.put(`/solicitacao-agendamento/visualizar/${idSolicitacao}`),
 
   //GET
-  getCustomerPagination: (page, size, sort) => api.get(`/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
-  getCasePagination: (page, size, sort) => api.get(`/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+
+  getCustomerPagination: (page, size, sort) => api
+  .get(`/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+  
+  getCasePagination: (page, size, sort) => api
+  .get(`/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
