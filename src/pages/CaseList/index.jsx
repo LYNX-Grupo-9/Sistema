@@ -92,10 +92,7 @@ export function CaseList() {
         return () => clearTimeout(delayDebounceFn);
     }, [searchValue]);
 
-    // 3. Carregar Nomes dos Clientes (Necessário para a exibição)
     useEffect(() => {
-        // Mantenho a busca por todos os clientes para mapeamento, já que a EntityItem usa o nome do cliente.
-        // Se a API de processos retornar o nome do cliente, essa chamada pode ser removida.
         api.getAllCustomer(idAdvogado)
             .then((response) => {
                 const map = {};
@@ -110,17 +107,15 @@ export function CaseList() {
     }, []);
 
 
-    // 4. Efeito principal para buscar processos (depende de pesquisa, ordenação e página)
+
     useEffect(() => {
         setLoading(true);
 
         if (debouncedSearchValue.length > 0) {
-            // Lógica de pesquisa: Busca direta, sem paginação/ordenação no front
-            // Mantenho a busca original, mas idealmente, o backend deveria retornar paginado mesmo na pesquisa.
             api.getCaseBySearch(debouncedSearchValue, idAdvogado)
                 .then((response) => {
                     setCaseList(response.data);
-                    setTotalPaginas(1); // Se não for paginado no back, trata como 1 página
+                    setTotalPaginas(1); 
                     setPagina(0);
                     setLoading(false);
                 })
@@ -129,21 +124,21 @@ export function CaseList() {
                     setLoading(false);
                 });
         } else {
-            // Lógica de Paginação e Ordenação
-            let ordem = "titulo"; // Padrão
+
+            let ordem = "titulo"; 
 
             switch (selectedOrderOptions) {
                 case 1:
                     ordem = "titulo";
                     break;
                 case 2:
-                    ordem = "cliente"; // Assumindo que a propriedade no backend seja 'cliente'
+                    ordem = "cliente"; 
                     break;
                 case 3:
-                    ordem = "valorAcao"; // Assumindo 'valorAcao'
+                    ordem = "valorAcao"; 
                     break;
                 case 4:
-                    ordem = "status"; // Assumindo 'status'
+                    ordem = "status"; 
                     break;
                 default:
                     ordem = "titulo";
@@ -152,9 +147,8 @@ export function CaseList() {
 
             handleGetCases(ordem);
         }
-    }, [debouncedSearchValue, selectedOrderOptions, pagina]); // Adicionado 'pagina'
+    }, [debouncedSearchValue, selectedOrderOptions, pagina]); 
 
-    // O código da função 'CaseList' aqui...
     return (
         <div className="bg-[var(--bgColor-primary)] w-full h-full flex">
             <div className="p-[5%] w-[90%] absolute h-full">

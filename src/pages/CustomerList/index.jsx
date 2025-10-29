@@ -84,7 +84,6 @@ export function CustomerList() {
 
     useEffect(() => {
         setLoading(true);
-        handleGetCustomers("nome");
 
         if (debouncedSearchValue.length > 0) {
             api.getCustomerBySearch(debouncedSearchValue, idAdvogado)
