@@ -8,9 +8,9 @@ import trashIcon from "../assets/icons/trash.svg";
 import Plus from "../assets/icons/plusWhite.svg";
 import { createClient } from "@supabase/supabase-js";
 import iconAttachment from '../assets/icons/attachment.svg';
-import axios from "axios";
-import { set } from "date-fns";
+
 import { v4 as uuidv4 } from 'uuid';
+import api from "../services/api";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -83,14 +83,9 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
 
   async function fetchAnexosDoCliente(idCliente) {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8080/api/anexos/cliente/${idCliente}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.getAnexosDoCliente(idCliente)
       setAnexosCliente(response.data);
-      setFiles(response.data);  // <-- Aqui! Usa o que acabou de chegar, sem depender do state
+      setFiles(response.data);  
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar anexos do cliente:", error);
@@ -100,14 +95,9 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
 
   async function fetchAnexosDoProcesso(idProcesso) {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8080/api/anexos/processo/${idProcesso}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.getAnexosDoProcesso(idProcesso)
       setAnexosProcesso(response.data);
-      setFiles(response.data);  // <-- Aqui! Usa o que acabou de chegar, sem depender do state
+      setFiles(response.data); 
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar anexos dos processos:", error);
@@ -148,12 +138,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       payload.idProcesso = idProcesso ?? null;
     }
 
-    axios.post("http://localhost:8080/api/anexos", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
+    api.newAnexo(payload)
       .then(response => {
       })
       .catch(error => {
@@ -195,12 +180,7 @@ export function ButtonAnexo({ idCliente, idProcesso }) {
       return false;
     }
 
-    return axios.delete(`http://localhost:8080/api/anexos/${idItem}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
+    return api.deleteAnexo(idItem)
       .then(async response => {
         await listFiles();
         return true;  

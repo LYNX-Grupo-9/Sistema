@@ -20,7 +20,7 @@ import FormCreateCategory from '../../components/FormCreateCategory';
 import ModalDelete from '../../components/ModalDelete';
 import api from "../../services/api";
 
-// Configurações de localização (pt-BR)
+
 const locales = {
     'pt-BR': ptBR,
 };
@@ -35,7 +35,6 @@ const localizer = dateFnsLocalizer({
 });
 
 
-const apiBaseURL = 'http://localhost:8080/api/';
 
 export default function Agenda() {
 

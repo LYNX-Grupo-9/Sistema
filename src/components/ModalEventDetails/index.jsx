@@ -3,8 +3,9 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react"
 import ModalDelete from "../ModalDelete";
 import { FormNewEvent } from "../FormNewEvent";
+import { API_URL } from "../../config/config";
 
-const apiBaseURL = 'http://localhost:8080/api/';
+const apiBaseURL = API_URL;
 
 export default function ModalEventDetails({ idEvento, onClose, onDeleteSuccess, isVisualize = false }) {
 

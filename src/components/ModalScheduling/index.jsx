@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { sendEmail } from "../../utils/email";
 import emailjs from '@emailjs/browser';
+import api from "../../services/api";
 
 export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
@@ -23,12 +24,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/solicitacao-agendamento/solicitacao/${idSolicitacao}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getSolicitacaoById(idSolicitacao)
             .then(response => {
                 setSolicitacao(response.data);
             }).catch(error => {
@@ -44,12 +40,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             return;
         }
 
-        axios.put(`http://localhost:8080/api/solicitacao-agendamento/visualizar/${idSolicitacao}`, {}, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.changeStatusSolicitacao(idSolicitacao)
             .then(response => {
             }).catch(error => {
                 toast.error('Erro ao atualizar status:', error);
@@ -93,12 +84,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
         }
 
 
-        axios.post(`http://localhost:8080/api/eventos`, eventoPayload, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        }).then(response => {
+        api.newEvent(eventoPayload)
+        .then(response => {
             toast.success("Agendamento aceito com sucesso! O cliente será notificado por email.");
             changeStatusSolicitacao(idSolicitacao);
             sendEmail({
@@ -120,8 +107,8 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
     function declineScheduling() {
         changeStatusSolicitacao(idSolicitacao);
         emailjs.send(
-            'service_2qh5flb',         // ID do serviço
-            'template_rzc92e7',        // ID do template
+            'service_2qh5flb',       
+            'template_rzc92e7',        
             {
                 nome: solicitacao.nome,
                 data: formatDateBR(solicitacao.dataSolicitacao),
@@ -129,7 +116,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
                 local: 'Remoto',
                 email: solicitacao.email,
             },
-            'BK1LR4npXZmiC_qlm'        // Public key
+            'BK1LR4npXZmiC_qlm'     
         );
         toast.success("Você Recusou a solicitação de agendamento com sucesso! O cliente será notificado por email.");
         setTimeout(onSuccess, 1500);

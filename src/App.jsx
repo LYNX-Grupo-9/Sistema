@@ -80,11 +80,6 @@ export default function App() {
               <Agenda />
             </ProtectedRoute>
           } />
-          <Route path="dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
 
         </Route>
 

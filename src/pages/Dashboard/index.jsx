@@ -9,9 +9,11 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { OverviewNotification } from "../../components/OverviewNotification";
 import DoubleLineChart from "../../components/Charts/DoubleLineChart";
 import RecebimentosChart from "../../components/RecebimentosChart";
+import api from "../../services/api";
 
 export default function Dashboard() {
 
+   
     const [today, setToday] = useState("")
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,16 +35,11 @@ export default function Dashboard() {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
-
-
         fetchData(idAdvogado);
     }, [])
 
     function fetchData(idAdvogado) {
-        console.log("Fetching data for advogado ID:", idAdvogado);
-
-
-
+        getEventosProx7dias(idAdvogado);
         getSolicitacoeByAdvId(idAdvogado);
         getQtdEventosPorCategoriaByIdAdv(idAdvogado);
         getContagemPorStatus(idAdvogado);
@@ -63,15 +60,8 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/proximo/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getNextEventByIdAdv(idAdvogado)
             .then(response => {
-                console.log("Próximo evento recebido:", response);
-
                 if (response.status === 204) {
                     return false;
                 }
@@ -94,14 +84,8 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/contar-eventos-dia/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getQtdEventosDia(idAdvogado)
             .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
                 setQtdEventoDia(response.data.quantidadeEvento);
             }).catch(error => {
                 toast.error('Erro ao buscar processos por tipo:', error);
@@ -117,15 +101,9 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/quantidade-por-classe/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+       api.getProcessosPorTipoDeAcao(idAdvogado)
             .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
-                setProcessosPorTipo(response.data);
+                setProcessosPorTipo(response.data.contagemPorClasseProcessual);
             }).catch(error => {
                 toast.error('Erro ao buscar processos por tipo:', error);
             })
@@ -139,14 +117,9 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/solicitacao-agendamento/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+
+        api.getSolicitacoeByAdvId(idAdvogado)
             .then(response => {
-                console.log("Solicitações recebidas:", response.data);
                 setSolicitacoes(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar solicitacoes:', error);
@@ -168,7 +141,7 @@ export default function Dashboard() {
                 qtdNotVizualized++;
                 return (
                     <>
-                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacao) }} message={`Agendamento de ${notificacao.nome}`} />
                     </>
                 )
             }
@@ -203,15 +176,9 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getQtdEventosPorCategoriaByIdAdv(idAdvogado)
             .then(response => {
-                console.log("Eventos por categoria recebidos:", response.data);
-                setEventosPorCategoria(response.data);
+                setEventosPorCategoria(response.data.categorias);
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
@@ -226,15 +193,9 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/media-valor/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+       api.getValorMedioProcessos(idAdvogado)
             .then(response => {
-                console.log("Valor médio recebido:", response.data);
-                setValorMedio(response.data);
+                setValorMedio(response.data.valorMedio);
             }).catch(error => {
                 toast.error('Erro ao buscar valor médio dos processos:', error);
             })
@@ -248,22 +209,58 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/contagem-por-status/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getContagemPorStatus(idAdvogado)
             .then(response => {
-                console.log("Processos por status:", response.data);
-                setProcessosPorStatus(response.data);
+                setProcessosPorStatus(response.data.contagemPorStatus
+                );
             }).catch(error => {
                 toast.error('Erro ao buscar eventos por categoria:', error);
             })
 
     }
 
+    function showEventosPorCategoria(eventos) {
+        if (!eventos || eventos.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhum evento
+                </span>
+            );
+        }
 
+        return Object.entries(eventos).map(([categoria, dados], index) => {
+            return (
+                <div key={index} className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{categoria}</span>
+                    <div className="flex items-center gap-3">
+                        <div
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: dados.cor }}
+                        ></div>
+                        <Badge variant="outline">{dados.quantidade}</Badge>
+                    </div>
+                </div>
+            );
+        })
+    }
+
+    function getEventosProx7dias(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        api.getEventosProx7dias(idAdvogado)
+            .then(response => {
+                console.log(response.data);
+                const eventosChartData = transformEventosToChartData(response.data);
+                setEventosPorDia(eventosChartData);
+            }).catch(error => {
+                toast.error('Erro ao buscar eventos:', error);
+            })
+    }
 
     function getTotalProcessosAtivos(idAdvogado) {
         const token = localStorage.getItem('token');
@@ -273,14 +270,8 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalProcessosAtivos(idAdvogado)
             .then(response => {
-                console.log("Total de processos ativos:", response.data);
                 setTotalProcessos(response.data.length);
             }).catch(error => {
                 toast.error('Erro ao buscar total de processos ativos:', error);
@@ -295,14 +286,8 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalEventosMes(idAdvogado)
             .then(response => {
-                console.log("Total de eventos ativos:", response.data);
                 setTotalEventos(response.data.length);
             }).catch(error => {
                 toast.error('Erro ao buscar total de processos ativos:', error);
@@ -317,25 +302,138 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalClietesAtivos(idAdvogado)
             .then(response => {
-                console.log("Total de clientes ativos:", response.data);
                 setTotalClientes(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar total de clientes ativos:', error);
             })
     }
 
+    function transformEventosToChartData(eventos) {
+        const hoje = new Date();
+        const proximosSeteDias = [];
+    
+        for (let i = 0; i < 7; i++) {
+            const data = new Date(hoje);
+            data.setDate(hoje.getDate() + i);
+            proximosSeteDias.push({
+                data: data,
+                dataFormatada: format(data, 'dd/MM'),
+                dia: format(data, 'EEE', { locale: ptBR }).charAt(0).toUpperCase() + format(data, 'EEE', { locale: ptBR }).slice(1),
+                eventos: 0
+            });
+        }
+    
+        if (eventos && eventos.length > 0) {
+            eventos.forEach(evento => {
+                const dataEventoFormatada = format(new Date(evento.dataReuniao), 'yyyy-MM-dd');
+    
+                proximosSeteDias.forEach(dia => {
+                    const diaDataFormatada = format(dia.data, 'yyyy-MM-dd');
+    
+                    if (diaDataFormatada === dataEventoFormatada) {
+                        dia.eventos++;
+                    }
+                });
+            });
+        }
+    
+        return proximosSeteDias.map(dia => ({
+            dia: dia.dia,
+            data: dia.dataFormatada,
+            eventos: dia.eventos
+        }));
+    }
 
+
+    function showNextDayCharts(eventosPorDia) {
+
+        if (eventosPorDia.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Não há dados disponíveis.
+                </span>
+            );
+        }
+
+        return (
+            <ResponsiveContainer width="90%" height='85%'>
+                <BarChart data={eventosPorDia}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="dia" />
+                    <YAxis />
+                    <Tooltip
+                        formatter={(value, name) => [value, 'Eventos']}
+                        labelFormatter={(label, payload) => {
+                            const item = payload?.[0]?.payload;
+                            return item ? `${label} - ${item.data}` : label;
+                        }}
+                    />
+                    <Bar dataKey="eventos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+        )
+    }
+
+    function showEventsByStatus(processosPorStatus) {
+
+        if (processosPorStatus.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Não há dados disponíveis.
+                </span>
+            );
+        }
+
+        const cores = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#34495e', '#1abc9c'];
+        const dadosFormatados = Object.entries(processosPorStatus).map(([status, quantidade], index) => ({
+            status,
+            quantidade,
+            cor: cores[index],
+        }));
+
+        return (
+            <ResponsiveContainer width="90%" height="85%">
+                <PieChart>
+                    <Pie
+                        data={dadosFormatados}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        dataKey="quantidade"
+                        label={({ status, quantidade }) => `${status}: ${quantidade}`}
+                    >
+                        {dadosFormatados.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.cor} />
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                </PieChart>
+            </ResponsiveContainer>
+        );
+    }
+
+    function showProcessosPorTipo(processosPorTipo) {
+        if (!processosPorTipo || processosPorTipo.length === 0) {
+            return (
+                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                    Nenhum evento
+                </span>
+            );
+        }
+
+        return Object.entries(processosPorTipo).map(([tipo, quantidade], index) => (
+            <div key={index} className="flex items-center justify-between">
+                <span className="text-sm font-medium">{tipo}</span>
+                <div className="flex items-center gap-3">
+                    <Badge variant="outline">{quantidade}</Badge>
+                </div>
+            </div>
+        ));
+    }
 
     function showNextEvent(nextEvent) {
-        console.log("Próximo evento:", nextEvent);
-
         if (!nextEvent) {
             return (
                 <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
@@ -346,11 +444,18 @@ export default function Dashboard() {
 
         const formattedDate = nextEvent.dataReuniao ?
             (() => {
-                const date = new Date(nextEvent.dataReuniao);
-                const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-                return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
+            const date = new Date(nextEvent.dataReuniao);
+            const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+            return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
             })() : '';
+
+        return (
+            <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                {nextEvent.nome || "Atendimento"} - {formattedDate} ({nextEvent.horaInicio?.substring(0, 5)} às {nextEvent.horaFim?.substring(0, 5)})
+            </span>
+        );
     }
+    
 
     return (
         <div className="flex h-full w-full bg-gray-100 px-6 py-8 space-y-6">

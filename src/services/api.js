@@ -23,6 +23,7 @@ const endpoints = {
   newCase: (data) => api.post("/processos", data),
   newCategory: (data) => api.post("/categorias", data),
   newEvent: (data) => api.post("/eventos", data),
+  newAnexo: (datpayloada) => api.post("/anexos", payload),
 
   //PATCH
   updateCustomer: (id, data) => api.patch(`/clientes/${id}`, data),
@@ -31,10 +32,11 @@ const endpoints = {
 
   //UPDATE
   updateCategory: (idCategoria, data) => api.patch(`/categorias/${idCategoria}`, data),
+  changeStatusSolicitacao: (idSolicitacao) => api.put(`/solicitacao-agendamento/visualizar/${idSolicitacao}`),
 
   //GET
-  getCustomerPagination: (page, size, sort) => api.get(`http://localhost:8080/api/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
-  getCasePagination: (page, size, sort) => api.get(`http://localhost:8080/api/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+  getCustomerPagination: (page, size, sort) => api.get(`/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+  getCasePagination: (page, size, sort) => api.get(`/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
@@ -69,10 +71,25 @@ const endpoints = {
   getEventsNext7days: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/7dias`),
   getClientsByIdAdvogado: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getProcessosByIdCliente: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
+  getAnexosDoCliente: (idCliente) => api.get(`/anexos/cliente/${idCliente}`),
+  getAnexosDoProcesso: (idProcesso) => api.get(`/anexos/processo/${idProcesso}`),
+  getSolicitacaoById: (idSolicitacao) => api.get(`/solicitacao-agendamento/solicitacao/${idSolicitacao}`),
+  getNextEventByIdAdv: (idAdvogado) => api.get(`/eventos/proximo/${idAdvogado}`),
+  getQtdEventosDia: (idAdvogado) => api.get(`/eventos/contar-eventos-dia/${idAdvogado}`),
+  getProcessosPorTipoDeAcao: (idAdvogado) => api.get(`/processos/quantidade-por-classe/${idAdvogado}`),
+  getSolicitacoeByAdvId: (idAdvogado) => api.get(`/solicitacao-agendamento/advogado/${idAdvogado}`),
+  getQtdEventosPorCategoriaByIdAdv: (idAdvogado) => api.get(`/categorias/contagem-por-nome/${idAdvogado}`),
+  getValorMedioProcessos: (idAdvogado) => api.get(`/processos/media-valor/${idAdvogado}`),
+  getContagemPorStatus: (idAdvogado) => api.get(`/processos/contagem-por-status/${idAdvogado}`),
+  getEventosProx7dias: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/7dias`),
+  getTotalProcessosAtivos: (idAdvogado) => api.get(`/processos/processosAtivos/${idAdvogado}`),
+  getTotalEventosMes: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/eventosMes`),
+  getTotalClietesAtivos: (idAdvogado) => api.get(`/clientes/advogado/${idAdvogado}/total-clientes`),
 
   // DELETE 
   deleteCategoria: (idCategoria) => api.delete(`/categorias/${idCategoria}`),
-  deleteEvento: (idEvento) => api.delete(`/eventos/${idEvento}`)
+  deleteEvento: (idEvento) => api.delete(`/eventos/${idEvento}`),
+  deleteAnexo: (idAnexo) => api.delete(`/anexos/${idAnexo}`),
 }
 
 export default endpoints
