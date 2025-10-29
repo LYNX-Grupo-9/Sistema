@@ -1,12 +1,11 @@
 import emailjs from '@emailjs/browser';
 
-// Configurações do EmailJS
 const EMAIL_CONFIG = {
-    serviceId: 'service_0rbaiji', // Substitua pelo seu Service ID
-    publicKey: 'utjNP4FwYfSEdvHyE' // Substitua pela sua Public Key
+    serviceId: 'service_0rbaiji',
+    publicKey: 'utjNP4FwYfSEdvHyE'
 };
 
-// Inicializar EmailJS
+
 emailjs.init(EMAIL_CONFIG.publicKey);
 
 
