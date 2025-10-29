@@ -7,6 +7,7 @@ import { IconAi } from '../IconAi';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { use, useEffect, useState } from 'react';
 import LoadingSVG from '../../assets/loading.svg';
+import { IconLogout } from '../IconLogout';
 
 export function Layout() {
 
@@ -20,7 +21,7 @@ export function Layout() {
         navigate(path);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000); // Simulating a loading time of 1 second
+        }, 1000); 
     }
 
     const pageMapping = {
@@ -53,6 +54,11 @@ export function Layout() {
         bottom: whiteBarMapping[currentPage],
         transition: 'all 0.2s ease-in-out',
     }   
+
+    function logout(){
+        localStorage.clear();
+        handleNavigation('/login');
+    }
 
     return (
         <>
@@ -91,6 +97,10 @@ export function Layout() {
 
                         <div style={whiteBarStyle}></div>
                     </div>
+
+                    <div className='w-full flex justify-center items-end h-full' onClick={logout}>
+                            <IconLogout actualcolor="#87939E" hovercolor="#fff" />
+                        </div>
                 </aside>
 
                 <div className="flex-1 ">

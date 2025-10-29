@@ -5,7 +5,6 @@ import LoadingSVG from '../assets/loading.svg';
 
 
 export function EntityItem(props) {
-
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
