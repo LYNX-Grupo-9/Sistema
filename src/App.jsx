@@ -22,7 +22,7 @@ export default function App() {
 
 
   return (
-    <Router>
+    <Router basename="/sistema">
       <ToastContainer
         position="top-right"
         hideProgressBar={false}
@@ -86,7 +86,7 @@ export default function App() {
         <Route path="/CustomerDetails/:idCliente" element={<ButtonAnexo />} />
         <Route path="/CaseDetails/:idProcesso" element={<ButtonAnexo />} />
 
-        
+
       </Routes>
     </Router>
   );
