@@ -66,11 +66,11 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
             `,
             local: "",
             linkReuniao: "",
-            idAdvogado: Number(idAdvogado),
-            idCliente: 0,
+            idAdvogado,
+            idCliente: null,
             idCategoria: 0,
             idProcesso: 0,
-            dataReuniao: new Date(`${solicitacao.dataSolicitacao}T12:00:00`).toISOString(),
+            dataReuniao: new Date(`${solicitacao.dataSolicitacao.split("T")[0]}T12:00:00`).toISOString(),
             horaInicio: `${solicitacao.horaSolicitacao}`,
             horaFim: `${horaFimFormatada}:${minuto}`,
         };
@@ -125,7 +125,7 @@ export function ModalScheduling({ onClose, onSuccess, idSolicitacao }) {
 
     function formatDateBR(dateString) {
         if (!dateString) return "";
-        const date = new Date(dateString + 'T00:00:00');
+        const date = new Date(dateString);
         if (isNaN(date)) return dateString;
         return date.toLocaleDateString('pt-BR');
     }

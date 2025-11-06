@@ -4,7 +4,7 @@ import { InputForm } from '../../components/InputForm';
 import { PossuiConta } from '../../components/PossuiConta';
 import React, { useState, } from 'react';
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { API_URL } from '../../config/config';
+import { API_URL } from '../../services/configuracao'; 
 
 export function Login() {
         const navigate = useNavigate();
@@ -67,7 +67,7 @@ export function Login() {
         };
 
         try {
-            const response = await fetch(`${API_URL}advogados/login`, {
+            const response = await fetch(`${API_URL}/advogados/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dados),
