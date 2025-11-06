@@ -10,10 +10,11 @@ import { OverviewNotification } from "../../components/OverviewNotification";
 import DoubleLineChart from "../../components/Charts/DoubleLineChart";
 import RecebimentosChart from "../../components/RecebimentosChart";
 import api from "../../services/api";
+import { Loading } from "../../components/Loading";
 
 export default function Dashboard() {
 
-   
+   const [loading, setLoading] = useState(true);
     const [today, setToday] = useState("")
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +33,10 @@ export default function Dashboard() {
     const idAdvogado = localStorage.getItem('idAdvogado');
 
     useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
@@ -458,8 +463,11 @@ export default function Dashboard() {
     
 
     return (
+        
+        loading ? <Loading /> :
+        
         <div className="flex h-full w-full bg-gray-100 px-6 py-8 space-y-6">
-            {/* Top cards */}
+            
             <div className="flex flex-col w-full h-full gap-6 ">
 
 
