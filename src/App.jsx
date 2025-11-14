@@ -22,7 +22,7 @@ export default function App() {
 
 
   return (
-    <Router basename="">
+    <Router>
       <ToastContainer
         position="top-right"
         hideProgressBar={false}

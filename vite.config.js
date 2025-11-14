@@ -8,7 +8,7 @@ export default defineConfig({
   // Quando a aplicação for servida em um subdiretório (/sistema),
   // defina o base para o mesmo caminho para que os assets gerados
   // e referências no `index.html` apontem para /sistema/
-  base: '',
+  base: '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
