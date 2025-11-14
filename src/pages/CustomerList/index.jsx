@@ -75,6 +75,7 @@ export function CustomerList() {
                 setCustomerList(res.data.content);
                 setTotalPaginas(res.data.totalPages);
                 setLoading(false);
+                console.log(res.data.content);
             })
             .catch((error) => {
                 console.error("Erro ao buscar clientes:", error);
@@ -148,7 +149,7 @@ export function CustomerList() {
                             {customerList.map((item, index) => (
                                 <EntityItem
                                     key={index}
-
+                                    id={item.idCliente}
                                     name={item.nome}
                                     email={item.email}
                                     phone={item.telefone}

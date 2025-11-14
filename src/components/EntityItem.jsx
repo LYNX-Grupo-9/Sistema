@@ -9,6 +9,7 @@ export function EntityItem(props) {
     const [isLoading, setIsLoading] = useState(false);
 
     function handleNavigation(path, id, customer, idCustomer) {
+        console.log("Navigating to:", path, "with id:", id, "customer:", customer, "idCustomer:", idCustomer);
         setIsLoading(true);
         navigate(path, { state: { id, customer, idCustomer} });
         setTimeout(() => {

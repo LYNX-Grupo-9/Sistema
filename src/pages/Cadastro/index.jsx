@@ -208,7 +208,7 @@ export function Cadastro() {
                 });
                 setTimeout(() => {
                     navigate("/login");
-                }, 1000);
+                }, 500);
         } else {
             const erro = await response.json();
             toast.error('Erro ao cadastrar', {
