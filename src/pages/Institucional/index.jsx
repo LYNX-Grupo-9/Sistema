@@ -52,7 +52,7 @@ export function Institucional() {
                         <p className='hover:underline hover:cursor-pointer' onClick={() => scrollToSectionDesktop("contato")}>CONTATO</p>
                     </div>
                     <div className='containerBtn'>
-                        <button onClick={() => window.location.href = '/sistema/login'}>
+                        <button onClick={() => window.location.href = '/login'}>
                             Login
                         </button>
                     </div>

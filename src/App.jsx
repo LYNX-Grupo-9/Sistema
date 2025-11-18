@@ -22,7 +22,7 @@ export default function App() {
 
 
   return (
-    <Router basename="/sistema">
+    <Router>
       <ToastContainer
         position="top-right"
         hideProgressBar={false}
