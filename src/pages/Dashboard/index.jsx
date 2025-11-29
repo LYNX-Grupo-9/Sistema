@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { OverviewNotification } from "../../components/OverviewNotification";
 import DoubleLineChart from "../../components/Charts/DoubleLineChart";
 import RecebimentosChart from "../../components/RecebimentosChart";
+import api from "../../services/api";
 
 export default function Dashboard() {
 
@@ -16,16 +16,17 @@ export default function Dashboard() {
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idSolicitacao, setIdSolicitacao] = useState(null);
-    const [eventosPorCategoria, setEventosPorCategoria] = useState([]);
-    const [eventosPorDia, setEventosPorDia] = useState([]);
-    const [processosPorStatus, setProcessosPorStatus] = useState([])
-    const [totalProcessos, setTotalProcessos] = useState(0);
-    const [totalEventos, setTotalEventos] = useState(0);
-    const [totalClientes, setTotalClientes] = useState(0);
-    const [processosPorTipo, setProcessosPorTipo] = useState();
     const [qtdEventoDia, setQtdEventoDia] = useState(0);
     const [nextEvent, setNextEvent] = useState(null);
-    const [valorMedio, setValorMedio] = useState(0);
+
+    const [totalPending, setTotalPending] = useState(0);
+    const [pendingPercentual, setPendingPercentual] = useState(0);
+
+    const [totalInvoiced, setTotalInvoiced] = useState(0);
+    const [invoicedPercentual, setInvoicedPercentual] = useState(0);
+
+    const [totalReceivable, setTotalReceivable] = useState(0);
+    const [receivablePercentual, setReceivablePercentual] = useState(0);
 
     const idAdvogado = localStorage.getItem('idAdvogado');
 
@@ -33,26 +34,34 @@ export default function Dashboard() {
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
-
-
         fetchData(idAdvogado);
+
+        api.getTotalPending().then(response => {
+            setTotalPending(response.data.totalPendente);
+            setPendingPercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total pendente:', error);
+        });
+
+        api.getTotalInvoicedMonth().then(response => {
+            setTotalInvoiced(response.data.totalFaturado);
+            setInvoicedPercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total faturado:', error);
+        });
+
+        api.getTotalReceivable().then(response => {
+            setTotalReceivable(response.data.totalAReceber);
+            setReceivablePercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total a receber:', error);
+        }
+        );
     }, [])
 
     function fetchData(idAdvogado) {
-        console.log("Fetching data for advogado ID:", idAdvogado);
-
-
-
         getSolicitacoeByAdvId(idAdvogado);
-        getQtdEventosPorCategoriaByIdAdv(idAdvogado);
-        getContagemPorStatus(idAdvogado);
-        getTotalProcessosAtivos(idAdvogado);
-        getTotalEventosMes(idAdvogado);
-        getTotalClietesAtivos(idAdvogado);
-        getProcessosPorTipoDeAcao(idAdvogado);
-        getQtdEventosDia(idAdvogado);
         getNextEventByIdAdv(idAdvogado);
-        getValorMedioProcessos(idAdvogado);
     }
 
     function getNextEventByIdAdv(idAdvogado) {
@@ -70,8 +79,6 @@ export default function Dashboard() {
             }
         })
             .then(response => {
-                console.log("Próximo evento recebido:", response);
-
                 if (response.status === 204) {
                     return false;
                 }
@@ -86,50 +93,6 @@ export default function Dashboard() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    function getQtdEventosDia(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/eventos/contar-eventos-dia/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
-                setQtdEventoDia(response.data.quantidadeEvento);
-            }).catch(error => {
-                toast.error('Erro ao buscar processos por tipo:', error);
-            })
-    }
-
-
-    function getProcessosPorTipoDeAcao(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/processos/quantidade-por-classe/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Processos por tipo recebidos:", response.data);
-                setProcessosPorTipo(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar processos por tipo:', error);
-            })
-    }
 
     function getSolicitacoeByAdvId(idAdvogado) {
         const token = localStorage.getItem('token');
@@ -146,7 +109,6 @@ export default function Dashboard() {
             }
         })
             .then(response => {
-                console.log("Solicitações recebidas:", response.data);
                 setSolicitacoes(response.data);
             }).catch(error => {
                 toast.error('Erro ao buscar solicitacoes:', error);
@@ -192,150 +154,9 @@ export default function Dashboard() {
     function handleModalSolicitacao(idSolicitacao) {
         setIdSolicitacao(idSolicitacao);
         openModal();
-
     }
-
-    function getQtdEventosPorCategoriaByIdAdv(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Eventos por categoria recebidos:", response.data);
-                setEventosPorCategoria(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos por categoria:', error);
-            })
-
-    }
-
-    function getValorMedioProcessos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/processos/media-valor/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Valor médio recebido:", response.data);
-                setValorMedio(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar valor médio dos processos:', error);
-            })
-    }
-
-    function getContagemPorStatus(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/processos/contagem-por-status/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Processos por status:", response.data);
-                setProcessosPorStatus(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos por categoria:', error);
-            })
-
-    }
-
-
-
-    function getTotalProcessosAtivos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Total de processos ativos:", response.data);
-                setTotalProcessos(response.data.length);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de processos ativos:', error);
-            })
-    }
-
-    function getTotalEventosMes(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Total de eventos ativos:", response.data);
-                setTotalEventos(response.data.length);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de processos ativos:', error);
-            })
-    }
-
-    function getTotalClietesAtivos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Total de clientes ativos:", response.data);
-                setTotalClientes(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de clientes ativos:', error);
-            })
-    }
-
-
 
     function showNextEvent(nextEvent) {
-        console.log("Próximo evento:", nextEvent);
-
         if (!nextEvent) {
             return (
                 <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
@@ -375,26 +196,62 @@ export default function Dashboard() {
                     <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
                         <div className="flex flex-col items-start justify-center">
                             <p className="text-[var(--grayText)] typography-regular">Faturado neste mês</p>
-                            <span className="text-[32px] typography-black text-[var(--success)] ">R$ 4.000,53</span>
+
+                            <span
+                                className={`text-[32px] typography-black ${totalInvoiced >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                    }`}
+                            >
+                                {totalInvoiced ?? 0}
+                            </span>
                         </div>
-                        <div className="text-[var(--success)]  flex items-center text-sm mt-1">
-                            <div className="bg-green-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
+
+                        <div
+                            className={`flex items-center text-sm mt-1 ${invoicedPercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                }`}
+                        >
+                            <div
+                                className={`flex items-center p-2 rounded text-xl ${invoicedPercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                    }`}
+                            >
+                                {invoicedPercentual >= 0 ? (
+                                    <TrendingUp size={24} className="mr-1" />
+                                ) : (
+                                    <TrendingDown size={24} className="mr-1" />
+                                )}
+                                {invoicedPercentual}%
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
+                        <div className="flex flex-col items-start justify-center">
+                            <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
+
+                            <span
+                                className={`text-[32px] typography-black ${totalPending >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                    }`}
+                            >
+                                {totalPending ?? 0}
+                            </span>
+                        </div>
+
+                        <div
+                            className={`flex items-center text-sm mt-1 ${pendingPercentual >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                }`}
+                        >
+                            <div
+                                className={`flex items-center p-2 rounded text-xl ${pendingPercentual >= 0 ? "bg-red-100" : "bg-green-100"
+                                    }`}
+                            >
+                                {pendingPercentual >= 0 ? (
+                                    <TrendingUp size={24} className="mr-1" />
+                                ) : (
+                                    <TrendingDown size={24} className="mr-1" />
+                                )}
+                                {pendingPercentual}%
                             </div>
                         </div>
                     </div>
 
-                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
-                            <span className="text-[32px] typography-black text-[var(--color-red)] ">R$ 4.000,53</span>
-                        </div>
-                        <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                            <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Middle section */}
@@ -454,19 +311,38 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                          
-                    <div className="bgGlassNoPadding flex justify-around  w-[38%] h-[80%]">
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Previsão de caixa (prox. 30 dias)</p>
-                            <span className="text-[32px] typography-black text-[var(--success)] ">R$ 15.000,53</span>
-                        </div>
-                        <div className="text-[var(--success)]  flex items-center text-sm mt-1">
-                            <div className="bg-green-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
-                            </div>
-                        </div>
-                    </div>
 
+                            <div className="bgGlassNoPadding flex justify-around w-[38%] h-[80%]">
+                                <div className="flex flex-col items-start justify-center">
+                                    <p className="text-[var(--grayText)] typography-regular">
+                                        Previsão de caixa (prox. 30 dias)
+                                    </p>
+
+                                    <span
+                                        className={`text-[32px] typography-black ${totalReceivable >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                            }`}
+                                    >
+                                        {totalReceivable ?? 0}
+                                    </span>
+                                </div>
+
+                                <div
+                                    className={`flex items-center text-sm mt-1 ${receivablePercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                        }`}
+                                >
+                                    <div
+                                        className={`flex items-center p-2 rounded text-xl ${receivablePercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                            }`}
+                                    >
+                                        {receivablePercentual >= 0 ? (
+                                            <TrendingUp size={24} className="mr-1" />
+                                        ) : (
+                                            <TrendingDown size={24} className="mr-1" />
+                                        )}
+                                        {receivablePercentual}%
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="flex justify-between h-full">
@@ -483,14 +359,14 @@ export default function Dashboard() {
                             </div>
 
                             <div className="bgGlassNoPadding px-5 py-7 h-[90%] w-[48%]">
-                            <div>
+                                <div>
                                     <span className="text-[var(--grayText)] typography-regular">Faturamento</span>
                                     <div className="mt-2 text-sm">
                                         <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Ultimos 6 meses</span>
                                     </div>
                                 </div>
                                 <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
-                                    <RecebimentosChart/>
+                                    <RecebimentosChart />
                                 </div>
                             </div>
                         </div>

@@ -72,14 +72,13 @@ export function Cadastro() {
     } else {
         document.getElementById("cpf").classList.remove("border-red-500");
     }
-  
-    if (registroOab.trim() === "" || !/^\d{1,6}[A-Za-z]{2,3}$/.test(registroOab.trim())) {
+    if (registroOab.trim() === "" || !/^[A-Za-z]{2}\d{1,6}$/.test(registroOab.trim())) {
         document.getElementById("registroOab").classList.add("border-red-500");
         hasError = true;
         toast.error(
             registroOab.trim() === ""
                 ? 'OAB não pode estar em branco'
-                : 'OAB inválido. Exemplo: 123456SP',
+                : 'OAB inválido. Exemplo: SP123456',
             {
                 position: "top-right",
                 autoClose: 3000,
@@ -95,6 +94,7 @@ export function Cadastro() {
     } else {
         document.getElementById("registroOab").classList.remove("border-red-500");
     }
+    
    
     if (email.trim() === "" || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
         document.getElementById("email").classList.add("border-red-500");

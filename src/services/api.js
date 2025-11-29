@@ -33,8 +33,8 @@ const endpoints = {
   updateCategory: (idCategoria, data) => api.patch(`/categorias/${idCategoria}`, data),
 
   //GET
-  getCustomerPagination: (page, size, sort) => api.get(`http://localhost:8080/api/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
-  getCasePagination: (page, size, sort) => api.get(`http://localhost:8080/api/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
+  getCustomerPagination: (page, size) => api.get(`/clientes/paginado?page=${page}&size=${size}`),
+  getCasePagination: (page, size) => api.get(`/processos/paginado?page=${page}&size=${size}`),
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
@@ -69,6 +69,36 @@ const endpoints = {
   getEventsNext7days: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/7dias`),
   getClientsByIdAdvogado: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getProcessosByIdCliente: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
+
+  // grafico-controller
+getPendingLast6MonthsChart: () =>
+  api.get('/grafico/grafico/pendente-ultimos-6-meses'),
+
+getInvoicedLast6MonthsChart: () =>
+  api.get('/grafico/grafico/faturado-ultimos-6-meses'),
+
+// financeiro-controller
+getTotalPending: () =>
+  api.get('/financeiro/total-pendente'),
+
+getTotalInvoicedMonth: () =>
+  api.get('/financeiro/total-faturado-mes'),
+
+getTotalReceivable: () =>
+  api.get('/financeiro/total-a-receber'),
+
+getNextPayment: () =>
+  api.get('/financeiro/proximo-pagamento'),
+
+getProcessesWithPendings: () =>
+  api.get('/financeiro/processos-com-pendencias'),
+
+getRevenueLast6Months: () =>
+  api.get('/financeiro/faturamento-6-meses'),
+
+getClientsWithPendings: () =>
+  api.get('/financeiro/clientes-com-pendencias'),
+
 
   // DELETE 
   deleteCategoria: (idCategoria) => api.delete(`/categorias/${idCategoria}`),

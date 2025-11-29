@@ -17,7 +17,6 @@ export function Login() {
         });
 
     async function loginAdvogados () {
-        console.log(API_URL)
         let hasError = false;
         
         if (email.trim() === "" || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
