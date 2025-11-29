@@ -96,8 +96,8 @@ export function Login() {
                     });
 
                     setTimeout(() => {
-                        navigate("/home");
-                    }, 3000);
+                        navigate("/dashboard");
+                    }, 500);
             
             } else if (response.status === 401) {
                 toast.error('Email ou senha incorretos', {
