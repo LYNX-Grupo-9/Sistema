@@ -74,7 +74,7 @@ export function Cadastro() {
         document.getElementById("cpf").classList.remove("border-red-500");
     }
   
-    if (registroOab.trim() === "" || !/^\d{1,6}[A-Za-z]{2,3}$/.test(registroOab.trim())) {
+    if (registroOab.trim() === "") {
         document.getElementById("registroOab").classList.add("border-red-500");
         hasError = true;
         toast.error(
@@ -183,7 +183,7 @@ export function Cadastro() {
     const dados = {
         nome,
         cpf,
-        registroOab,
+        oab: registroOab,
         email,
         senha,
     };
