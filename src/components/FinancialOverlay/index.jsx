@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DownIcon from './icons/chevron-baixo.png'
 import { FormNEInput } from '../FormNewEvent/FormNEInput'
-
+import api from '../../services/api'
 const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, '0')
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -125,7 +125,7 @@ const FinancialIndicatorCard = ({ title, value, gradientFrom, gradientTo }) => {
     )
 }
 
-export default function FinancialOverlay({ isOpen, onClose }) {
+export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
     const [expandedId, setExpandedId] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -135,6 +135,63 @@ export default function FinancialOverlay({ isOpen, onClose }) {
     const [numeroParcelas, setNumeroParcelas] = useState('')
     const [dataVencimentoInicial, setDataVencimentoInicial] = useState(null)
     const [titulo, setTitulo] = useState('')
+    const [optionsProcessos, setOptionsProcessos] = useState([])
+    const [totalRecebido, setTotalRecebido] = useState(0)
+    const [totalReceber, setTotalReceber] = useState(0)
+
+
+    useEffect(() => {
+         api.getCasesByCustomerId(idCliente).then((response) => {
+            const processos = response.data
+            const options = processos.map((processo) => ({
+                value: processo.idProcesso,
+                label: `Processo ${processo.titulo}`
+            }))
+            setOptionsProcessos(options)
+        })
+    }, [])
+
+    const criarLancamento = async () => {
+        const payloadLancamento = {
+            titulo,
+            idProcesso: selectedProcesso,
+            idCliente: idCliente
+        };
+    
+        const response = await api.createLancamento(payloadLancamento);
+        return response.data.idLancamentos;
+    };
+
+    const gerarParcelas = (idLancamento) => {
+        const numParcelas = Math.max(1, Number(numeroParcelas)); // garante ao menos 1 parcela
+    
+        const valorParcela = Number(valorTotal) / numParcelas;
+    
+        const parcelas = [];
+    
+        for (let i = 0; i < numParcelas; i++) {
+    
+            const dataVenc = new Date(dataVencimentoInicial);
+            dataVenc.setMonth(dataVenc.getMonth() + i);
+    
+            parcelas.push({
+                valor: valorParcela,
+                dataVencimento: dataVenc.toISOString(),
+                status: { valor: "PENDENTE" },
+                idLancamento
+            });
+        }
+    
+        return parcelas;
+    };
+
+    const salvarParcelas = async (parcelas) => {
+        for (const parcela of parcelas) {
+            await api.createParcela(parcela);
+        }
+    };
+    
+
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id)
@@ -160,8 +217,22 @@ export default function FinancialOverlay({ isOpen, onClose }) {
         setDataVencimentoInicial(null)
     }
 
-    const handleSave = () => {
-        handleCloseModal()
+    const handleSave = async () => {
+            try {
+                setIsLoading(true);
+                const idLancamento = await criarLancamento();
+        
+                const parcelas = gerarParcelas(idLancamento);
+        
+                await salvarParcelas(parcelas);
+        
+                handleCloseModal();
+                setIsLoading(false);
+        
+            } catch (error) {
+                console.error("Erro ao salvar:", error);
+                setIsLoading(false);
+            }
     }
 
 
@@ -222,7 +293,7 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                 {
                     "idParcelas": 103,
                     "idLancamento": 12,
-                    "valor": 1500.00,
+                    "valor": 5500.00,
                     "vencimento": "2026-01-10",
                     "status": "PAGO"
                 }
@@ -387,12 +458,7 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                                                 value={selectedProcesso}
                                                 onChange={(e) => setSelectedProcesso(e.target.value)}
                                                 optionLabel="Selecionar Processo"
-                                                options={[
-                                                    { value: '1', label: 'Processo 012345' },
-                                                    { value: '2', label: 'Processo 012346' },
-                                                    { value: '3', label: 'Processo 012347' },
-                                                    { value: '4', label: 'Processo 012348' }
-                                                ]}
+                                                options={optionsProcessos}
                                             />
                                         </div>
 
@@ -422,7 +488,15 @@ export default function FinancialOverlay({ isOpen, onClose }) {
                                                     { value: '1', label: 'À VISTA' },
                                                     { value: '2', label: '2x' },
                                                     { value: '3', label: '3x' },
-                                                    { value: '4', label: '4x' }
+                                                    { value: '4', label: '4x' },
+                                                    { value: '5', label: '5x' },
+                                                    { value: '6', label: '6x' },
+                                                    { value: '7', label: '7x' },
+                                                    { value: '8', label: '8x' },
+                                                    { value: '9', label: '9x' },
+                                                    { value: '10', label: '10x' },
+                                                    { value: '11', label: '11x' },
+                                                    { value: '12', label: '12x' }
                                                 ]}
                                             />
                                         </div>

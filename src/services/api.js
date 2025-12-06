@@ -59,6 +59,13 @@ const endpoints = {
     },
   }),
 
+  // PARCELAS
+createParcela: (payload) => api.post("/parcelas", payload),
+
+// LANCAMENTOS
+createLancamento: (payload) => api.post("/lancamentos", payload),
+
+
   getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
   getCaseById: (id) => api.get(`/processos/${id}`),
   getCasesByCustomerId: (idCliente) => api.get(`/processos/cliente/${idCliente}`),
