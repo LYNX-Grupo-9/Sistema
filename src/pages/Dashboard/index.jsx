@@ -14,6 +14,7 @@ import api from "../../services/api";
 
 export default function Dashboard() {
 
+   const [loading, setLoading] = useState(true);
     const [today, setToday] = useState("")
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,10 @@ export default function Dashboard() {
 
 
     useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+
         const today = new Date();
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
@@ -138,12 +143,7 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/proximo/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getNextEventByIdAdv(idAdvogado)
             .then(response => {
                 if (response.status === 204) {
                     return false;
@@ -168,12 +168,8 @@ export default function Dashboard() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/solicitacao-agendamento/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+
+        api.getSolicitacoeByAdvId(idAdvogado)
             .then(response => {
                 setSolicitacoes(response.data);
             }).catch(error => {
@@ -196,7 +192,7 @@ export default function Dashboard() {
                 qtdNotVizualized++;
                 return (
                     <>
-                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacaoAgendamento) }} message={`Agendamento de ${notificacao.nome}`} />
+                        <OverviewNotification key={index} onClick={() => { handleModalSolicitacao(notificacao.idSolicitacao) }} message={`Agendamento de ${notificacao.nome}`} />
                     </>
                 )
             }
@@ -233,13 +229,20 @@ export default function Dashboard() {
 
         const formattedDate = nextEvent.dataReuniao ?
             (() => {
-                const date = new Date(nextEvent.dataReuniao);
-                const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-                return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
+            const date = new Date(nextEvent.dataReuniao);
+            const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+            return format(adjustedDate, "d 'de' MMMM", { locale: ptBR });
             })() : '';
-    }
 
-    return (
+        return (
+            <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
+                {nextEvent.nome || "Atendimento"} - {formattedDate} ({nextEvent.horaInicio?.substring(0, 5)} às {nextEvent.horaFim?.substring(0, 5)})
+            </span>
+        );
+    }
+    
+
+    return (        
         <div className="flex h-full w-full bg-gray-100 px-6 py-8 space-y-6">
             <div className="flex flex-col w-full h-full gap-6 ">
                 <div className="flex w-full gap-4 h-[15%] justify-between">

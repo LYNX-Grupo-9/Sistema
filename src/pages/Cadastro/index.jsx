@@ -5,6 +5,7 @@ import { BtnForm } from '../../components/BtnForm';
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from "../../config/config";
 
 export function Cadastro() {
     const navigate = useNavigate();
@@ -72,7 +73,8 @@ export function Cadastro() {
     } else {
         document.getElementById("cpf").classList.remove("border-red-500");
     }
-    if (registroOab.trim() === "" || !/^[A-Za-z]{2}\d{1,6}$/.test(registroOab.trim())) {
+  
+    if (registroOab.trim() === "") {
         document.getElementById("registroOab").classList.add("border-red-500");
         hasError = true;
         toast.error(
@@ -182,13 +184,13 @@ export function Cadastro() {
     const dados = {
         nome,
         cpf,
-        registroOab,
+        oab: registroOab,
         email,
         senha,
     };
 
     try {
-        const response = await fetch("http://localhost:8080/api/advogados/cadastrar", {
+        const response = await fetch(`${API_URL}advogados/cadastrar`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados),

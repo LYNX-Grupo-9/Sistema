@@ -80,18 +80,13 @@ export default function App() {
               <Agenda />
             </ProtectedRoute>
           } />
-          <Route path="dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
 
         </Route>
 
         <Route path="/CustomerDetails/:idCliente" element={<ButtonAnexo />} />
         <Route path="/CaseDetails/:idProcesso" element={<ButtonAnexo />} />
 
-        
+
       </Routes>
     </Router>
   );

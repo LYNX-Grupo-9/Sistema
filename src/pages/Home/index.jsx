@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/Card"
 import { Calendar, Clock, FileText, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Badge } from "../../components/Badge";
+import api from "../../services/api";
 
 
 export function Home() {
@@ -59,12 +60,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/proximo/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getNextEventByIdAdv(idAdvogado)
             .then(response => {
                 if (response.status === 204) {
                     return false;
@@ -88,12 +84,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/contar-eventos-dia/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getQtdEventosDia(idAdvogado)
             .then(response => {
                 setQtdEventoDia(response.data.quantidadeEvento);
             }).catch(error => {
@@ -110,12 +101,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/quantidade-por-classe/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+       api.getProcessosPorTipoDeAcao(idAdvogado)
             .then(response => {
                 setProcessosPorTipo(response.data.contagemPorClasseProcessual);
             }).catch(error => {
@@ -132,12 +118,7 @@ export function Home() {
         }
 
 
-        axios.get(`http://localhost:8080/api/solicitacao-agendamento/advogado/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getSolicitacoeByAdvId(idAdvogado)
             .then(response => {
                 setSolicitacoes(response.data);
             }).catch(error => {
@@ -195,12 +176,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/categorias/contagem-por-nome/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getQtdEventosPorCategoriaByIdAdv(idAdvogado)
             .then(response => {
                 setEventosPorCategoria(response.data.categorias);
             }).catch(error => {
@@ -217,12 +193,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/media-valor/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+       api.getValorMedioProcessos(idAdvogado)
             .then(response => {
                 setValorMedio(response.data.valorMedio);
             }).catch(error => {
@@ -238,12 +209,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/contagem-por-status/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getContagemPorStatus(idAdvogado)
             .then(response => {
                 setProcessosPorStatus(response.data.contagemPorStatus
                 );
@@ -286,12 +252,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/7dias`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getEventosProx7dias(idAdvogado)
             .then(response => {
                 console.log(response.data);
                 const eventosChartData = transformEventosToChartData(response.data);
@@ -309,12 +270,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalProcessosAtivos(idAdvogado)
             .then(response => {
                 setTotalProcessos(response.data.length);
             }).catch(error => {
@@ -330,12 +286,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalEventosMes(idAdvogado)
             .then(response => {
                 setTotalEventos(response.data.length);
             }).catch(error => {
@@ -351,12 +302,7 @@ export function Home() {
             return;
         }
 
-        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
+        api.getTotalClietesAtivos(idAdvogado)
             .then(response => {
                 setTotalClientes(response.data);
             }).catch(error => {

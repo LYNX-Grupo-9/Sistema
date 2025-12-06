@@ -4,7 +4,7 @@ import { InputForm } from '../../components/InputForm';
 import { PossuiConta } from '../../components/PossuiConta';
 import React, { useState, } from 'react';
 import { Bounce, toast, ToastContainer } from "react-toastify";
-
+import { API_URL } from '../../services/configuracao'; 
 
 export function Login() {
         const navigate = useNavigate();
@@ -67,7 +67,7 @@ export function Login() {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/advogados/login", {
+            const response = await fetch(`${API_URL}/advogados/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dados),
@@ -96,8 +96,8 @@ export function Login() {
                     });
 
                     setTimeout(() => {
-                        navigate("/home");
-                    }, 3000);
+                        navigate("/dashboard");
+                    }, 500);
             
             } else if (response.status === 401) {
                 toast.error('Email ou senha incorretos', {
