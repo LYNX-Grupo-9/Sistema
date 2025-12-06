@@ -8,6 +8,8 @@ import { ptBR } from "date-fns/locale";
 import { OverviewNotification } from "../../components/OverviewNotification";
 import DoubleLineChart from "../../components/Charts/DoubleLineChart";
 import RecebimentosChart from "../../components/RecebimentosChart";
+import { Calendar, Clock, FileText, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/Card";
 import api from "../../services/api";
 
 export default function Dashboard() {
@@ -18,17 +20,17 @@ export default function Dashboard() {
     const [idSolicitacao, setIdSolicitacao] = useState(null);
     const [qtdEventoDia, setQtdEventoDia] = useState(0);
     const [nextEvent, setNextEvent] = useState(null);
-
+    const [totalProcessos, setTotalProcessos] = useState(0);
+    const [totalEventos, setTotalEventos] = useState(0);
+    const [totalClientes, setTotalClientes] = useState(0);
     const [totalPending, setTotalPending] = useState(0);
     const [pendingPercentual, setPendingPercentual] = useState(0);
-
     const [totalInvoiced, setTotalInvoiced] = useState(0);
     const [invoicedPercentual, setInvoicedPercentual] = useState(0);
-
     const [totalReceivable, setTotalReceivable] = useState(0);
     const [receivablePercentual, setReceivablePercentual] = useState(0);
-
     const idAdvogado = localStorage.getItem('idAdvogado');
+
 
     useEffect(() => {
         const today = new Date();
@@ -60,8 +62,72 @@ export default function Dashboard() {
     }, [])
 
     function fetchData(idAdvogado) {
+        getTotalProcessosAtivos(idAdvogado);
+        getTotalClietesAtivos(idAdvogado);
         getSolicitacoeByAdvId(idAdvogado);
         getNextEventByIdAdv(idAdvogado);
+        getTotalEventosMes(idAdvogado);
+        getTotalClietesAtivos(idAdvogado);
+    }
+    function getTotalClietesAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalClientes(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de clientes ativos:', error);
+            })
+    }
+    function getTotalEventosMes(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalEventos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
+    }
+    function getTotalProcessosAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalProcessos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
     }
 
     function getNextEventByIdAdv(idAdvogado) {
@@ -175,79 +241,69 @@ export default function Dashboard() {
 
     return (
         <div className="flex h-full w-full bg-gray-100 px-6 py-8 space-y-6">
-            {/* Top cards */}
             <div className="flex flex-col w-full h-full gap-6 ">
+                <div className="flex w-full gap-4 h-[15%] justify-between">
+                    <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Total de Processos</CardTitle>
+                            <FileText className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalProcessos}</div>
+                            <p className="text-xs opacity-80 mt-1">Processos ativos</p>
+                        </CardContent>
+                    </Card>
 
+                    <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Clientes Ativos</CardTitle>
+                            <Users className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalClientes}</div>
+                            <p className="text-xs opacity-80 mt-1">Clientes em acompanhamento</p>
+                        </CardContent>
+                    </Card>
 
-                <div className="flex justify-between">
-                    <div className="bgGlassNoPadding flex w-[45%] h-[140px] items-center justify-between px-[24px]">
-                        <div>
-                            <span className="text-[var(--grayText)] typography-regular">Próximo pagamento</span>
-                            <div className="mt-2 text-sm">
-                                <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Lewis Hamilton</span> - <span className="text-[var(--color-red)] typography-semibold text-[20px]">Em atraso</span>
-                            </div>
-                        </div>
-                        <div className="text-sm flex flex-col items-end ">
-                            <span className="text-[var(--color-blueLight)] typography-bold text-[20px]">Venc. 06/11/2025</span>
-                            <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Parcela 2/3 - €600,00</span>
-                        </div>
-                    </div>
+                    <Card className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Eventos do Mês</CardTitle>
+                            <Calendar className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalEventos}</div>
+                            <p className="text-xs opacity-80 mt-1">Compromissos agendados</p>
+                        </CardContent>
+                    </Card>
 
-                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
+                    <div className="bgGlassNoPadding flex justify-around w-[30%] h-[100%]">
                         <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Faturado neste mês</p>
+                            <p className="text-[var(--grayText)] typography-regular">
+                                Previsão de caixa (prox. 30 dias)
+                            </p>
 
                             <span
-                                className={`text-[32px] typography-black ${totalInvoiced >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                className={`text-[32px] typography-black ${totalReceivable >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
                                     }`}
                             >
-                                {totalInvoiced ?? 0}
+                                {totalReceivable ?? 0}
                             </span>
                         </div>
 
                         <div
-                            className={`flex items-center text-sm mt-1 ${invoicedPercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                            className={`flex items-center text-sm mt-1 ${receivablePercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
                                 }`}
                         >
                             <div
-                                className={`flex items-center p-2 rounded text-xl ${invoicedPercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                className={`flex items-center p-2 rounded text-xl ${receivablePercentual >= 0 ? "bg-green-100" : "bg-red-100"
                                     }`}
                             >
-                                {invoicedPercentual >= 0 ? (
+                                {receivablePercentual >= 0 ? (
                                     <TrendingUp size={24} className="mr-1" />
                                 ) : (
                                     <TrendingDown size={24} className="mr-1" />
                                 )}
-                                {invoicedPercentual}%
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
-
-                            <span
-                                className={`text-[32px] typography-black ${totalPending >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
-                                    }`}
-                            >
-                                {totalPending ?? 0}
-                            </span>
-                        </div>
-
-                        <div
-                            className={`flex items-center text-sm mt-1 ${pendingPercentual >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
-                                }`}
-                        >
-                            <div
-                                className={`flex items-center p-2 rounded text-xl ${pendingPercentual >= 0 ? "bg-red-100" : "bg-green-100"
-                                    }`}
-                            >
-                                {pendingPercentual >= 0 ? (
-                                    <TrendingUp size={24} className="mr-1" />
-                                ) : (
-                                    <TrendingDown size={24} className="mr-1" />
-                                )}
-                                {pendingPercentual}%
+                                {receivablePercentual}%
                             </div>
                         </div>
                     </div>
@@ -286,63 +342,66 @@ export default function Dashboard() {
 
                     {/* Bottom section */}
                     <div className="flex flex-col  w-full h-full">
-                        <div className="flex justify-between w-full h-[30%] ">
-                            <div className=" bgGlassNoPadding w-[30%] h-[80%] px-8 py-4  flex items-center justify-between">
+                        <div className="flex w-full h-[30%] gap-6">
+                            <div className="bgGlassNoPadding flex justify-around  w-[35%] h-[140px]">
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className="text-[var(--grayText)] typography-regular">Clientes inadimplentes</p>
-                                    <span className="text-[28px] typography-black text-[var(--color-red)] ">12</span>
-                                </div>
-                                <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                                    <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                        <TrendingUp size={16} className="mr-1" /> -4%
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className=" bgGlassNoPadding w-[30%] h-[80%] px-8 py-4 flex items-center justify-between">
-                                <div className="flex flex-col items-start justify-center">
-                                    <p className="text-[var(--grayText)] typography-regular">Processos com pendências</p>
-                                    <span className="text-[28px] typography-black text-[var(--color-red)] ">12</span>
-                                </div>
-                                <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                                    <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                        <TrendingUp size={16} className="mr-1" /> -4%
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className="bgGlassNoPadding flex justify-around w-[38%] h-[80%]">
-                                <div className="flex flex-col items-start justify-center">
-                                    <p className="text-[var(--grayText)] typography-regular">
-                                        Previsão de caixa (prox. 30 dias)
-                                    </p>
+                                    <p className="text-[var(--grayText)] typography-regular">Faturado neste mês</p>
 
                                     <span
-                                        className={`text-[32px] typography-black ${totalReceivable >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                        className={`text-[32px] typography-black ${totalInvoiced >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
                                             }`}
                                     >
-                                        {totalReceivable ?? 0}
+                                        {totalInvoiced ?? 0}
                                     </span>
                                 </div>
 
                                 <div
-                                    className={`flex items-center text-sm mt-1 ${receivablePercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                    className={`flex items-center text-sm mt-1 ${invoicedPercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
                                         }`}
                                 >
                                     <div
-                                        className={`flex items-center p-2 rounded text-xl ${receivablePercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                        className={`flex items-center p-2 rounded text-xl ${invoicedPercentual >= 0 ? "bg-green-100" : "bg-red-100"
                                             }`}
                                     >
-                                        {receivablePercentual >= 0 ? (
+                                        {invoicedPercentual >= 0 ? (
                                             <TrendingUp size={24} className="mr-1" />
                                         ) : (
                                             <TrendingDown size={24} className="mr-1" />
                                         )}
-                                        {receivablePercentual}%
+                                        {invoicedPercentual}%
                                     </div>
                                 </div>
                             </div>
+                            <div className="bgGlassNoPadding flex justify-around  w-[35%] h-[140px]">
+                                <div className="flex flex-col items-start justify-center">
+                                    <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
+
+                                    <span
+                                        className={`text-[32px] typography-black ${totalPending >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                            }`}
+                                    >
+                                        {totalPending ?? 0}
+                                    </span>
+                                </div>
+
+                                <div
+                                    className={`flex items-center text-sm mt-1 ${pendingPercentual >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                        }`}
+                                >
+                                    <div
+                                        className={`flex items-center p-2 rounded text-xl ${pendingPercentual >= 0 ? "bg-red-100" : "bg-green-100"
+                                            }`}
+                                    >
+                                        {pendingPercentual >= 0 ? (
+                                            <TrendingUp size={24} className="mr-1" />
+                                        ) : (
+                                            <TrendingDown size={24} className="mr-1" />
+                                        )}
+                                        {pendingPercentual}%
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div className="flex justify-between h-full">

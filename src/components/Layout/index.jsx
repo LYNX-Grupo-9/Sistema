@@ -25,7 +25,7 @@ export function Layout() {
     }
 
     const pageMapping = {
-        '/home': 'home',
+        '/dashboard': 'dashboard',
         '/customerlist': 'custumerlist',
         '/CustomerDetails': 'custumerlist',
         '/caselist': 'caselist',
@@ -37,7 +37,7 @@ export function Layout() {
     const currentPage = pageMapping[location.pathname];
 
     const whiteBarMapping = {
-        'home': "416px",
+        'dashboard': "416px",
         'custumerlist': "312px",
         'caselist': "208px",
         'agenda': "104px",
@@ -75,8 +75,8 @@ export function Layout() {
                     <img src={TemisLogo} alt="" className='w-2/3 cursor-pointer' />
 
                     <div className='flex flex-col items-center gap-10 w-full relative'>
-                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/home')}>
-                            <IconHome actualcolor={currentPage == "home" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/dashboard')}>
+                            <IconHome actualcolor={currentPage == "dashboard" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/customerlist')}>
