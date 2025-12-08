@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { OverviewNotification } from "../../components/OverviewNotification";
 import DoubleLineChart from "../../components/Charts/DoubleLineChart";
 import RecebimentosChart from "../../components/RecebimentosChart";
+import { Calendar, Clock, FileText, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/Card";
 import api from "../../services/api";
-import { Loading } from "../../components/Loading";
 
 export default function Dashboard() {
 
@@ -19,18 +19,19 @@ export default function Dashboard() {
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idSolicitacao, setIdSolicitacao] = useState(null);
-    const [eventosPorCategoria, setEventosPorCategoria] = useState([]);
-    const [eventosPorDia, setEventosPorDia] = useState([]);
-    const [processosPorStatus, setProcessosPorStatus] = useState([])
+    const [qtdEventoDia, setQtdEventoDia] = useState(0);
+    const [nextEvent, setNextEvent] = useState(null);
     const [totalProcessos, setTotalProcessos] = useState(0);
     const [totalEventos, setTotalEventos] = useState(0);
     const [totalClientes, setTotalClientes] = useState(0);
-    const [processosPorTipo, setProcessosPorTipo] = useState();
-    const [qtdEventoDia, setQtdEventoDia] = useState(0);
-    const [nextEvent, setNextEvent] = useState(null);
-    const [valorMedio, setValorMedio] = useState(0);
-
+    const [totalPending, setTotalPending] = useState(0);
+    const [pendingPercentual, setPendingPercentual] = useState(0);
+    const [totalInvoiced, setTotalInvoiced] = useState(0);
+    const [invoicedPercentual, setInvoicedPercentual] = useState(0);
+    const [totalReceivable, setTotalReceivable] = useState(0);
+    const [receivablePercentual, setReceivablePercentual] = useState(0);
     const idAdvogado = localStorage.getItem('idAdvogado');
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -41,20 +42,97 @@ export default function Dashboard() {
         const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: ptBR });
         setToday(capitalizeFirstLetter(formattedDate))
         fetchData(idAdvogado);
+
+        api.getTotalPending().then(response => {
+            setTotalPending(response.data.totalPendente);
+            setPendingPercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total pendente:', error);
+        });
+
+        api.getTotalInvoicedMonth().then(response => {
+            setTotalInvoiced(response.data.totalFaturado);
+            setInvoicedPercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total faturado:', error);
+        });
+
+        api.getTotalReceivable().then(response => {
+            setTotalReceivable(response.data.totalAReceber);
+            setReceivablePercentual(response.data.percentual);
+        }).catch(error => {
+            toast.error('Erro ao buscar total a receber:', error);
+        }
+        );
     }, [])
 
     function fetchData(idAdvogado) {
-        getEventosProx7dias(idAdvogado);
-        getSolicitacoeByAdvId(idAdvogado);
-        getQtdEventosPorCategoriaByIdAdv(idAdvogado);
-        getContagemPorStatus(idAdvogado);
         getTotalProcessosAtivos(idAdvogado);
+        getTotalClietesAtivos(idAdvogado);
+        getSolicitacoeByAdvId(idAdvogado);
+        getNextEventByIdAdv(idAdvogado);
         getTotalEventosMes(idAdvogado);
         getTotalClietesAtivos(idAdvogado);
-        getProcessosPorTipoDeAcao(idAdvogado);
-        getQtdEventosDia(idAdvogado);
-        getNextEventByIdAdv(idAdvogado);
-        getValorMedioProcessos(idAdvogado);
+    }
+    function getTotalClietesAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/clientes/advogado/${idAdvogado}/total-clientes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalClientes(response.data);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de clientes ativos:', error);
+            })
+    }
+    function getTotalEventosMes(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/eventos/advogado/${idAdvogado}/eventosMes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalEventos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
+    }
+    function getTotalProcessosAtivos(idAdvogado) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/api/processos/processosAtivos/${idAdvogado}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                setTotalProcessos(response.data.length);
+            }).catch(error => {
+                toast.error('Erro ao buscar total de processos ativos:', error);
+            })
     }
 
     function getNextEventByIdAdv(idAdvogado) {
@@ -81,38 +159,6 @@ export default function Dashboard() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    function getQtdEventosDia(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getQtdEventosDia(idAdvogado)
-            .then(response => {
-                setQtdEventoDia(response.data.quantidadeEvento);
-            }).catch(error => {
-                toast.error('Erro ao buscar processos por tipo:', error);
-            })
-    }
-
-
-    function getProcessosPorTipoDeAcao(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-       api.getProcessosPorTipoDeAcao(idAdvogado)
-            .then(response => {
-                setProcessosPorTipo(response.data.contagemPorClasseProcessual);
-            }).catch(error => {
-                toast.error('Erro ao buscar processos por tipo:', error);
-            })
-    }
 
     function getSolicitacoeByAdvId(idAdvogado) {
         const token = localStorage.getItem('token');
@@ -170,272 +216,6 @@ export default function Dashboard() {
     function handleModalSolicitacao(idSolicitacao) {
         setIdSolicitacao(idSolicitacao);
         openModal();
-
-    }
-
-    function getQtdEventosPorCategoriaByIdAdv(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getQtdEventosPorCategoriaByIdAdv(idAdvogado)
-            .then(response => {
-                setEventosPorCategoria(response.data.categorias);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos por categoria:', error);
-            })
-
-    }
-
-    function getValorMedioProcessos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-       api.getValorMedioProcessos(idAdvogado)
-            .then(response => {
-                setValorMedio(response.data.valorMedio);
-            }).catch(error => {
-                toast.error('Erro ao buscar valor médio dos processos:', error);
-            })
-    }
-
-    function getContagemPorStatus(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getContagemPorStatus(idAdvogado)
-            .then(response => {
-                setProcessosPorStatus(response.data.contagemPorStatus
-                );
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos por categoria:', error);
-            })
-
-    }
-
-    function showEventosPorCategoria(eventos) {
-        if (!eventos || eventos.length === 0) {
-            return (
-                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                    Nenhum evento
-                </span>
-            );
-        }
-
-        return Object.entries(eventos).map(([categoria, dados], index) => {
-            return (
-                <div key={index} className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{categoria}</span>
-                    <div className="flex items-center gap-3">
-                        <div
-                            className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: dados.cor }}
-                        ></div>
-                        <Badge variant="outline">{dados.quantidade}</Badge>
-                    </div>
-                </div>
-            );
-        })
-    }
-
-    function getEventosProx7dias(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getEventosProx7dias(idAdvogado)
-            .then(response => {
-                console.log(response.data);
-                const eventosChartData = transformEventosToChartData(response.data);
-                setEventosPorDia(eventosChartData);
-            }).catch(error => {
-                toast.error('Erro ao buscar eventos:', error);
-            })
-    }
-
-    function getTotalProcessosAtivos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getTotalProcessosAtivos(idAdvogado)
-            .then(response => {
-                setTotalProcessos(response.data.length);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de processos ativos:', error);
-            })
-    }
-
-    function getTotalEventosMes(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getTotalEventosMes(idAdvogado)
-            .then(response => {
-                setTotalEventos(response.data.length);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de processos ativos:', error);
-            })
-    }
-
-    function getTotalClietesAtivos(idAdvogado) {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Token de autenticação não encontrado. Por favor, faça login novamente.');
-            return;
-        }
-
-        api.getTotalClietesAtivos(idAdvogado)
-            .then(response => {
-                setTotalClientes(response.data);
-            }).catch(error => {
-                toast.error('Erro ao buscar total de clientes ativos:', error);
-            })
-    }
-
-    function transformEventosToChartData(eventos) {
-        const hoje = new Date();
-        const proximosSeteDias = [];
-    
-        for (let i = 0; i < 7; i++) {
-            const data = new Date(hoje);
-            data.setDate(hoje.getDate() + i);
-            proximosSeteDias.push({
-                data: data,
-                dataFormatada: format(data, 'dd/MM'),
-                dia: format(data, 'EEE', { locale: ptBR }).charAt(0).toUpperCase() + format(data, 'EEE', { locale: ptBR }).slice(1),
-                eventos: 0
-            });
-        }
-    
-        if (eventos && eventos.length > 0) {
-            eventos.forEach(evento => {
-                const dataEventoFormatada = format(new Date(evento.dataReuniao), 'yyyy-MM-dd');
-    
-                proximosSeteDias.forEach(dia => {
-                    const diaDataFormatada = format(dia.data, 'yyyy-MM-dd');
-    
-                    if (diaDataFormatada === dataEventoFormatada) {
-                        dia.eventos++;
-                    }
-                });
-            });
-        }
-    
-        return proximosSeteDias.map(dia => ({
-            dia: dia.dia,
-            data: dia.dataFormatada,
-            eventos: dia.eventos
-        }));
-    }
-
-
-    function showNextDayCharts(eventosPorDia) {
-
-        if (eventosPorDia.length === 0) {
-            return (
-                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                    Não há dados disponíveis.
-                </span>
-            );
-        }
-
-        return (
-            <ResponsiveContainer width="90%" height='85%'>
-                <BarChart data={eventosPorDia}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="dia" />
-                    <YAxis />
-                    <Tooltip
-                        formatter={(value, name) => [value, 'Eventos']}
-                        labelFormatter={(label, payload) => {
-                            const item = payload?.[0]?.payload;
-                            return item ? `${label} - ${item.data}` : label;
-                        }}
-                    />
-                    <Bar dataKey="eventos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-            </ResponsiveContainer>
-        )
-    }
-
-    function showEventsByStatus(processosPorStatus) {
-
-        if (processosPorStatus.length === 0) {
-            return (
-                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                    Não há dados disponíveis.
-                </span>
-            );
-        }
-
-        const cores = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#34495e', '#1abc9c'];
-        const dadosFormatados = Object.entries(processosPorStatus).map(([status, quantidade], index) => ({
-            status,
-            quantidade,
-            cor: cores[index],
-        }));
-
-        return (
-            <ResponsiveContainer width="90%" height="85%">
-                <PieChart>
-                    <Pie
-                        data={dadosFormatados}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        dataKey="quantidade"
-                        label={({ status, quantidade }) => `${status}: ${quantidade}`}
-                    >
-                        {dadosFormatados.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.cor} />
-                        ))}
-                    </Pie>
-                    <Tooltip />
-                </PieChart>
-            </ResponsiveContainer>
-        );
-    }
-
-    function showProcessosPorTipo(processosPorTipo) {
-        if (!processosPorTipo || processosPorTipo.length === 0) {
-            return (
-                <span className="typography-regular text-[var(--grayText)] text-base sm:text-lg md:text-xl">
-                    Nenhum evento
-                </span>
-            );
-        }
-
-        return Object.entries(processosPorTipo).map(([tipo, quantidade], index) => (
-            <div key={index} className="flex items-center justify-between">
-                <span className="text-sm font-medium">{tipo}</span>
-                <div className="flex items-center gap-3">
-                    <Badge variant="outline">{quantidade}</Badge>
-                </div>
-            </div>
-        ));
     }
 
     function showNextEvent(nextEvent) {
@@ -462,52 +242,75 @@ export default function Dashboard() {
     }
     
 
-    return (
-        
-        loading ? <Loading /> :
-        
+    return (        
         <div className="flex h-full w-full bg-gray-100 px-6 py-8 space-y-6">
-            
             <div className="flex flex-col w-full h-full gap-6 ">
+                <div className="flex w-full gap-4 h-[15%] justify-between">
+                    <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Total de Processos</CardTitle>
+                            <FileText className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalProcessos}</div>
+                            <p className="text-xs opacity-80 mt-1">Processos ativos</p>
+                        </CardContent>
+                    </Card>
 
+                    <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Clientes Ativos</CardTitle>
+                            <Users className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalClientes}</div>
+                            <p className="text-xs opacity-80 mt-1">Clientes em acompanhamento</p>
+                        </CardContent>
+                    </Card>
 
-                <div className="flex justify-between">
-                    <div className="bgGlassNoPadding flex w-[45%] h-[140px] items-center justify-between px-[24px]">
-                        <div>
-                            <span className="text-[var(--grayText)] typography-regular">Próximo pagamento</span>
-                            <div className="mt-2 text-sm">
-                                <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Lewis Hamilton</span> - <span className="text-[var(--color-red)] typography-semibold text-[20px]">Em atraso</span>
-                            </div>
-                        </div>
-                        <div className="text-sm flex flex-col items-end ">
-                            <span className="text-[var(--color-blueLight)] typography-bold text-[20px]">Venc. 06/11/2025</span>
-                            <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Parcela 2/3 - €600,00</span>
-                        </div>
-                    </div>
+                    <Card className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 w-[20%]">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium opacity-90">Eventos do Mês</CardTitle>
+                            <Calendar className="h-5 w-5 opacity-90" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">{totalEventos}</div>
+                            <p className="text-xs opacity-80 mt-1">Compromissos agendados</p>
+                        </CardContent>
+                    </Card>
 
-                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
+                    <div className="bgGlassNoPadding flex justify-around w-[30%] h-[100%]">
                         <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Faturado neste mês</p>
-                            <span className="text-[32px] typography-black text-[var(--success)] ">R$ 4.000,53</span>
+                            <p className="text-[var(--grayText)] typography-regular">
+                                Previsão de caixa (prox. 30 dias)
+                            </p>
+
+                            <span
+                                className={`text-[32px] typography-black ${totalReceivable >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                    }`}
+                            >
+                                {totalReceivable ?? 0}
+                            </span>
                         </div>
-                        <div className="text-[var(--success)]  flex items-center text-sm mt-1">
-                            <div className="bg-green-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
+
+                        <div
+                            className={`flex items-center text-sm mt-1 ${receivablePercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                }`}
+                        >
+                            <div
+                                className={`flex items-center p-2 rounded text-xl ${receivablePercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                    }`}
+                            >
+                                {receivablePercentual >= 0 ? (
+                                    <TrendingUp size={24} className="mr-1" />
+                                ) : (
+                                    <TrendingDown size={24} className="mr-1" />
+                                )}
+                                {receivablePercentual}%
                             </div>
                         </div>
                     </div>
 
-                    <div className="bgGlassNoPadding flex justify-around  w-[25%] h-[140px]">
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
-                            <span className="text-[32px] typography-black text-[var(--color-red)] ">R$ 4.000,53</span>
-                        </div>
-                        <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                            <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Middle section */}
@@ -542,43 +345,65 @@ export default function Dashboard() {
 
                     {/* Bottom section */}
                     <div className="flex flex-col  w-full h-full">
-                        <div className="flex justify-between w-full h-[30%] ">
-                            <div className=" bgGlassNoPadding w-[30%] h-[80%] px-8 py-4  flex items-center justify-between">
+                        <div className="flex w-full h-[30%] gap-6">
+                            <div className="bgGlassNoPadding flex justify-around  w-[35%] h-[140px]">
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className="text-[var(--grayText)] typography-regular">Clientes inadimplentes</p>
-                                    <span className="text-[28px] typography-black text-[var(--color-red)] ">12</span>
+                                    <p className="text-[var(--grayText)] typography-regular">Faturado neste mês</p>
+
+                                    <span
+                                        className={`text-[32px] typography-black ${totalInvoiced >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                            }`}
+                                    >
+                                        {totalInvoiced ?? 0}
+                                    </span>
                                 </div>
-                                <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                                    <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                        <TrendingUp size={16} className="mr-1" /> -4%
+
+                                <div
+                                    className={`flex items-center text-sm mt-1 ${invoicedPercentual >= 0 ? "text-[var(--success)]" : "text-[var(--color-red)]"
+                                        }`}
+                                >
+                                    <div
+                                        className={`flex items-center p-2 rounded text-xl ${invoicedPercentual >= 0 ? "bg-green-100" : "bg-red-100"
+                                            }`}
+                                    >
+                                        {invoicedPercentual >= 0 ? (
+                                            <TrendingUp size={24} className="mr-1" />
+                                        ) : (
+                                            <TrendingDown size={24} className="mr-1" />
+                                        )}
+                                        {invoicedPercentual}%
                                     </div>
                                 </div>
                             </div>
-
-                            <div className=" bgGlassNoPadding w-[30%] h-[80%] px-8 py-4 flex items-center justify-between">
+                            <div className="bgGlassNoPadding flex justify-around  w-[35%] h-[140px]">
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className="text-[var(--grayText)] typography-regular">Processos com pendências</p>
-                                    <span className="text-[28px] typography-black text-[var(--color-red)] ">12</span>
+                                    <p className="text-[var(--grayText)] typography-regular">Pendente neste mês</p>
+
+                                    <span
+                                        className={`text-[32px] typography-black ${totalPending >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                            }`}
+                                    >
+                                        {totalPending ?? 0}
+                                    </span>
                                 </div>
-                                <div className="text-[var(--color-red)]  flex items-center text-sm mt-1">
-                                    <div className="bg-red-100 flex items-center p-2 rounded text-xl">
-                                        <TrendingUp size={16} className="mr-1" /> -4%
+
+                                <div
+                                    className={`flex items-center text-sm mt-1 ${pendingPercentual >= 0 ? "text-[var(--color-red)]" : "text-[var(--success)]"
+                                        }`}
+                                >
+                                    <div
+                                        className={`flex items-center p-2 rounded text-xl ${pendingPercentual >= 0 ? "bg-red-100" : "bg-green-100"
+                                            }`}
+                                    >
+                                        {pendingPercentual >= 0 ? (
+                                            <TrendingUp size={24} className="mr-1" />
+                                        ) : (
+                                            <TrendingDown size={24} className="mr-1" />
+                                        )}
+                                        {pendingPercentual}%
                                     </div>
                                 </div>
                             </div>
-
-                          
-                    <div className="bgGlassNoPadding flex justify-around  w-[38%] h-[80%]">
-                        <div className="flex flex-col items-start justify-center">
-                            <p className="text-[var(--grayText)] typography-regular">Previsão de caixa (prox. 30 dias)</p>
-                            <span className="text-[32px] typography-black text-[var(--success)] ">R$ 15.000,53</span>
-                        </div>
-                        <div className="text-[var(--success)]  flex items-center text-sm mt-1">
-                            <div className="bg-green-100 flex items-center p-2 rounded text-xl">
-                                <TrendingUp size={24} className="mr-1" /> -4%
-                            </div>
-                        </div>
-                    </div>
 
                         </div>
 
@@ -596,14 +421,14 @@ export default function Dashboard() {
                             </div>
 
                             <div className="bgGlassNoPadding px-5 py-7 h-[90%] w-[48%]">
-                            <div>
+                                <div>
                                     <span className="text-[var(--grayText)] typography-regular">Faturamento</span>
                                     <div className="mt-2 text-sm">
                                         <span className="text-[var(--color-blueDark)] typography-bold text-[20px]">Ultimos 6 meses</span>
                                     </div>
                                 </div>
                                 <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
-                                    <RecebimentosChart/>
+                                    <RecebimentosChart />
                                 </div>
                             </div>
                         </div>

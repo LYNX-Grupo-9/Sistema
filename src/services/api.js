@@ -37,13 +37,8 @@ const endpoints = {
   changeStatusSolicitacao: (idSolicitacao) => api.put(`/solicitacao-agendamento/visualizar/${idSolicitacao}`),
 
   //GET
-
-  getCustomerPagination: (page, size, sort) => api
-  .get(`/clientes/paginado?page=${page}&size=${size}&sort=${sort},asc`),
-  
-  getCasePagination: (page, size, sort) => api
-  .get(`/processos/paginado?page=${page}&size=${size}&sort=${sort},asc`),
-
+  getCustomerPagination: (page, size) => api.get(`/clientes/paginado?page=${page}&size=${size}`),
+  getCasePagination: (page, size) => api.get(`/processos/paginado?page=${page}&size=${size}`),
   getAllCustomer: (idAdvogado) => api.get(`/clientes/listarPorAdvogado/${idAdvogado}`),
   getCustomerById: (id) => api.get(`/clientes/${id}/dados-completos`),
   getOrderByName: (idAdvogado) => api.get("/clientes/ordenado-nome", { params: { idAdvogado } }),
@@ -63,6 +58,13 @@ const endpoints = {
       idAdvogado: idAdvogado
     },
   }),
+
+  // PARCELAS
+createParcela: (payload) => api.post("/parcelas", payload),
+
+// LANCAMENTOS
+createLancamento: (payload) => api.post("/lancamentos", payload),
+
 
   getAllCases: (idAdvogado) => api.get(`/processos/advogado/${idAdvogado}`),
   getCaseById: (id) => api.get(`/processos/${id}`),
@@ -92,6 +94,36 @@ const endpoints = {
   getTotalProcessosAtivos: (idAdvogado) => api.get(`/processos/processosAtivos/${idAdvogado}`),
   getTotalEventosMes: (idAdvogado) => api.get(`/eventos/advogado/${idAdvogado}/eventosMes`),
   getTotalClietesAtivos: (idAdvogado) => api.get(`/clientes/advogado/${idAdvogado}/total-clientes`),
+
+  // grafico-controller
+getPendingLast6MonthsChart: () =>
+  api.get('/grafico/grafico/pendente-ultimos-6-meses'),
+
+getInvoicedLast6MonthsChart: () =>
+  api.get('/grafico/grafico/faturado-ultimos-6-meses'),
+
+// financeiro-controller
+getTotalPending: () =>
+  api.get('/financeiro/total-pendente'),
+
+getTotalInvoicedMonth: () =>
+  api.get('/financeiro/total-faturado-mes'),
+
+getTotalReceivable: () =>
+  api.get('/financeiro/total-a-receber'),
+
+getNextPayment: () =>
+  api.get('/financeiro/proximo-pagamento'),
+
+getProcessesWithPendings: () =>
+  api.get('/financeiro/processos-com-pendencias'),
+
+getRevenueLast6Months: () =>
+  api.get('/financeiro/faturamento-6-meses'),
+
+getClientsWithPendings: () =>
+  api.get('/financeiro/clientes-com-pendencias'),
+
 
   // DELETE 
   deleteCategoria: (idCategoria) => api.delete(`/categorias/${idCategoria}`),

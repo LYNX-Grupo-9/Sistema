@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 import {
   LineChart,
   Line,
@@ -10,20 +11,48 @@ import {
 } from "recharts";
 
 export default function RecebimentosChart() {
-  const data = [
-    { mes: "Jan", valor1: 300, valor2: 500 },
-    { mes: "Fev", valor1: 3800, valor2: 4200 },
-    { mes: "Mar", valor1: 4000, valor2: 3800 },
-    { mes: "Abr", valor1: 5200, valor2: 4600 },
-    { mes: "Mai", valor1: 4600, valor2: 4000 },
-    { mes: "Jun", valor1: 4300, valor2: 4100 },
-  ];
+  const [data, setData] = useState([]);
+
+  function getLast6Months() {
+    const months = [];
+    const date = new Date();
+
+    for (let i = 0; i < 6; i++) {
+      const month = date.toLocaleString("pt-BR", { month: "short" });
+      months.push(month);
+      date.setMonth(date.getMonth() - 1);
+    }
+    return months.reverse();
+  }
+
+  useEffect(() => {
+    api.getInvoicedLast6MonthsChart().then((response) => {
+      console.log("Dados do gráfico de recebimentos:", response.data);
+
+      const months = getLast6Months();
+
+      const keys = [
+        "totalFaturado30",
+        "totalFaturado60",
+        "totalFaturado90",
+        "totalFaturado120",
+        "totalFaturado150",
+        "totalFaturado180",
+      ];
+
+      const formatted = keys.map((key, index) => ({
+        mes: months[index],
+        valor1: response.data[key] ?? 0,
+      }));
+      setData(formatted);
+    });
+  }, []);
 
   return (
     <div className="w-full h-full p-6 bg-transparent">
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 20, right: 40, left: 20, bottom: 0 }}>
-            
+
           <defs>
             <linearGradient id="gradient1" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#6366F1" stopOpacity={0.5} />
@@ -41,14 +70,14 @@ export default function RecebimentosChart() {
             dot={{ r: 5, fill: "#fff", stroke: "#6366F1", strokeWidth: 2 }}
             activeDot={{ r: 6, fill: "#6366F1", stroke: "#fff", strokeWidth: 3 }}
           />
-        
+
 
           <XAxis
             dataKey="mes"
             axisLine={false}
             tickLine={false}
             tick={{ fill: "#9CA3AF", fontSize: 12 }}
-            padding={{ left: 10, right: 10 }} 
+            padding={{ left: 10, right: 10 }}
           />
 
           {/* Eixo Y */}

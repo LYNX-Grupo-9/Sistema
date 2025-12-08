@@ -43,9 +43,9 @@ export default function App() {
             <Layout />
           </ProtectedRoute>
         }>
-          <Route path="home" element={
+          <Route path="dashboard" element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard />
             </ProtectedRoute>
           } />
           <Route path="customerdetails" element={

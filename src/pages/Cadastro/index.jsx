@@ -80,7 +80,7 @@ export function Cadastro() {
         toast.error(
             registroOab.trim() === ""
                 ? 'OAB não pode estar em branco'
-                : 'OAB inválido. Exemplo: 123456SP',
+                : 'OAB inválido. Exemplo: SP123456',
             {
                 position: "top-right",
                 autoClose: 3000,
@@ -96,6 +96,7 @@ export function Cadastro() {
     } else {
         document.getElementById("registroOab").classList.remove("border-red-500");
     }
+    
    
     if (email.trim() === "" || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
         document.getElementById("email").classList.add("border-red-500");
@@ -209,7 +210,7 @@ export function Cadastro() {
                 });
                 setTimeout(() => {
                     navigate("/login");
-                }, 1000);
+                }, 500);
         } else {
             const erro = await response.json();
             toast.error('Erro ao cadastrar', {
