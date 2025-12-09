@@ -97,6 +97,7 @@ export function CaseRegister({ isOpen, onClose }) {
     api.newCase(payload)
       .then((response) => {
         closeBothModals();
+        api.clearCacheProcessos();
         location.reload();
       })
       .catch((error) => {

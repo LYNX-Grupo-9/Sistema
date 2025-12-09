@@ -134,12 +134,12 @@ export function FormNewEvent({ onClose, onSuccess, isEdit, idEvento, onEditSucce
             idAdvogado,
             idCliente: convidado,
             idCategoria: Number(categoria),
-            idProcesso:processo ,
+            idProcesso: processo != "0" ? Number(processo) : null,
             dataReuniao: dataSelecionada ? new Date(dataSelecionada).toISOString() : null,
             horaInicio: `${horaInicio}:00`,
             horaFim: `${horaFim}:00`,
         };
-        
+
         if (isEdit) {
             api.patchEvent(idEvento, eventoPayload)
                 .then(response => {

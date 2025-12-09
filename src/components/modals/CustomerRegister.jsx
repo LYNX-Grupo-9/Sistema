@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 
 export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, CustomerData, editMode, idCliente }) {
 
- const handleClose = () => {
+  const handleClose = () => {
     onClose();
   }
   const [step, setStep] = useState(1);
@@ -39,7 +39,7 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     }
   }, [CustomerData]);
 
- const errorMessage = (message) => toast.error(message, {
+  const errorMessage = (message) => toast.error(message, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -49,40 +49,40 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     progress: undefined,
     theme: "colored",
     transition: Bounce,
-    });
+  });
 
-    const handleNextStep = () => {
-      if (step === 1) {
-        if (!user.nome.trim()) return errorMessage("Preencha o nome do cliente");
-        if (!user.dataNascimento) return errorMessage("Preencha a data de nascimento");
-        if (!user.genero) return errorMessage("Selecione o gênero");
-        if (!user.estadoCivil) return errorMessage("Selecione o estado civil");
-        if (!user.naturalidade.trim()) return errorMessage("Preencha a naturalidade");
-    
-        converterParaISO(user.dataNascimento);
-        setStep(2);
-      }
-    
-      else if (step === 2) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!user.email.trim()) return errorMessage("Preencha o e-mail");
-        if (!emailRegex.test(user.email)) return errorMessage("E-mail inválido");
-        if (!user.telefone.trim()) return errorMessage("Preencha o telefone");
-        if (!user.endereco.trim()) return errorMessage("Preencha o endereço");
-        if (!user.profissao.trim()) return errorMessage("Preencha a profissão");
-        
-        
-        setStep(3);
-      }
-      
-      else if (step === 3) {
-        if (!user.tipoDocumento) return errorMessage("Selecione o tipo de documento");
-        if (!user.documento.trim() || user.documento.length < 5) return errorMessage("Preencha um número de documento válido");
-        handleRegister()
-      }
-    
-    };
-    
+  const handleNextStep = () => {
+    if (step === 1) {
+      if (!user.nome.trim()) return errorMessage("Preencha o nome do cliente");
+      if (!user.dataNascimento) return errorMessage("Preencha a data de nascimento");
+      if (!user.genero) return errorMessage("Selecione o gênero");
+      if (!user.estadoCivil) return errorMessage("Selecione o estado civil");
+      if (!user.naturalidade.trim()) return errorMessage("Preencha a naturalidade");
+
+      converterParaISO(user.dataNascimento);
+      setStep(2);
+    }
+
+    else if (step === 2) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!user.email.trim()) return errorMessage("Preencha o e-mail");
+      if (!emailRegex.test(user.email)) return errorMessage("E-mail inválido");
+      if (!user.telefone.trim()) return errorMessage("Preencha o telefone");
+      if (!user.endereco.trim()) return errorMessage("Preencha o endereço");
+      if (!user.profissao.trim()) return errorMessage("Preencha a profissão");
+
+
+      setStep(3);
+    }
+
+    else if (step === 3) {
+      if (!user.tipoDocumento) return errorMessage("Selecione o tipo de documento");
+      if (!user.documento.trim() || user.documento.length < 5) return errorMessage("Preencha um número de documento válido");
+      handleRegister()
+    }
+
+  };
+
 
   const converterParaISO = (data) => {
     const partes = data.split("-");
@@ -95,8 +95,9 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     if (editMode) {
       api.updateCustomer(idCliente, user)
         .then((response) => {
+          api.clearCacheClientes();
           handleClose();
-          if(!caseFlow) {
+          if (!caseFlow) {
             location.reload();
           }
         })
@@ -109,8 +110,9 @@ export function CustomerRegister({ isOpen, onClose, caseFlow, closeModal, Custom
     const payload = { ...user, idAdvogado };
     api.newCustomer(payload)
       .then((response) => {
+        api.clearCacheClientes();
         handleClose();
-        if(!caseFlow) {
+        if (!caseFlow) {
           location.reload();
         }
       })

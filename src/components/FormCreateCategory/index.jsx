@@ -28,7 +28,7 @@ export default function FormCreateCategory({ onClose, isEdit, idCategoria, onSuc
 
     function fetchData() {
         api.getCategoriaById(idCategoria).then((response) => {
-            setNome(response.data.nomeEvento);
+            setNome(response.data.nome);
             setColor(response.data.cor.replace("BF", ""));
         })
             .catch((error) => {

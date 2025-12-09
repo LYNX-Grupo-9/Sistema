@@ -125,7 +125,7 @@ const FinancialIndicatorCard = ({ title, value, gradientFrom, gradientTo }) => {
     )
 }
 
-export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
+export default function FinancialOverlay({ isOpen, onClose, idCliente }) {
     const [expandedId, setExpandedId] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -136,18 +136,24 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
     const [dataVencimentoInicial, setDataVencimentoInicial] = useState(null)
     const [titulo, setTitulo] = useState('')
     const [optionsProcessos, setOptionsProcessos] = useState([])
+    const [lancamentos, setLancamentos] = useState([])
     const [totalRecebido, setTotalRecebido] = useState(0)
     const [totalReceber, setTotalReceber] = useState(0)
 
+    const idAdvogado = localStorage.getItem('idAdvogado')
 
     useEffect(() => {
-         api.getCasesByCustomerId(idCliente).then((response) => {
+        api.getCasesByCustomerId(idCliente).then((response) => {
             const processos = response.data
             const options = processos.map((processo) => ({
                 value: processo.idProcesso,
                 label: `Processo ${processo.titulo}`
             }))
             setOptionsProcessos(options)
+        })
+        api.getLancamentoByIdAdvogado(idAdvogado).then((response) => {
+            const lancamentos = response.data.filter(lancamento => lancamento.idCliente === idCliente)
+            setLancamentos(lancamentos)
         })
     }, [])
 
@@ -157,23 +163,23 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
             idProcesso: selectedProcesso,
             idCliente: idCliente
         };
-    
+
         const response = await api.createLancamento(payloadLancamento);
-        return response.data.idLancamentos;
+        return response.data.idLancamento;
     };
 
     const gerarParcelas = (idLancamento) => {
         const numParcelas = Math.max(1, Number(numeroParcelas)); // garante ao menos 1 parcela
-    
+
         const valorParcela = Number(valorTotal) / numParcelas;
-    
+
         const parcelas = [];
-    
+
         for (let i = 0; i < numParcelas; i++) {
-    
+
             const dataVenc = new Date(dataVencimentoInicial);
             dataVenc.setMonth(dataVenc.getMonth() + i);
-    
+
             parcelas.push({
                 valor: valorParcela,
                 dataVencimento: dataVenc.toISOString(),
@@ -181,7 +187,8 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
                 idLancamento
             });
         }
-    
+
+        console.log(parcelas);
         return parcelas;
     };
 
@@ -190,7 +197,7 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
             await api.createParcela(parcela);
         }
     };
-    
+
 
 
     const toggleExpand = (id) => {
@@ -218,21 +225,21 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
     }
 
     const handleSave = async () => {
-            try {
-                setIsLoading(true);
-                const idLancamento = await criarLancamento();
-        
-                const parcelas = gerarParcelas(idLancamento);
-        
-                await salvarParcelas(parcelas);
-        
-                handleCloseModal();
-                setIsLoading(false);
-        
-            } catch (error) {
-                console.error("Erro ao salvar:", error);
-                setIsLoading(false);
-            }
+        try {
+            setIsLoading(true);
+            const idLancamento = await criarLancamento();
+
+            const parcelas = gerarParcelas(idLancamento);
+
+            await salvarParcelas(parcelas);
+
+            handleCloseModal();
+            setIsLoading(false);
+
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+            setIsLoading(false);
+        }
     }
 
 
@@ -269,74 +276,11 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
         display: isOpen ? 'flex' : 'none',
     }
 
-    const lancamento = [
-        {
-            "idLancamentos": 12,
-            "idCliente": 8,
-            "idProcesso": 4,
-            "titulo": "Pagamento de Honorários - Caso Almeida",
-            "parcelas": [
-                {
-                    "idParcelas": 101,
-                    "idLancamento": 12,
-                    "valor": 1500.00,
-                    "vencimento": "2025-11-10",
-                    "status": "PENDENTE"
-                },
-                {
-                    "idParcelas": 102,
-                    "idLancamento": 12,
-                    "valor": 1500.00,
-                    "vencimento": "2025-12-10",
-                    "status": "PENDENTE"
-                },
-                {
-                    "idParcelas": 103,
-                    "idLancamento": 12,
-                    "valor": 5500.00,
-                    "vencimento": "2026-01-10",
-                    "status": "PAGO"
-                }
-            ]
-        },
-        {
-            "idLancamentos": 13,
-            "idCliente": 11,
-            "idProcesso": 7,
-            "titulo": "Custas Processuais - Ação Trabalhista",
-            "parcelas": [
-                {
-                    "idParcelas": 201,
-                    "idLancamento": 13,
-                    "valor": 980.50,
-                    "vencimento": "2025-10-25",
-                    "status": "PAGO"
-                },
-                {
-                    "idParcelas": 202,
-                    "idLancamento": 13,
-                    "valor": 980.50,
-                    "vencimento": "2025-11-25",
-                    "status": "PENDENTE"
-                },
-                {
-                    "idParcelas": 203,
-                    "idLancamento": 13,
-                    "valor": 980.50,
-                    "vencimento": "2025-12-25",
-                    "status": "PENDENTE"
-                }
-            ]
-        }
-
-    ]
-
-    // Calcular totais
-    const calcularTotais = () => {
+    const calcularTotais = (lancamentos) => {
         let totalPago = 0
         let totalPendente = 0
 
-        lancamento.forEach(item => {
+        lancamentos.forEach(item => {
             item.parcelas.forEach(parcela => {
                 if (parcela.status === 'PAGO') {
                     totalPago += parcela.valor
@@ -349,14 +293,14 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
         return { totalPago, totalPendente }
     }
 
-    const { totalPago, totalPendente } = calcularTotais()
+    const { totalPago, totalPendente } = calcularTotais(lancamentos)
 
     return (
         <div style={wrapper}>
             <div style={overlayStyle} onClick={onClose}>
 
             </div>
-            <div style={containerStyle}>
+            <div style={{ ...containerStyle, overflow: 'hidden' }}>
                 <h1 className="font-extrabold text-3xl text-[#013451]">Financeiro:</h1>
                 <div className="w-full h-[1px] bg-[#87939E]"></div>
                 <div className="w-full h-32 flex gap-10">
@@ -374,8 +318,8 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
                     />
                 </div>
                 <h1 className="font-extrabold text-3xl text-[#013451]">Lançamentos:</h1>
-                <div style={{ flex: 1 }} className="overflow-y-auto flex flex-col gap-4">
-                    {lancamento.map((item) => (
+                    <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', height: 'fit-content' }}>
+                    {lancamentos.map((item) => (
                         <LancamentoCard
                             key={item.idLancamentos}
                             item={item}
@@ -480,7 +424,7 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente}) {
                                                 Parcelas:
                                             </label>
                                             <FormNEInput
-                                                type="select"   
+                                                type="select"
                                                 placeholder="Ex.: À VISTA"
                                                 value={numeroParcelas}
                                                 onChange={(e) => setNumeroParcelas(e.target.value)}

@@ -21,7 +21,7 @@ export function CustomerDetails() {
     const closeModal = () => setModalOpen(false);
 
     const location = useLocation();
-    const  id = "295d5530-4869-3916-a158-4a830f4fa161";
+    const { id } = location.state || {};
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
     const [customerData, setCustomerData] = useState([]);
     const [casesData, setCasesData] = useState([]);
@@ -98,7 +98,7 @@ export function CustomerDetails() {
                 <CustomerRegister isOpen={modalOpen} onClose={closeModal} CustomerData={customerData} editMode={true} />
             }
             <div className="flex w-full h-screen bg-[var(--bgColor-primary))] items-center justify-center">
-                <FinancialOverlay isOpen={isFinancialOverlayOpen} onClose={closeFinancialOverlay} idCliente={id}/>
+                <FinancialOverlay isOpen={isFinancialOverlayOpen} onClose={closeFinancialOverlay} idCliente={id} />
                 <div className="pl-20 p-10 flex gap-10 w-[95%] h-full ">
                     <div className="flex flex-col gap-6 w-1/2 h-full">
                         <div className="bgGlass w-full h-[10%] flex justify-between items-center">
