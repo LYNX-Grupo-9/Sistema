@@ -1,4 +1,4 @@
-````markdown
+
 # Temis Hub
 
 Uma solução completa desenvolvida para modernizar a rotina jurídica. Este sistema centraliza as operações diárias de um advogado, oferecendo controle total sobre prazos e dados processuais em uma interface intuitiva e responsiva.
@@ -53,44 +53,42 @@ Os arquivos gerados estarão na pasta `dist/`.
 
 -----
 
-## ☁️ Deploy
+## ☁️ D🚀 Deploy (CI/CD Automatizado)
+Este projeto utiliza um pipeline de Integração Contínua e Entrega Contínua (CI/CD) orquestrado pelo GitHub Actions, que automatiza a construção, o push da imagem Docker e a implantação na AWS.
 
-### Opção 1: Vercel ou Netlify
+Fluxo de Deploy
 
-1.  Gere o build (`npm run build`).
-2.  Envie todo o conteúdo da pasta `dist/` para a plataforma desejada.
-      * *Dica: Ao conectar o repositório do GitHub na Vercel/Netlify, o build é feito automaticamente.*
+O deploy é acionado automaticamente em pushes para o branch main (ou o branch de produção configurado) e segue os passos abaixo:
 
-### Opção 2: Deploy Manual (Apache / Nginx / cPanel)
+Build do Projeto: O GitHub Actions executa os testes e, em seguida, gera o build otimizado da aplicação.
 
-1.  Gere o build.
-2.  Envie os arquivos da pasta `dist/` para o diretório público do servidor (ex: `public_html`).
+Dockerização: A aplicação é empacotada em uma imagem Docker.
 
-### Opção 3: GitHub Pages
+Push para o Registry: A imagem Docker é enviada para um registro de contêineres da AWS, como o Amazon ECR (Elastic Container Registry).
 
-1.  Instale o pacote `gh-pages`:
+Implantação na AWS: O pipeline se conecta ao serviço de contêineres da AWS (Amazon ECS - Elastic Container Service ou EKS - Elastic Kubernetes Service) e força uma nova implantação, garantindo que o serviço utilize a imagem mais recente do ECR.
 
-    ```bash
-    npm install gh-pages --save-dev
-    ```
+Requisitos de Configuração
 
-2.  Adicione os scripts no `package.json`:
+Para que o pipeline funcione corretamente, é necessário configurar as seguintes Secrets no seu repositório GitHub (em Settings > Secrets > Actions):
 
-    ```json
-    "scripts": {
-      "predeploy": "npm run build",
-      "deploy": "gh-pages -d dist"
-    }
-    ```
+Secret	Descrição
+AWS_ACCESS_KEY_ID	Chave de acesso do usuário IAM com permissões de ECR/ECS.
+AWS_SECRET_ACCESS_KEY	Chave secreta correspondente.
+AWS_REGION	Região da AWS onde o serviço está hospedado (ex: sa-east-1).
+ECR_REGISTRY_URL	URL completa do seu repositório ECR.
+ECS_CLUSTER_NAME	Nome do cluster ECS onde o serviço será implantado.
+ECS_SERVICE_NAME	Nome do serviço ECS a ser atualizado.
+Build Manual (Local)
 
-3.  Execute o deploy:
+Para fins de desenvolvimento ou debug local, você pode construir e rodar a imagem Docker manualmente:
 
-    ```bash
-    npm run deploy
-    ```
+Build da Imagem:
 
-4.  O projeto estará disponível em:
-    `https://<SEU_USUARIO>.github.io/<NOME_DO_REPOSITORIO>`
+Bash
+docker build -t nome-da-sua-aplicacao .
+Execução Local:
 
-<!-- end list -->
+Bash
+docker run -p 8080:80 nome-da-sua-aplicacao
 
