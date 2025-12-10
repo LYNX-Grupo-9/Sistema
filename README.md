@@ -94,7 +94,3 @@ Os arquivos gerados estarão na pasta `dist/`.
 
 <!-- end list -->
 
-```
-
-Gostaria de adicionar uma seção de **"Como contribuir"** ou uma **licença** específica a este arquivo?
-```
