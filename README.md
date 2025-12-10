@@ -1,29 +1,8 @@
-Com certeza. Aqui está o código fonte completo do `README.md`. Você pode copiar o bloco abaixo inteiro e colar no seu arquivo.
-
 ````markdown
-# Nome do Projeto
+# Temis Hub
 
-> Adicione uma breve descrição do projeto aqui.
+Uma solução completa desenvolvida para modernizar a rotina jurídica. Este sistema centraliza as operações diárias de um advogado, oferecendo controle total sobre prazos e dados processuais em uma interface intuitiva e responsiva.
 
-## 🛠 Tecnologias Utilizadas
-
-* [React](https://reactjs.org/)
-* [Vite](https://vitejs.dev/)
-* [React Router](https://reactrouter.com/)
-* [React Toastify](https://fkhadra.github.io/react-toastify/)
-
----
-
-## 📂 Estrutura de Pastas
-
-```bash
-src/
- ├── components/
- ├── pages/
- ├── services/
- ├── hooks/
- ├── assets/
- └── main.jsx
 ````
 
 -----
