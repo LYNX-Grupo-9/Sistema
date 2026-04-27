@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import { ButtonAnexo } from "./components/ButtonAnexo";
 import Dashboard from "./pages/Dashboard";
+import FindCases from "./pages/FindCases";
 
 
 export default function App() {
@@ -78,6 +79,12 @@ export default function App() {
           <Route path="agenda" element={
             <ProtectedRoute>
               <Agenda />
+            </ProtectedRoute>
+          } />
+
+          <Route path="findcases" element={
+            <ProtectedRoute>
+              <FindCases />
             </ProtectedRoute>
           } />
 

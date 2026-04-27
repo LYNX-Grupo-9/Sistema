@@ -1,6 +1,6 @@
 import axios from "axios";
 // import { API_URL } from "../config/config.js";
-import { API_URL } from "./configuracao.js";
+import { API_URL, API_APP_URL } from "./configuracao.js";
 
 
 const api = axios.create({
@@ -10,7 +10,22 @@ const api = axios.create({
   },
 });
 
+const api_app = axios.create({
+  baseURL: API_APP_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+api_app.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -148,6 +163,11 @@ getClientsWithPendings: () =>
   deleteCategoria: (idCategoria) => api.delete(`/categorias/${idCategoria}`),
   deleteEvento: (idEvento) => api.delete(`/eventos/${idEvento}`),
   deleteAnexo: (idAnexo) => api.delete(`/anexos/${idAnexo}`),
+
+
+  // endpoints app
+
+  getCasosAbertos: () => api_app.get("/casos/abertos"),
 }
 
 export default endpoints

@@ -8,6 +8,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { use, useEffect, useState } from 'react';
 import LoadingSVG from '../../assets/loading.svg';
 import { IconLogout } from '../IconLogout';
+import { IconSearch } from '../IconSearch';
 
 export function Layout() {
 
@@ -32,16 +33,18 @@ export function Layout() {
         '/CaseDetails': 'caselist',
         '/agenda': 'agenda',
         '/temisai': 'temisai',
+        '/findcases': 'findcases',
     };
 
     const currentPage = pageMapping[location.pathname];
 
     const whiteBarMapping = {
-        'dashboard': "416px",
-        'custumerlist': "312px",
-        'caselist': "208px",
-        'agenda': "104px",
-        'temisai': "0px"
+        'dashboard': "520px",
+        'custumerlist': "416px",
+        'caselist': "312px",
+        'agenda': "208px",
+        'temisai': "104px",
+        'findcases': "0px"
     }
 
     const whiteBarStyle = {
@@ -93,6 +96,10 @@ export function Layout() {
 
                         <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/temisai')}>
                             <IconAi actualcolor={currentPage == "temisai" ? "#fff" : "#87939E"} hovercolor="#fff" />
+                        </div>
+
+                        <div className='w-full flex justify-center items-center h-16' onClick={() => handleNavigation('/findcases')}>
+                            <IconSearch actualcolor={currentPage == "findcases" ? "#fff" : "#87939E"} hovercolor="#fff" />
                         </div>
 
                         <div style={whiteBarStyle}></div>
