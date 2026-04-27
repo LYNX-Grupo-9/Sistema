@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { toast } from "react-toastify";
 import api from "../../services/api";
 
 export default function Cases() {
@@ -8,6 +9,11 @@ export default function Cases() {
     const [error, setError] = useState("");
     const [selectedCase, setSelectedCase] = useState(null);
     const [selectedArea, setSelectedArea] = useState("Todos");
+    const [showContactModal, setShowContactModal] = useState(false);
+    const [initialMessage, setInitialMessage] = useState("");
+    const [contactLoading, setContactLoading] = useState(false);
+
+    const idAdvogado = localStorage.getItem("idAdvogado");
 
     const areaFilters = [
         "Todos",
@@ -43,14 +49,91 @@ export default function Cases() {
         return value || "Nao informado";
     }
 
-    function handleContact(client) {
-        if (!client?.email) return;
+    function openContactModal() {
+        setInitialMessage("");
+        setShowContactModal(true);
+    }
 
-        window.location.href = `mailto:${client.email}`;
+    function closeContactModal() {
+        if (contactLoading) return;
+
+        setShowContactModal(false);
+        setInitialMessage("");
+    }
+
+    function getClientId(caseData) {
+        return caseData?.cliente?.idClienteApp || caseData?.cliente?.idCliente;
+    }
+
+    function getConversationId(responseData) {
+        return (
+            responseData?.idConversa ||
+            responseData?.conversaId ||
+            responseData?.id ||
+            responseData?.data?.idConversa ||
+            responseData?.data?.id
+        );
+    }
+
+    async function handleContactSubmit() {
+        const trimmedMessage = initialMessage.trim();
+        const idCaso = selectedCase?.idCaso;
+        const idCliente = getClientId(selectedCase);
+
+        if (!idAdvogado) {
+            toast.error("ID do advogado não encontrado. Por favor, faça login novamente.");
+            return;
+        }
+
+        if (!idCaso || !idCliente) {
+            toast.error("Não foi possível identificar o caso ou o cliente.");
+            return;
+        }
+
+        if (!trimmedMessage) {
+            toast.error("Escreva uma mensagem inicial para o cliente.");
+            return;
+        }
+
+        setContactLoading(true);
+
+        try {
+            await api.registrarInteresseCaso(idCaso, idAdvogado);
+
+            const conversaResponse = await api.criarConversaCaso({
+                idCliente,
+                idAdvogado,
+                idCaso
+            });
+
+            const idConversa = getConversationId(conversaResponse?.data);
+
+            if (!idConversa) {
+                throw new Error("idConversa não retornado pela API.");
+            }
+
+            await api.enviarMensagem({
+                idConversa,
+                conteudo: trimmedMessage,
+                remetenteTipo: "ADVOGADO",
+                remetenteId: idAdvogado
+            });
+
+            toast.success("Contato iniciado com sucesso.");
+            closeContactModal();
+            closeModal();
+        } catch (requestError) {
+            console.error("Erro ao iniciar contato com o cliente:", requestError);
+            toast.error("Erro ao iniciar contato com o cliente. Tente novamente.");
+        } finally {
+            setContactLoading(false);
+        }
     }
 
     function closeModal() {
         setSelectedCase(null);
+        setShowContactModal(false);
+        setInitialMessage("");
     }
 
     return (
@@ -208,7 +291,7 @@ export default function Cases() {
                             <button
                                 type="button"
                                 className="h-11 px-6 rounded-lg bg-[var(--color-blueLight)] text-white typography-medium cursor-pointer"
-                                onClick={() => handleContact(selectedCase.cliente)}
+                                onClick={openContactModal}
                             >
                                 Entrar em contato
                             </button>
@@ -216,6 +299,64 @@ export default function Cases() {
                                 type="button"
                                 className="h-11 px-6 rounded-lg border-2 border-[var(--color-blueLight)] text-[var(--color-blueLight)] typography-medium cursor-pointer"
                                 onClick={closeModal}
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {selectedCase && showContactModal && (
+                <>
+                    <div className="fixed inset-0 bg-[#00000070] z-[60]" onClick={closeContactModal}></div>
+                    <div className="fixed top-1/2 left-1/2 z-[70] w-[92%] max-w-xl -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl">
+                        <div className="flex items-start justify-between gap-4 p-6 border-b border-[#e8eef2]">
+                            <div>
+                                <h2 className="typography-bold text-[var(--color-blueDark)] text-2xl">
+                                    Mensagem inicial
+                                </h2>
+                                <span className="typography-medium text-sm text-[var(--grayText)]">
+                                    Envie uma mensagem para {getValue(selectedCase.cliente?.nome)}
+                                </span>
+                            </div>
+                            <button
+                                type="button"
+                                className="cursor-pointer text-[var(--color-blueDark)]"
+                                onClick={closeContactModal}
+                                disabled={contactLoading}
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <div className="p-6">
+                            <label className="block typography-bold text-sm text-[var(--color-blueDark)] mb-2">
+                                Sua mensagem
+                            </label>
+                            <textarea
+                                className="w-full min-h-[160px] rounded-lg border border-[#d8e1e8] p-4 typography-medium text-sm text-[#4b5563] outline-none resize-none focus:border-[var(--color-blueLight)]"
+                                placeholder="Escreva a primeira mensagem para o cliente"
+                                value={initialMessage}
+                                onChange={(event) => setInitialMessage(event.target.value)}
+                                disabled={contactLoading}
+                            />
+                        </div>
+
+                        <div className="p-6 border-t border-[#e8eef2] flex flex-col sm:flex-row justify-end gap-3">
+                            <button
+                                type="button"
+                                className="h-11 px-6 rounded-lg bg-[var(--color-blueLight)] text-white typography-medium cursor-pointer disabled:opacity-70"
+                                onClick={handleContactSubmit}
+                                disabled={contactLoading}
+                            >
+                                {contactLoading ? "Enviando..." : "Enviar mensagem"}
+                            </button>
+                            <button
+                                type="button"
+                                className="h-11 px-6 rounded-lg border-2 border-[var(--color-blueLight)] text-[var(--color-blueLight)] typography-medium cursor-pointer disabled:opacity-70"
+                                onClick={closeContactModal}
+                                disabled={contactLoading}
                             >
                                 Cancelar
                             </button>

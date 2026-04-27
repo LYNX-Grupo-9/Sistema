@@ -282,9 +282,10 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente }) {
 
         lancamentos.forEach(item => {
             item.parcelas.forEach(parcela => {
-                if (parcela.status === 'PAGO') {
+                console.log(parcela)
+                if (parcela.status.valor === 'PAGO') {
                     totalPago += parcela.valor
-                } else if (parcela.status === 'PENDENTE') {
+                } else if (parcela.status.valor === 'PENDENTE') {
                     totalPendente += parcela.valor
                 }
             })
@@ -318,7 +319,7 @@ export default function FinancialOverlay({ isOpen, onClose, idCliente }) {
                     />
                 </div>
                 <h1 className="font-extrabold text-3xl text-[#013451]">Lançamentos:</h1>
-                    <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', height: 'fit-content' }}>
+                <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', height: 'fit-content' }}>
                     {lancamentos.map((item) => (
                         <LancamentoCard
                             key={item.idLancamentos}

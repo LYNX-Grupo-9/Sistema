@@ -168,6 +168,11 @@ getClientsWithPendings: () =>
   // endpoints app
 
   getCasosAbertos: () => api_app.get("/casos/abertos"),
+  getConversasPorAdvogado: (advogadoId) => api_app.get("/conversas", { params: { advogadoId } }),
+  getMensagensPorConversa: (idConversa) => api_app.get(`/conversas/${idConversa}/mensagens`),
+  registrarInteresseCaso: (idCaso, idAdvogado) => api_app.post(`/casos/${idCaso}/advogados-interessado/${idAdvogado}`),
+  criarConversaCaso: (payload) => api_app.post("/conversas", payload),
+  enviarMensagem: (payload) => api_app.post("/mensagens", payload),
 }
 
 export default endpoints
