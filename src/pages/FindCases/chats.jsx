@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import api from "../../services/api";
@@ -12,8 +12,19 @@ export default function Chats() {
     const [newMessage, setNewMessage] = useState("");
     const [sendingMessage, setSendingMessage] = useState(false);
     const [error, setError] = useState("");
+    const socketRef = useRef(null);
 
     const idAdvogado = localStorage.getItem("idAdvogado");
+
+    function appendMessage(message) {
+        setMessages((currentMessages) => {
+            if (message?.idMensagem && currentMessages.some((item) => item.idMensagem === message.idMensagem)) {
+                return currentMessages;
+            }
+
+            return [...currentMessages, message];
+        });
+    }
 
     useEffect(() => {
         if (!idAdvogado) {
@@ -60,6 +71,46 @@ export default function Chats() {
             .finally(() => {
                 setMessagesLoading(false);
             });
+    }, [selectedConversation?.idConversa]);
+
+    useEffect(() => {
+        const idConversa = selectedConversation?.idConversa;
+        const token = localStorage.getItem("token");
+
+        if (!idConversa || !token) {
+            return;
+        }
+
+        const socket = new WebSocket(api.getChatWebSocketUrl(token));
+        socketRef.current = socket;
+
+        socket.onopen = () => {
+            socket.send(JSON.stringify({
+                type: "SUBSCRIBE",
+                idConversa
+            }));
+        };
+
+        socket.onmessage = (event) => {
+            try {
+                const payload = JSON.parse(event.data);
+
+                if (payload?.type === "MESSAGE" && payload.data?.idConversa === idConversa) {
+                    appendMessage(payload.data);
+                }
+            } catch (parseError) {
+                console.error("Erro ao processar mensagem do chat:", parseError);
+            }
+        };
+
+        socket.onerror = (socketError) => {
+            console.error("Erro no WebSocket do chat:", socketError);
+        };
+
+        return () => {
+            socket.close();
+            socketRef.current = null;
+        };
     }, [selectedConversation?.idConversa]);
 
     function formatDate(dateString) {
@@ -111,6 +162,17 @@ export default function Chats() {
         setSendingMessage(true);
 
         try {
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({
+                    type: "SEND",
+                    idConversa,
+                    conteudo: trimmedMessage,
+                    remetenteTipo: "ADVOGADO"
+                }));
+                setNewMessage("");
+                return;
+            }
+
             const response = await api.enviarMensagem({
                 idConversa,
                 conteudo: trimmedMessage,
@@ -121,7 +183,7 @@ export default function Chats() {
             const createdMessage = response?.data;
 
             if (createdMessage && typeof createdMessage === "object" && !Array.isArray(createdMessage)) {
-                setMessages((currentMessages) => [...currentMessages, createdMessage]);
+                appendMessage(createdMessage);
             } else {
                 const messagesResponse = await api.getMensagensPorConversa(idConversa);
                 const payload = Array.isArray(messagesResponse.data) ? messagesResponse.data : [];
@@ -160,7 +222,7 @@ export default function Chats() {
                     </div>
                 ) : (
                     <div className="grid h-full grid-cols-1 lg:grid-cols-[1.5fr_420px]">
-                        <div className="flex flex-col bg-[#f8fbfd]">
+                        <div className="flex min-h-0 flex-col overflow-hidden bg-[#f8fbfd]">
                             {selectedConversation ? (
                                 <>
                                     <div className="border-b border-[#e8eef2] bg-white px-6 py-5">
@@ -172,7 +234,7 @@ export default function Chats() {
                                         </span>
                                     </div>
 
-                                    <div className="flex-1 min-h-0 flex flex-col">
+                                    <div className="flex min-h-0 flex-1 flex-col">
                                         <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-4 bg-[#f8fbfd]">
                                             {messagesLoading ? (
                                                 <div className="flex-1 flex items-center justify-center">
@@ -205,7 +267,7 @@ export default function Chats() {
                                                                 className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${isAdvogado
                                                                     ? "bg-[var(--color-blueLight)] text-white rounded-br-md"
                                                                     : "bg-white text-[var(--color-blueDark)] border border-[#e8eef2] rounded-bl-md"
-                                                                }`}
+                                                                    }`}
                                                             >
                                                                 <span className="block typography-medium text-sm leading-6 whitespace-pre-wrap break-words">
                                                                     {message.conteudo}

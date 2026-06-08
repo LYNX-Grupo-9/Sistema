@@ -275,9 +275,6 @@ export default function Cases() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Detail label="Nome" value={selectedCase.cliente?.nome} />
                                     <Detail label="Email" value={selectedCase.cliente?.email} />
-                                    <Detail label="CPF" value={selectedCase.cliente?.cpf} />
-                                    <Detail label="ID do cliente" value={selectedCase.cliente?.idClienteApp} />
-                                    <Detail label="Advogado fixo" value={selectedCase.cliente?.advogadoFixoId} />
                                 </div>
                             </section>
 

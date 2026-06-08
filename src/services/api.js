@@ -17,6 +17,9 @@ const api_app = axios.create({
   },
 });
 
+const getChatWebSocketUrl = (token) =>
+  `${API_APP_URL.replace(/^http/, "ws").replace(/\/api\/?$/, "")}/ws/chat?token=${encodeURIComponent(token)}`;
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -173,6 +176,7 @@ getClientsWithPendings: () =>
   registrarInteresseCaso: (idCaso, idAdvogado) => api_app.post(`/casos/${idCaso}/advogados-interessado/${idAdvogado}`),
   criarConversaCaso: (payload) => api_app.post("/conversas", payload),
   enviarMensagem: (payload) => api_app.post("/mensagens", payload),
+  getChatWebSocketUrl,
 }
 
 export default endpoints
